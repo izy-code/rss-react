@@ -1,0 +1,14 @@
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
+<path style="fill:none;stroke:#00a000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
+	M20.5,22.5L20.5,22.5c2.865,1.273,4.135,1.273,7,0l0,0"/>
+<circle cx="21.5" cy="28.5" r="2.5" stroke="#00a000" fill="none"/>
+<circle cx="26.5" cy="28.5" r="2.5" stroke="#00a000" fill="none"/>
+<path style="fill:none;stroke:#00a000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
+	M33.5,28.5c-0.353,0-0.686,0.072-1,0.184V24c0-5.247-3.253-9.5-8.5-9.5s-8.5,4.253-8.5,9.5v4.684c-0.314-0.112-0.647-0.184-1-0.184
+	c-1.657,0-3,1.343-3,3s1.343,3,3,3c0.353,0,0.686-0.072,1-0.184V36c0,5.247,5,7.5,8.5,7.5s8.5-2.253,8.5-7.5v-1.684
+	c0.314,0.112,0.647,0.184,1,0.184c1.657,0,3-1.343,3-3S35.157,28.5,33.5,28.5z"/>
+<polyline style="fill:none;stroke:#00a000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" points="
+	34.021,37.064 41.5,37.5 40.5,28.5 43.5,22.5 37.5,20.5 38.5,10.5 31.5,11.5 24,4.5 16.5,11.5 9.5,10.5 10.5,20.5 4.5,23.5
+	7.5,28.5 6.5,37.5 13.979,37.064 "/>
+</svg>
