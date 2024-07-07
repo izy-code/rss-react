@@ -37,6 +37,7 @@ module.exports = {
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
     'prettier/prettier': 'error',
+    'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-void': ['error', { allowAsStatement: true }],
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     'no-param-reassign': ['error', { props: false }],
@@ -47,6 +48,7 @@ module.exports = {
     'import/no-absolute-path': 'off',
     'import/extensions': 'off',
     'react/require-default-props': 'off',
+    'react/prefer-stateless-function': 'off',
     curly: ['error', 'all'],
     '@typescript-eslint/no-inferrable-types': 'error',
     '@typescript-eslint/explicit-member-accessibility': [
