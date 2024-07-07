@@ -15,7 +15,7 @@
     "stylelint": "stylelint ./src/**/*.{css,scss} --quiet-deprecation-warnings",
     "stylelint:fix": "stylelint ./src/**/*.{css,scss} --fix --quiet-deprecation-warnings",
     "prepare": "husky",
-    "deploy": "npm run build && npx gh-pages -b netlify-task-1 -d dist"
+    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e class-components -b netlify "
   },
   "browserslist": [
     "last 2 versions",
