@@ -49,6 +49,7 @@ module.exports = {
     'import/extensions': 'off',
     'react/require-default-props': 'off',
     'react/prefer-stateless-function': 'off',
+    'react/button-has-type': 'off',
     curly: ['error', 'all'],
     '@typescript-eslint/no-inferrable-types': 'error',
     '@typescript-eslint/explicit-member-accessibility': [
