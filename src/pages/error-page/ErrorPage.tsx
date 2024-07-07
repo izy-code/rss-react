@@ -2,6 +2,8 @@ import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { Component } from 'react';
 
+import { CustomButton } from '@/components/custom-button/CustomButton';
+
 import styles from './styles.module.scss';
 
 type Props = {
@@ -9,7 +11,7 @@ type Props = {
 };
 
 export class ErrorPage extends Component<Props> {
-  private static handleReload = (): void => {
+  private static handleRefresh = (): void => {
     window.location.reload();
   };
 
@@ -28,9 +30,9 @@ export class ErrorPage extends Component<Props> {
             </>
           )}
           <p className={styles.text}>Please try to refresh the page.</p>
-          <button className={styles.reloadBtn} type="button" onClick={ErrorPage.handleReload}>
+          <CustomButton className={styles.refreshBtn} type="button" onClick={ErrorPage.handleRefresh}>
             Refresh the page
-          </button>
+          </CustomButton>
         </div>
       </main>
     );
