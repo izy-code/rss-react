@@ -17,7 +17,7 @@ type State = {
   lastSearchTime: Date | null;
 };
 
-const LOCAL_STORAGE_KEY = 'searchTerm';
+const LOCAL_STORAGE_KEY = 'izy-search-term-task-1';
 
 export class MainPage extends Component<Props, State> {
   constructor(props: Props) {
