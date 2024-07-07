@@ -65,12 +65,12 @@ export class CardList extends Component<Props, State> {
     const { cards } = this.state;
     const { isLoading } = this.props;
 
-    if (cards.length === 0) {
-      return <div className={styles.noResults}>No characters found</div>;
-    }
-
     if (isLoading) {
       return <Loader />;
+    }
+
+    if (cards.length === 0) {
+      return <div className={styles.noResults}>No characters found</div>;
     }
 
     return (
