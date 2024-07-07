@@ -1,5 +1,5 @@
 import type { FormEvent, ReactNode } from 'react';
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './styles.module.scss';
@@ -15,6 +15,20 @@ type State = {
 };
 
 export class SearchForm extends Component<Props, State> {
+  private inputRef = createRef<HTMLInputElement>();
+
+  public componentDidMount(): void {
+    this.inputRef.current?.focus();
+  }
+
+  public componentDidUpdate(prevProps: Props): void {
+    const { isLoading } = this.props;
+
+    if (prevProps.isLoading && !isLoading) {
+      this.inputRef.current?.focus();
+    }
+  }
+
   private handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
@@ -32,6 +46,7 @@ export class SearchForm extends Component<Props, State> {
     return (
       <form className={styles.form} onSubmit={this.handleSubmit}>
         <input
+          ref={this.inputRef}
           className={styles.input}
           type="search"
           placeholder="Enter character name…"
