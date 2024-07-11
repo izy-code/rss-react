@@ -10,11 +10,7 @@ type Props = {
   isLoading: boolean;
 };
 
-type State = {
-  searchTerm: string;
-};
-
-export class SearchForm extends Component<Props, State> {
+export class SearchForm extends Component<Props> {
   private inputRef = createRef<HTMLInputElement>();
 
   public componentDidMount(): void {
