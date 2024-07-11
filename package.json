@@ -11,11 +11,13 @@
     "lint": "eslint ./src --ext ts,tsx --report-unused-disable-directives",
     "lint:fix": "eslint ./src --ext ts,tsx --report-unused-disable-directives --fix",
     "format": "prettier --check .",
-    "format:fix": "prettier --write .",
+    "format:fix": "prettier --write -l .",
     "stylelint": "stylelint ./src/**/*.{css,scss} --quiet-deprecation-warnings",
     "stylelint:fix": "stylelint ./src/**/*.{css,scss} --fix --quiet-deprecation-warnings",
+    "tsc": "tsc --noEmit --project ./tsconfig.json",
+    "tsc:watch": "tsc --noEmit --project --watch ./tsconfig.json",
     "prepare": "husky",
-    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e class-components -b netlify "
+    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e class-components -b netlify"
   },
   "browserslist": [
     "last 2 versions",
