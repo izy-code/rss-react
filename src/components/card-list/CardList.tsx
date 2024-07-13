@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 
 import { fetchCharacters } from '@/api/api';
 import type { Character } from '@/api/types';
@@ -8,77 +8,51 @@ import { Loader } from '@/components/loader/Loader';
 
 import styles from './styles.module.scss';
 
-type Props = {
+interface Props {
   searchTerm: string;
   onLoadingStateChange: (isLoading: boolean) => void;
   lastSearchTime: Date | null;
   isLoading: boolean;
-};
+}
 
-type State = {
-  cards: Character[];
-};
+export function CardList({ searchTerm, onLoadingStateChange, lastSearchTime, isLoading }: Props): ReactNode {
+  const [cards, setCards] = useState<Character[]>([]);
 
-export class CardList extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      cards: [],
-    };
-  }
+  useEffect(() => {
+    const updateCards = async (): Promise<void> => {
+      onLoadingStateChange(true);
 
-  public componentDidMount(): void {
-    const { searchTerm } = this.props;
+      try {
+        const data = await fetchCharacters(searchTerm);
 
-    void this.updateCards(searchTerm);
-  }
-
-  public componentDidUpdate(prevProps: Props): void {
-    const { lastSearchTime, searchTerm } = this.props;
-
-    if (prevProps.lastSearchTime !== lastSearchTime) {
-      void this.updateCards(searchTerm);
-    }
-  }
-
-  private updateCards = async (searchTerm: string): Promise<void> => {
-    const { onLoadingStateChange } = this.props;
-
-    onLoadingStateChange(true);
-
-    try {
-      const data = await fetchCharacters(searchTerm);
-
-      if (data) {
-        this.setState({ cards: data.results });
-      } else {
-        this.setState({ cards: [] });
+        if (data) {
+          setCards(data.results);
+        } else {
+          setCards([]);
+        }
+      } catch (error) {
+        console.error('Error fetching characters:', error);
+      } finally {
+        onLoadingStateChange(false);
       }
-    } catch (error) {
-      console.error('Error fetching characters:', error);
-    } finally {
-      onLoadingStateChange(false);
-    }
-  };
+    };
 
-  public render(): ReactNode {
-    const { cards } = this.state;
-    const { isLoading } = this.props;
+    void updateCards();
+  }, [lastSearchTime, searchTerm, onLoadingStateChange]);
 
-    if (isLoading) {
-      return <Loader />;
-    }
-
-    if (cards.length === 0) {
-      return <div className={styles.noResults}>No characters found</div>;
-    }
-
-    return (
-      <ul className={styles.list}>
-        {cards.map((card) => (
-          <Card key={card.id} character={card} />
-        ))}
-      </ul>
-    );
+  if (isLoading) {
+    return <Loader />;
   }
+
+  if (cards.length === 0) {
+    return <div className={styles.noResults}>No characters found</div>;
+  }
+
+  return (
+    <ul className={styles.list}>
+      {cards.map((card) => (
+        <Card key={card.id} character={card} />
+      ))}
+    </ul>
+  );
 }

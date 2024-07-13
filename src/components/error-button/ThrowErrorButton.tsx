@@ -1,37 +1,22 @@
 import type { ReactNode } from 'react';
-import { Component } from 'react';
+import { useState } from 'react';
 
 import { CustomButton } from '../custom-button/CustomButton';
 
-type Props = Record<string, never>;
+export function ThrowErrorButton(): ReactNode {
+  const [shouldThrowError, setShouldThrowError] = useState(false);
 
-type State = {
-  shouldThrowError: boolean;
-};
+  const handleClick = (): void => {
+    setShouldThrowError(true);
+  };
 
-export class ThrowErrorButton extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      shouldThrowError: false,
-    };
+  if (shouldThrowError) {
+    throw new Error('Error throwing button was clicked');
   }
 
-  private handleClick(): void {
-    this.setState({ shouldThrowError: true });
-  }
-
-  public render(): ReactNode {
-    const { shouldThrowError } = this.state;
-
-    if (shouldThrowError) {
-      throw new Error('Error throwing button was clicked');
-    }
-
-    return (
-      <CustomButton type="button" variant="cancel" onClick={() => this.handleClick()}>
-        Throw error
-      </CustomButton>
-    );
-  }
+  return (
+    <CustomButton type="button" variant="cancel" onClick={handleClick}>
+      Throw error
+    </CustomButton>
+  );
 }
