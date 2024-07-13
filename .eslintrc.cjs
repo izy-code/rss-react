@@ -51,6 +51,9 @@ module.exports = {
     'react/prefer-stateless-function': 'off',
     'react/button-has-type': 'off',
     curly: ['error', 'all'],
+    "react/jsx-props-no-spreading": ['error', {
+      "html": "ignore"
+    }],
     '@typescript-eslint/no-inferrable-types': 'error',
     '@typescript-eslint/explicit-member-accessibility': [
       'error',

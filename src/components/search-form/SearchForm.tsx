@@ -51,7 +51,7 @@ export class SearchForm extends Component<Props> {
           disabled={isLoading}
           autoComplete="off"
         />
-        <CustomButton type="submit" variant="secondary" isDisabled={isLoading}>
+        <CustomButton type="submit" variant="secondary" disabled={isLoading}>
           Search
         </CustomButton>
       </form>
