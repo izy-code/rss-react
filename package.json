@@ -17,7 +17,7 @@
     "tsc": "tsc --noEmit --project ./tsconfig.json",
     "tsc:watch": "tsc --noEmit --project --watch ./tsconfig.json",
     "prepare": "husky",
-    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e class-components -b netlify"
+    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e hooks-and-routing -b netlify"
   },
   "browserslist": [
     "last 2 versions",
