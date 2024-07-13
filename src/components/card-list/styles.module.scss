@@ -1,0 +1,21 @@
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  justify-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.noResults {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 30px;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  background-color: var(--color-bg-container);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 4px rgb(0 0 0 / 20%),;
+}

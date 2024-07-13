@@ -1,0 +1,23 @@
+.loaderContainer {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.loader {
+  width: 80px;
+  margin: auto;
+  border: 14px solid var(--color-primary);
+  border-right-color: var(--color-second);
+  border-radius: 50%;
+  animation: l2 1s infinite linear;
+  aspect-ratio: 1;
+}
+
+@keyframes l2 {
+  to {
+    transform: rotate(1turn);
+  }
+}
