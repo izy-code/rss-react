@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { Component } from 'react';
 
@@ -29,7 +29,7 @@ export class CustomButton extends Component<Props> {
 
     return (
       <button
-        className={classNames(styles.button, optionClass, className)}
+        className={clsx(styles.button, optionClass, className)}
         type={type}
         onClick={onClick}
         disabled={isDisabled}

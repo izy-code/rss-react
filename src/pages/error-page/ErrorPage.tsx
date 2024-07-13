@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { Component } from 'react';
 
@@ -19,7 +18,7 @@ export class ErrorPage extends Component<Props> {
     const { errorMessage } = this.props;
 
     return (
-      <main className={classNames('main', styles.main)}>
+      <main className={styles.main}>
         <div className={styles.container}>
           <h1 className={styles.header}>Oops!</h1>
           <p className={styles.text}>Sorry, an unexpected error has occurred.</p>
