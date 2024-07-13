@@ -30,9 +30,8 @@ export class SearchForm extends Component<Props> {
 
     if (event.target instanceof HTMLFormElement) {
       const { onSearch } = this.props;
-      const formData = new FormData(event.target);
 
-      onSearch(formData.get('search')?.toString().trim() || '');
+      onSearch(this.inputRef.current?.value.trim() ?? '');
     }
   };
 
@@ -47,7 +46,6 @@ export class SearchForm extends Component<Props> {
           type="search"
           placeholder="Enter character name…"
           defaultValue={initialTerm}
-          name="search"
           disabled={isLoading}
           autoComplete="off"
         />
