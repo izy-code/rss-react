@@ -1,0 +1,62 @@
+.container {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(340px, 100%);
+  margin: auto;
+  padding: 20px;
+  text-decoration: none;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-container);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 4px rgb(0 0 0 / 20%),;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s ease;
+}
+
+.button {
+  width: min(340px, 100%);
+  margin: 0 auto;
+  padding-block: 10px;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.propsContainer {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.prop {
+  margin: 0;
+}
+
+.param {
+  font-weight: 700;
+}
+
+.message {
+  width: fit-content;
+  margin: auto;
+  padding: 30px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text-dark);
+  background-color: var(--color-bg-container);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 4px rgb(0 0 0 / 20%),;
+}
