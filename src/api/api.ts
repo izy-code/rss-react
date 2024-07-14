@@ -1,13 +1,13 @@
 import type { ApiResponse } from './types';
 
 const BASE_URL = 'https://rickandmortyapi.com/api/character';
-const DEFAULT_PAGE = 1;
+export const DEFAULT_PAGE = 1;
 
 export const fetchCharacters = async (
   searchTerm: string,
   controller: AbortController,
   page = DEFAULT_PAGE,
-): Promise<ApiResponse | null> => {
+): Promise<ApiResponse> => {
   const params = new URLSearchParams({
     page: page.toString(),
   });
@@ -18,15 +18,22 @@ export const fetchCharacters = async (
 
   const url = `${BASE_URL}/?${params.toString()}`;
 
-  const response = await fetch(url, { signal: controller?.signal });
+  try {
+    const response = await fetch(url, { signal: controller?.signal });
 
-  if (!response.ok) {
-    if (response.status === 404) {
+    if (!response.ok) {
+      if (response.status === 404) {
+        return { results: [] };
+      }
+      throw new Error('Network response was not ok');
+    }
+
+    return (await response.json()) as ApiResponse;
+  } catch (error) {
+    if (controller?.signal.aborted) {
       return null;
     }
 
-    throw new Error('Network response was not ok');
+    throw error;
   }
-
-  return response.json() as Promise<ApiResponse | null>;
 };

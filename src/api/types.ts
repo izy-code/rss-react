@@ -27,6 +27,6 @@ export type Character = {
 };
 
 export type ApiResponse = {
-  info: Info;
+  info?: Info;
   results: Character[];
 } | null;
