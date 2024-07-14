@@ -1,12 +1,13 @@
 .card {
   display: flex;
+  width: min(300px, 100%);
 }
 
 .link {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: min(300px, 100%);
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
   text-decoration: none;
@@ -24,47 +25,9 @@
   transform: scale(1.03);
 }
 
-.placeholder {
-  display: grid;
-  place-items: center;
-}
-
-.loader {
-  grid-area: 1 / 1 / 1 / 1;
-  width: 100%;
-  aspect-ratio: 1;
-}
-
-.image {
-  grid-area: 1 / 1 / 1 / 1;
-  object-fit: cover;
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-}
-
-.hidden {
-  display: none;
-}
-
 .title {
   margin: 0;
   font-size: 22px;
   font-weight: 700;
   text-align: center;
-}
-
-.propsContainer {
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.prop {
-  margin: 0;
-}
-
-.param {
-  font-weight: 700;
 }
