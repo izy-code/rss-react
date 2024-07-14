@@ -1,7 +1,12 @@
 import type { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 
-import { MainPage } from '@/pages/main-page/MainPage';
+import { ErrorBoundary } from './components/error-boundary/ErrorBoundary';
 
 export function App(): ReactNode {
-  return <MainPage />;
+  return (
+    <ErrorBoundary>
+      <Outlet />
+    </ErrorBoundary>
+  );
 }
