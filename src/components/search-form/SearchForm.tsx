@@ -47,7 +47,7 @@ export function SearchForm({ onSearch, initialTerm, isLoading }: Props): ReactNo
       searchParams.delete(SearchParams.PAGE);
       setSearchParams(searchParams);
     } else {
-      searchParams.delete(SearchParams.NAME, searchTerm);
+      searchParams.delete(SearchParams.NAME);
       searchParams.delete(SearchParams.PAGE);
       setSearchParams(searchParams);
     }
