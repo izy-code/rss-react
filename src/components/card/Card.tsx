@@ -3,6 +3,7 @@ import { type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 import type { Character } from '@/api/types';
+import { SearchParams } from '@/common/enums';
 
 import { ImageLoader } from '../image-loader/ImageLoader';
 import styles from './Card.module.scss';
@@ -18,7 +19,7 @@ export function Card({ character }: Props): ReactNode {
 
   updatedSearchParams.delete('details');
 
-  const linkPath = `?${updatedSearchParams.toString()}&details=${character.id}`;
+  const linkPath = `?${updatedSearchParams.toString()}&${SearchParams.DETAILS}=${character.id}`;
 
   const isActive = searchParams.get('details') === String(character.id);
 
