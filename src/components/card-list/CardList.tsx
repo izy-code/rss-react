@@ -17,13 +17,18 @@ interface Props {
 
 export function CardList({ searchTerm, onLoadingStateChange, lastSearchTime, isLoading }: Props): ReactNode {
   const [cards, setCards] = useState<Character[]>([]);
+  const [fetchError, setFetchError] = useState<boolean>(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const updateCards = async (): Promise<void> => {
       onLoadingStateChange(true);
 
       try {
-        const data = await fetchCharacters(searchTerm);
+        const data = await fetchCharacters(searchTerm, controller);
+
+        setFetchError(false);
 
         if (data) {
           setCards(data.results);
@@ -31,14 +36,22 @@ export function CardList({ searchTerm, onLoadingStateChange, lastSearchTime, isL
           setCards([]);
         }
       } catch (error) {
-        console.error('Error fetching characters:', error);
+        setFetchError(true);
       } finally {
         onLoadingStateChange(false);
       }
     };
 
     void updateCards();
+
+    return (): void => {
+      controller.abort();
+    };
   }, [lastSearchTime, searchTerm, onLoadingStateChange]);
+
+  if (fetchError) {
+    return <div className={styles.noResults}>Network connection problem</div>;
+  }
 
   if (isLoading) {
     return <Loader />;
