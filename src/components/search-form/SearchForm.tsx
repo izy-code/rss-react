@@ -1,5 +1,8 @@
 import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+import { SearchParams } from '@/common/enums';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './styles.module.scss';
@@ -11,6 +14,7 @@ interface Props {
 }
 
 export function SearchForm({ onSearch, initialTerm, isLoading }: Props): ReactNode {
+  const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -19,10 +23,30 @@ export function SearchForm({ onSearch, initialTerm, isLoading }: Props): ReactNo
     }
   }, [isLoading]);
 
+  useEffect(() => {
+    const search = searchParams.get(SearchParams.NAME) ?? '';
+
+    if (inputRef.current) {
+      inputRef.current.value = search;
+    }
+  }, [searchParams]);
+
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
-    onSearch(inputRef.current?.value.trim() ?? '');
+    const searchTerm = inputRef.current?.value.trim() ?? '';
+
+    onSearch(searchTerm);
+
+    if (searchTerm) {
+      setSearchParams((prev) => ({ ...prev, [SearchParams.NAME]: searchTerm }));
+    } else {
+      setSearchParams((prev) => {
+        prev.delete(SearchParams.NAME);
+
+        return prev;
+      });
+    }
   }
 
   return (
