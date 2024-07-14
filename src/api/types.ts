@@ -6,7 +6,7 @@ export type Info = {
 };
 
 export type Character = {
-  id: number;
+  id: number | null;
   name: string;
   status: string;
   species: string;
