@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
 
-import styles from './styles.module.scss';
+import styles from './Loader.module.scss';
 
 export function Loader({ className }: { className?: string }): ReactNode {
   return (

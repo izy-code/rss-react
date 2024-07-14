@@ -8,7 +8,7 @@ import { Header } from '@/components/header/Header';
 import { SearchForm } from '@/components/search-form/SearchForm';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
-import styles from './styles.module.scss';
+import styles from './MainPage.module.scss';
 
 export function MainPage(): ReactNode {
   const [storedValue, setStoredValue] = useLocalStorage();

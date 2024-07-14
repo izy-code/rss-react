@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchParams } from '@/common/enums';
 
 import { CustomButton } from '../custom-button/CustomButton';
-import styles from './styles.module.scss';
+import styles from './SearchForm.module.scss';
 
 interface Props {
   onSearch: (term: string) => void;

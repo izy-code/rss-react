@@ -6,7 +6,7 @@ import type { Character } from '@/api/types';
 import { Card } from '@/components/card/Card';
 import { Loader } from '@/components/loader/Loader';
 
-import styles from './styles.module.scss';
+import styles from './CardList.module.scss';
 
 interface Props {
   searchTerm: string;

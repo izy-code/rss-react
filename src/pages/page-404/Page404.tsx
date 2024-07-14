@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { CustomButton } from '@/components/custom-button/CustomButton';
 
-import styles from './styles.module.scss';
+import styles from './Page404.module.scss';
 
 export function Page404(): ReactNode {
   const navigate = useNavigate();

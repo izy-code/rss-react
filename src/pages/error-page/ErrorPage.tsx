@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import { CustomButton } from '@/components/custom-button/CustomButton';
 
-import styles from './styles.module.scss';
+import styles from './ErrorPage.module.scss';
 
 interface Props {
   errorMessage: string;

@@ -5,7 +5,7 @@ import type { Character } from '@/api/types';
 import placeholder from '@/assets/images/placeholder.jpeg';
 
 import { Loader } from '../loader/Loader';
-import styles from './styles.module.scss';
+import styles from './Card.module.scss';
 
 interface Props {
   character: Character;
