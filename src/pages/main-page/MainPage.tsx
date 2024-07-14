@@ -16,11 +16,14 @@ export function MainPage(): ReactNode {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [lastSearchTime, setLastSearchTime] = useState<Date | null>(null);
 
-  const handleSearch = (term: string): void => {
-    setStoredValue(term);
-    setSearchTerm(term);
-    setLastSearchTime(new Date());
-  };
+  const handleSearch = useCallback(
+    (term: string): void => {
+      setStoredValue(term);
+      setSearchTerm(term);
+      setLastSearchTime(new Date());
+    },
+    [setStoredValue],
+  );
 
   const handleLoadingState = useCallback((loading: boolean): void => {
     setIsLoading(loading);

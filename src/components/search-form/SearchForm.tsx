@@ -29,7 +29,11 @@ export function SearchForm({ onSearch, initialTerm, isLoading }: Props): ReactNo
     if (inputRef.current) {
       inputRef.current.value = search;
     }
-  }, [searchParams]);
+
+    if (initialTerm !== search) {
+      onSearch(search);
+    }
+  }, [searchParams, onSearch, initialTerm]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -39,13 +43,13 @@ export function SearchForm({ onSearch, initialTerm, isLoading }: Props): ReactNo
     onSearch(searchTerm);
 
     if (searchTerm) {
-      setSearchParams((prev) => ({ ...prev, [SearchParams.NAME]: searchTerm }));
+      searchParams.set(SearchParams.NAME, searchTerm);
+      searchParams.delete(SearchParams.PAGE);
+      setSearchParams(searchParams);
     } else {
-      setSearchParams((prev) => {
-        prev.delete(SearchParams.NAME);
-
-        return prev;
-      });
+      searchParams.delete(SearchParams.NAME, searchTerm);
+      searchParams.delete(SearchParams.PAGE);
+      setSearchParams(searchParams);
     }
   }
 
