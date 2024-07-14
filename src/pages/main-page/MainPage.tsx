@@ -1,23 +1,23 @@
 import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import { CardList } from '@/components/card-list/CardList';
 import { ThrowErrorButton } from '@/components/error-button/ThrowErrorButton';
 import { Header } from '@/components/header/Header';
-import { Main } from '@/components/main/Main';
 import { SearchForm } from '@/components/search-form/SearchForm';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 import styles from './styles.module.scss';
 
-const LOCAL_STORAGE_KEY = 'izy-search-term-task-1';
-
 export function MainPage(): ReactNode {
-  const [searchTerm, setSearchTerm] = useState<string>(localStorage.getItem(LOCAL_STORAGE_KEY) || '');
+  const [storedValue, setStoredValue] = useLocalStorage();
+  const [searchTerm, setSearchTerm] = useState<string>(storedValue);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [lastSearchTime, setLastSearchTime] = useState<Date | null>(null);
 
   const handleSearch = (term: string): void => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, term);
+    setStoredValue(term);
     setSearchTerm(term);
     setLastSearchTime(new Date());
   };
@@ -32,14 +32,19 @@ export function MainPage(): ReactNode {
         <SearchForm onSearch={handleSearch} initialTerm={searchTerm} isLoading={isLoading} />
         <ThrowErrorButton />
       </Header>
-      <Main>
-        <CardList
-          searchTerm={searchTerm}
-          onLoadingStateChange={handleLoadingState}
-          lastSearchTime={lastSearchTime}
-          isLoading={isLoading}
-        />
-      </Main>
+      <main className={styles.main}>
+        <section className={styles.listSection}>
+          <CardList
+            searchTerm={searchTerm}
+            onLoadingStateChange={handleLoadingState}
+            lastSearchTime={lastSearchTime}
+            isLoading={isLoading}
+          />
+        </section>
+        <section className={styles.detailsSection}>
+          <Outlet />
+        </section>
+      </main>
     </div>
   );
 }
