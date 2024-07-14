@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { DEFAULT_PAGE, fetchCharacters } from '@/api/api';
@@ -23,6 +23,7 @@ export function CardList({ searchTerm, onLoadingStateChange, lastSearchTime, isL
   const [cards, setCards] = useState<Character[] | null>(null);
   const [pageInfo, setPageInfo] = useState<Info | null>(null);
   const [isFetchError, setIsFetchError] = useState<boolean>(false);
+  const listRef = useRef(null);
 
   const currentPage = Number(searchParams.get('page'));
 
@@ -74,6 +75,13 @@ export function CardList({ searchTerm, onLoadingStateChange, lastSearchTime, isL
     [setSearchParams, searchParams],
   );
 
+  const handleListClick = (evt: React.MouseEvent): void => {
+    if (evt.target === listRef.current) {
+      searchParams.delete(SearchParams.DETAILS);
+      setSearchParams(searchParams);
+    }
+  };
+
   if (isFetchError) {
     return <div className={styles.message}>Network connection problem</div>;
   }
@@ -89,7 +97,7 @@ export function CardList({ searchTerm, onLoadingStateChange, lastSearchTime, isL
   return (
     <>
       <Pagination pageInfo={pageInfo!} currentPage={currentPage} onPageChange={handlePageChange} />
-      <ul className={styles.list}>
+      <ul className={styles.list} ref={listRef} onClick={handleListClick}>
         {cards.map((card) => (
           <Card key={card.id} character={card} />
         ))}
