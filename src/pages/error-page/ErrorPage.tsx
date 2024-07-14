@@ -1,14 +1,30 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
+import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 
 import { CustomButton } from '@/components/custom-button/CustomButton';
 
 import styles from './ErrorPage.module.scss';
 
 interface Props {
-  errorMessage: string;
+  errorBoundaryMessage: string | null;
 }
 
-export function ErrorPage({ errorMessage }: Props): ReactNode {
+export function ErrorPage({ errorBoundaryMessage }: Props): ReactNode {
+  const routeError = useRouteError();
+  const [errorMessage, setErrorMessage] = useState<string | null>(errorBoundaryMessage);
+
+  useEffect(() => {
+    if (routeError) {
+      if (isRouteErrorResponse(routeError)) {
+        setErrorMessage(routeError.statusText);
+      } else if (routeError instanceof Error) {
+        setErrorMessage(routeError.message);
+      } else {
+        setErrorMessage(null);
+      }
+    }
+  }, [routeError]);
+
   const handleRefresh = (): void => {
     window.location.reload();
   };

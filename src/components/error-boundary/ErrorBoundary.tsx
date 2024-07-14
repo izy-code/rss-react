@@ -40,7 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
     const { children } = this.props;
 
     if (hasError) {
-      return <ErrorPage errorMessage={errorMessage} />;
+      return <ErrorPage errorBoundaryMessage={errorMessage} />;
     }
 
     return children;
