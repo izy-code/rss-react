@@ -1,12 +1,27 @@
 .card {
   display: flex;
+}
+
+.link {
+  display: flex;
   flex-direction: column;
   gap: 10px;
   width: min(300px, 100%);
+  margin: 0 auto;
   padding: 20px;
+  text-decoration: none;
+  color: var(--color-text-primary);
   background-color: var(--color-bg-container);
   border-radius: 10px;
   box-shadow: 0 0 10px 4px rgb(0 0 0 / 20%),;
+  cursor: pointer;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s ease;
+}
+
+.active {
+  background-color: var(--color-primary);
+  cursor: initial;
+  transform: scale(1.03);
 }
 
 .placeholder {
