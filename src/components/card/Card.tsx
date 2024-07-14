@@ -1,7 +1,10 @@
-import type { ReactNode } from 'react';
+import clsx from 'clsx';
+import { type ReactNode, useState } from 'react';
 
 import type { Character } from '@/api/types';
+import placeholder from '@/assets/images/placeholder.jpeg';
 
+import { Loader } from '../loader/Loader';
 import styles from './styles.module.scss';
 
 interface Props {
@@ -9,9 +12,26 @@ interface Props {
 }
 
 export function Card({ character }: Props): ReactNode {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleImageLoad = (): void => {
+    setIsLoading(false);
+  };
+
   return (
     <li className={styles.card}>
-      <img className={styles.image} src={character.image} alt={character.name} />
+      {isLoading && (
+        <div className={styles.placeholder}>
+          <img className={styles.image} src={placeholder} alt="Placeholder" />
+          <Loader className={styles.loader} />
+        </div>
+      )}
+      <img
+        className={clsx(styles.image, isLoading ? styles.hidden : '')}
+        src={character.image}
+        alt={character.name}
+        onLoad={handleImageLoad}
+      />
       <h2 className={styles.title}>{character.name}</h2>
       <div className={styles.propsContainer}>
         <p className={styles.prop}>
