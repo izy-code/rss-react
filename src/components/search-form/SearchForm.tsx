@@ -9,41 +9,41 @@ import styles from './SearchForm.module.scss';
 
 interface Props {
   onSearch: (term: string) => void;
-  initialTerm: string;
-  isLoading: boolean;
+  initialSearchTerm: string;
+  isDisabled: boolean;
 }
 
-export function SearchForm({ onSearch, initialTerm, isLoading }: Props): ReactNode {
+export function SearchForm({ onSearch, initialSearchTerm, isDisabled }: Props): ReactNode {
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isDisabled) {
       inputRef.current?.focus();
     }
-  }, [isLoading]);
+  }, [isDisabled]);
 
   useEffect(() => {
-    const search = searchParams.get(SearchParams.NAME) ?? '';
+    const urlSearchTerm = searchParams.get(SearchParams.NAME) ?? '';
 
     if (inputRef.current) {
-      inputRef.current.value = search;
+      inputRef.current.value = urlSearchTerm;
     }
 
-    if (initialTerm !== search) {
-      onSearch(search);
+    if (initialSearchTerm !== urlSearchTerm) {
+      onSearch(urlSearchTerm);
     }
-  }, [searchParams, onSearch, initialTerm]);
+  }, [searchParams, onSearch, initialSearchTerm]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
-    const searchTerm = inputRef.current?.value.trim() ?? '';
+    const inputSearchTerm = inputRef.current?.value.trim() ?? '';
 
-    onSearch(searchTerm);
+    onSearch(inputSearchTerm);
 
-    if (searchTerm) {
-      searchParams.set(SearchParams.NAME, searchTerm);
+    if (inputSearchTerm) {
+      searchParams.set(SearchParams.NAME, inputSearchTerm);
       searchParams.delete(SearchParams.PAGE);
       setSearchParams(searchParams);
     } else {
@@ -60,11 +60,11 @@ export function SearchForm({ onSearch, initialTerm, isLoading }: Props): ReactNo
         className={styles.input}
         type="search"
         placeholder="Enter character name…"
-        defaultValue={initialTerm}
-        disabled={isLoading}
+        defaultValue={initialSearchTerm}
+        disabled={isDisabled}
         autoComplete="off"
       />
-      <CustomButton type="submit" variant="secondary" disabled={isLoading}>
+      <CustomButton type="submit" variant="secondary" disabled={isDisabled}>
         Search
       </CustomButton>
     </form>

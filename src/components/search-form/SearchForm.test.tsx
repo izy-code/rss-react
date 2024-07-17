@@ -16,10 +16,10 @@ describe('SearchForm Component', () => {
       <MemoryRouter>
         <SearchForm
           onSearch={(term) => {
-            localStorage.setItem('izy-search-term-task-2', term);
+            localStorage.setItem('LS_KEY', term);
           }}
-          initialTerm=""
-          isLoading={false}
+          initialSearchTerm=""
+          isDisabled={false}
         />
       </MemoryRouter>,
     );
@@ -31,6 +31,6 @@ describe('SearchForm Component', () => {
     fireEvent.change(searchInput, { target: { value: newSearchTerm } });
     fireEvent.click(searchButton);
 
-    expect(localStorage.getItem('izy-search-term-task-2')).toBe(newSearchTerm);
+    expect(localStorage.getItem('LS_KEY')).toBe(newSearchTerm);
   });
 });
