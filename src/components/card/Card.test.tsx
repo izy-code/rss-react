@@ -30,11 +30,26 @@ function TestComponent(): ReactNode {
 }
 
 describe('Card Component', () => {
-  const mockCharacter = {
+  const mockCharacter: CharacterData = {
     id: 1,
     name: 'Rick Sanchez',
-    image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-  } as CharacterData;
+    status: 'Alive',
+    species: 'Human',
+    gender: 'Male',
+    episode: ['1', '2', '3'],
+    origin: {
+      name: '',
+      url: '',
+    },
+    image: '',
+    created: '',
+    url: '',
+    location: {
+      name: '',
+      url: '',
+    },
+    type: '',
+  };
 
   it('renders the relevant card data', (): void => {
     render(
