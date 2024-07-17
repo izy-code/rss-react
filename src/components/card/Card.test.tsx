@@ -2,11 +2,12 @@ import '@testing-library/jest-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fetchCharacterById } from '@/api/api';
-import type { Character } from '@/api/types';
+import type { CharacterData } from '@/api/types';
+import { SearchParams } from '@/common/enums';
 
 import { Details } from '../details/Details';
 import { Card } from './Card';
@@ -21,21 +22,19 @@ vi.mock('../image-loader/ImageLoader', () => ({
   ),
 }));
 
+function TestComponent(): ReactNode {
+  const location = useLocation();
+  const detailsID = new URLSearchParams(location.search).get(SearchParams.DETAILS);
+
+  return <span>URL details ID search parameter: {detailsID}</span>;
+}
+
 describe('Card Component', () => {
-  const mockCharacter: Character = {
+  const mockCharacter = {
     id: 1,
     name: 'Rick Sanchez',
     image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-    species: 'Human',
-    status: 'Alive',
-    gender: 'Male',
-    episode: [],
-    origin: { name: 'Earth (C-137)', url: '' },
-    location: { name: 'Earth (Replacement Dimension)', url: '' },
-    type: '',
-    url: '',
-    created: '',
-  };
+  } as CharacterData;
 
   it('renders the relevant card data', (): void => {
     render(
@@ -52,6 +51,7 @@ describe('Card Component', () => {
     const { container } = render(
       <MemoryRouter>
         <Card character={mockCharacter} />
+        <TestComponent />
       </MemoryRouter>,
     );
 
@@ -60,14 +60,16 @@ describe('Card Component', () => {
 
     if (linkElement) {
       fireEvent.click(linkElement);
-      const searchParams = new URLSearchParams(linkElement.getAttribute('href')!);
-      expect(searchParams.get('details')).toBe(String(mockCharacter.id));
+      expect(screen.getByText(`URL details ID search parameter: ${mockCharacter.id}`)).toBeInTheDocument();
     }
   });
 
   it('triggers an additional API call to fetch detailed information when clicked', async (): Promise<void> => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
-    fetchCharacterByIdMock.mockResolvedValue(mockCharacter);
+    fetchCharacterByIdMock.mockResolvedValue({
+      status: 'success',
+      data: mockCharacter,
+    });
 
     render(
       <MemoryRouter initialEntries={[`/?details=${mockCharacter.id}`]}>
@@ -89,7 +91,7 @@ describe('Card Component', () => {
     if (linkElement) {
       fireEvent.click(linkElement);
       await waitFor(() =>
-        expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id, expect.any(AbortController)),
+        expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
       );
     }
   });

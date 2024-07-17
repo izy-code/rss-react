@@ -2,30 +2,32 @@ import clsx from 'clsx';
 import { type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
-import type { Character } from '@/api/types';
+import type { CharacterData } from '@/api/types';
 import { SearchParams } from '@/common/enums';
 
 import { ImageLoader } from '../image-loader/ImageLoader';
 import styles from './Card.module.scss';
 
 interface Props {
-  character: Character;
+  character: CharacterData;
 }
 
 export function Card({ character }: Props): ReactNode {
   const [searchParams] = useSearchParams();
 
-  const updatedSearchParams = new URLSearchParams(searchParams);
+  const isActive = searchParams.get(SearchParams.DETAILS) === character.id.toString();
 
-  updatedSearchParams.delete('details');
+  const getLinkPath = (): string => {
+    const updatedSearchParams = new URLSearchParams(searchParams);
 
-  const linkPath = `?${updatedSearchParams.toString()}&${SearchParams.DETAILS}=${character.id}`;
+    updatedSearchParams.set(SearchParams.DETAILS, character.id.toString());
 
-  const isActive = searchParams.get('details') === String(character.id);
+    return `?${updatedSearchParams.toString()}`;
+  };
 
   return (
     <li className={styles.card}>
-      <Link className={clsx(isActive ? styles.active : '', styles.link)} to={linkPath}>
+      <Link className={clsx(isActive ? styles.active : '', styles.link)} to={getLinkPath()}>
         <ImageLoader imageSrc={character.image} imageAlt={character.name} />
         <h2 className={styles.title}>{character.name}</h2>
       </Link>
