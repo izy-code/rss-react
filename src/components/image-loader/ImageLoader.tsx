@@ -9,9 +9,10 @@ import styles from './ImageLoader.module.scss';
 interface Props {
   imageSrc: string;
   imageAlt: string;
+  secondaryColor?: boolean;
 }
 
-export function ImageLoader({ imageSrc, imageAlt }: Props): ReactNode {
+export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Props): ReactNode {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleImageLoad = (): void => {
@@ -23,7 +24,7 @@ export function ImageLoader({ imageSrc, imageAlt }: Props): ReactNode {
       {isLoading && (
         <div className={styles.placeholder}>
           <img className={styles.image} src={placeholder} alt="Placeholder" />
-          <Loader className={styles.loader} />
+          <Loader className={styles.loader} secondaryColor={secondaryColor} />
         </div>
       )}
       <img
