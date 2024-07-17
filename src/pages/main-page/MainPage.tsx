@@ -12,14 +12,14 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import styles from './MainPage.module.scss';
 
 export function MainPage(): ReactNode {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [storedValue, setStoredValue] = useLocalStorage();
   const [searchTerm, setSearchTerm] = useState<string>(storedValue);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCardListLoading, setIsCardListLoading] = useState<boolean>(false);
   const [lastSearchTime, setLastSearchTime] = useState<Date | null>(null);
-  const sectionRef = useRef(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const detailsParam = searchParams.get(SearchParams.DETAILS);
+  const sectionRef = useRef(null);
+  const mainRef = useRef(null);
 
   const handleSearch = useCallback(
     (term: string): void => {
@@ -30,33 +30,31 @@ export function MainPage(): ReactNode {
     [setStoredValue],
   );
 
-  const handleLoadingState = useCallback((loading: boolean): void => {
-    setIsLoading(loading);
-  }, []);
-
-  const handleListSectionClick = (evt: React.MouseEvent): void => {
-    if (evt.target === sectionRef.current) {
+  const handleMainClick = (evt: React.MouseEvent): void => {
+    if (evt.target === sectionRef.current || evt.target === mainRef.current) {
       searchParams.delete(SearchParams.DETAILS);
       setSearchParams(searchParams);
     }
   };
 
+  const isDetailsSectionShown = Boolean(searchParams.get(SearchParams.DETAILS));
+
   return (
     <div className={styles.page}>
       <Header>
-        <SearchForm onSearch={handleSearch} initialTerm={searchTerm} isLoading={isLoading} />
+        <SearchForm initialSearchTerm={searchTerm} onSearch={handleSearch} isDisabled={isCardListLoading} />
         <ThrowErrorButton />
       </Header>
-      <main className={styles.main}>
-        <section className={styles.listSection} onClick={handleListSectionClick} ref={sectionRef}>
+      <main className={styles.main} onClick={handleMainClick} ref={mainRef}>
+        <section className={styles.listSection} ref={sectionRef}>
           <CardList
             searchTerm={searchTerm}
-            onLoadingStateChange={handleLoadingState}
             lastSearchTime={lastSearchTime}
-            isLoading={isLoading}
+            isLoading={isCardListLoading}
+            setIsLoading={setIsCardListLoading}
           />
         </section>
-        {detailsParam && (
+        {isDetailsSectionShown && (
           <section className={styles.detailsSection}>
             <Outlet />
           </section>
