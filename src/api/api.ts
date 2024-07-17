@@ -1,47 +1,58 @@
-import type { ApiResponse, Character } from './types';
+import { SearchParams } from '@/common/enums';
+import { isCharacterData, isCharacterListData } from '@/utils/type-guards';
 
-const BASE_URL = 'https://rickandmortyapi.com/api/character';
+import type { CharacterData, CharacterListData } from './types';
+
+export const BASE_URL = 'https://rickandmortyapi.com/api/character';
 export const DEFAULT_PAGE = 1;
+
+type FetchStatusType = 'aborted' | 'success' | 'empty';
+export type FetchCharacterListResult = { status: FetchStatusType; data?: CharacterListData };
+export type FetchCharacterResult = { status: FetchStatusType; data?: CharacterData };
+
+const emptyResult = { status: 'empty' } as const;
+const abortedResult = { status: 'aborted' } as const;
 
 export const fetchCharacters = async (
   searchTerm: string,
   controller: AbortController,
   page = DEFAULT_PAGE,
-): Promise<ApiResponse> => {
-  const params = new URLSearchParams({
-    page: page.toString(),
+): Promise<FetchCharacterListResult> => {
+  const searchParams = new URLSearchParams({
+    [SearchParams.PAGE]: page.toString(),
+    [SearchParams.NAME]: searchTerm,
   });
 
-  if (searchTerm) {
-    params.append('name', searchTerm);
-  }
-
-  const url = `${BASE_URL}/?${params.toString()}`;
+  const url = `${BASE_URL}/?${searchParams.toString()}`;
 
   try {
     const response = await fetch(url, { signal: controller?.signal });
 
     if (!response.ok) {
-      if (response.status === 404 || response.status === 500) {
-        return { results: [] };
+      if (response.status === 404) {
+        return emptyResult;
       }
-      throw new Error('Network response was not ok');
+
+      throw new Error(`Fetching response status is not ok: ${response.status}`);
     }
 
-    return (await response.json()) as ApiResponse;
+    const parsedResponse: unknown = await response.json();
+
+    if (isCharacterListData(parsedResponse)) {
+      return { status: 'success', data: parsedResponse };
+    }
+
+    return emptyResult;
   } catch (error) {
     if (controller?.signal.aborted) {
-      return null;
+      return abortedResult;
     }
 
     throw error;
   }
 };
 
-export const fetchCharacterById = async (
-  id: number,
-  controller: AbortController,
-): Promise<Partial<Character> | null> => {
+export const fetchCharacterById = async (id: string, controller: AbortController): Promise<FetchCharacterResult> => {
   const url = `${BASE_URL}/${id}`;
 
   try {
@@ -49,15 +60,22 @@ export const fetchCharacterById = async (
 
     if (!response.ok) {
       if (response.status === 404) {
-        return { id: null };
+        return emptyResult;
       }
-      throw new Error('Network response was not ok');
+
+      throw new Error(`Fetching response status is not ok: ${response.status}`);
     }
 
-    return (await response.json()) as Partial<Character>;
+    const parsedResponse: unknown = await response.json();
+
+    if (isCharacterData(parsedResponse)) {
+      return { status: 'success', data: parsedResponse };
+    }
+
+    return emptyResult;
   } catch (error) {
     if (controller?.signal.aborted) {
-      return null;
+      return abortedResult;
     }
 
     throw error;

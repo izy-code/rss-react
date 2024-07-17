@@ -1,12 +1,12 @@
-export type Info = {
+export type CharacterListInfo = {
   count: number;
   pages: number;
   next: string | null;
   prev: string | null;
 };
 
-export type Character = {
-  id: number | null;
+export type CharacterData = {
+  id: number;
   name: string;
   status: string;
   species: string;
@@ -26,7 +26,7 @@ export type Character = {
   created: string;
 };
 
-export type ApiResponse = {
-  info?: Info;
-  results: Character[];
-} | null;
+export type CharacterListData = {
+  info: CharacterListInfo;
+  results: CharacterData[];
+};
