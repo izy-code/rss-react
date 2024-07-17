@@ -17,5 +17,5 @@ export function useLocalStorage(): [string, (value: string) => void] {
     localStorage.setItem(LOCAL_STORAGE_KEY, value);
   }, []);
 
-  return [storedValue, setValue];
+  return [storedValue, setValue] as const;
 }
