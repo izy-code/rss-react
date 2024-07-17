@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { fetchCharacters } from '@/api/api';
-import type { Character, Info } from '@/api/types';
+import type { CharacterData, CharacterListInfo } from '@/api/types';
 
 import { CardList } from './CardList';
 
@@ -14,8 +14,8 @@ vi.mock('@/api/api', () => ({
   DEFAULT_PAGE: 1,
 }));
 
-vi.mock('@/components/card/Card', (): { Card: React.FC<{ character: Character }> } => ({
-  Card: ({ character }: { character: Character }) => <div data-testid="card">{character.name}</div>,
+vi.mock('@/components/card/Card', (): { Card: React.FC<{ character: CharacterData }> } => ({
+  Card: ({ character }: { character: CharacterData }) => <div data-testid="card">{character.name}</div>,
 }));
 
 vi.mock('@/components/loader/Loader', (): { Loader: React.FC } => ({
@@ -34,34 +34,22 @@ describe('CardList Component', () => {
   });
 
   it('renders the specified number of cards (20)', async (): Promise<void> => {
-    const mockCharacters: Character[] = Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      name: `Character ${i}`,
-      status: 'Alive',
-      species: 'Human',
-      type: 'Human',
-      gender: 'Male',
-      origin: {
-        name: 'Earth (C-137)',
-        url: 'https://rickandmortyapi.com/api/location/1',
-      },
-      location: {
-        name: 'Earth (Replacement Dimension)',
-        url: 'https://rickandmortyapi.com/api/location/20',
-      },
-      image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-      episode: ['https://rickandmortyapi.com/api/episode/1'],
-      created: '2017-11-04T18:48:46.250Z',
-      url: 'https://rickandmortyapi.com/api/character/1',
-    }));
+    const mockCharacters: CharacterData[] = Array.from(
+      { length: 20 },
+      (_, i) =>
+        ({
+          id: i,
+          name: `Character ${i}`,
+        }) as CharacterData,
+    );
     fetchCharactersMock.mockResolvedValue({
-      results: mockCharacters,
-      info: { count: 20, pages: 1, next: null, prev: null } as Info,
+      status: 'success',
+      data: { results: mockCharacters, info: { count: 20, pages: 1, next: null, prev: null } as CharacterListInfo },
     });
 
     render(
       <MemoryRouter initialEntries={['/']}>
-        <CardList searchTerm="" onLoadingStateChange={() => {}} lastSearchTime={null} isLoading={false} />
+        <CardList searchTerm="" setIsLoading={() => {}} lastSearchTime={null} isLoading={false} />
       </MemoryRouter>,
     );
 
@@ -73,13 +61,12 @@ describe('CardList Component', () => {
 
   it('displays an appropriate message if no cards are present', async (): Promise<void> => {
     fetchCharactersMock.mockResolvedValue({
-      results: [],
-      info: { count: 0, pages: 1, next: null, prev: null } as Info,
+      status: 'empty',
     });
 
     render(
       <MemoryRouter initialEntries={['/']}>
-        <CardList searchTerm="" onLoadingStateChange={() => {}} lastSearchTime={null} isLoading={false} />
+        <CardList searchTerm="" setIsLoading={() => {}} lastSearchTime={null} isLoading={false} />
       </MemoryRouter>,
     );
 
