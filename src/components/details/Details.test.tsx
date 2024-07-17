@@ -6,7 +6,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fetchCharacterById } from '@/api/api';
-import type { Character } from '@/api/types';
+import type { CharacterData } from '@/api/types';
+import { SearchParams } from '@/common/enums';
 
 import { Details } from './Details';
 
@@ -20,25 +21,34 @@ vi.mock('../image-loader/ImageLoader', () => ({
   ),
 }));
 
-const mockCharacter: Character = {
+const mockCharacter: CharacterData = {
   id: 1,
   name: 'Rick Sanchez',
-  image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-  species: 'Human',
   status: 'Alive',
+  species: 'Human',
   gender: 'Male',
-  episode: [],
-  origin: { name: 'Earth (C-137)', url: '' },
-  location: { name: 'Earth (Replacement Dimension)', url: '' },
-  type: '',
-  url: '',
+  episode: ['1', '2', '3'],
+  origin: {
+    name: '',
+    url: '',
+  },
+  image: '',
   created: '',
+  url: '',
+  location: {
+    name: '',
+    url: '',
+  },
+  type: '',
 };
 
 describe('Details Component', () => {
   it('displays a loading indicator while fetching data', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
-    fetchCharacterByIdMock.mockResolvedValueOnce(mockCharacter);
+    fetchCharacterByIdMock.mockResolvedValueOnce({
+      status: 'success',
+      data: mockCharacter,
+    });
 
     render(
       <MemoryRouter initialEntries={[`/?details=${mockCharacter.id}`]}>
@@ -50,13 +60,16 @@ describe('Details Component', () => {
 
     expect(screen.getByTestId('loader')).toBeInTheDocument();
     await waitFor(() =>
-      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id, expect.any(AbortController)),
+      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
     );
   });
 
   it('displays the detailed card data correctly', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
-    fetchCharacterByIdMock.mockResolvedValueOnce(mockCharacter);
+    fetchCharacterByIdMock.mockResolvedValueOnce({
+      status: 'success',
+      data: mockCharacter,
+    });
 
     render(
       <MemoryRouter initialEntries={[`/?details=${mockCharacter.id}`]}>
@@ -67,9 +80,10 @@ describe('Details Component', () => {
     );
 
     await waitFor(() =>
-      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id, expect.any(AbortController)),
+      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
     );
 
+    screen.debug();
     expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
     expect(screen.getByText('Human')).toBeInTheDocument();
     expect(screen.getByText('Alive')).toBeInTheDocument();
@@ -78,7 +92,10 @@ describe('Details Component', () => {
 
   it('hides the component when the close button is clicked', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
-    fetchCharacterByIdMock.mockResolvedValueOnce(mockCharacter);
+    fetchCharacterByIdMock.mockResolvedValueOnce({
+      status: 'success',
+      data: mockCharacter,
+    });
 
     render(
       <MemoryRouter initialEntries={[`/?details=${mockCharacter.id}`]}>
@@ -89,7 +106,7 @@ describe('Details Component', () => {
     );
 
     await waitFor(() =>
-      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id, expect.any(AbortController)),
+      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
     );
 
     expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
@@ -99,7 +116,7 @@ describe('Details Component', () => {
 
     await waitFor(() => {
       const searchParams = new URLSearchParams(window.location.search);
-      expect(searchParams.get('details')).toBeNull();
+      expect(searchParams.get(SearchParams.DETAILS)).toBeNull();
     });
   });
 });

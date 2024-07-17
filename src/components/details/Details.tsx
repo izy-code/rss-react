@@ -1,8 +1,8 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import type { FetchCharacterResult } from '@/api/api';
 import { fetchCharacterById } from '@/api/api';
-import type { Character } from '@/api/types';
 import { SearchParams } from '@/common/enums';
 
 import { CustomButton } from '../custom-button/CustomButton';
@@ -10,40 +10,46 @@ import { ImageLoader } from '../image-loader/ImageLoader';
 import { Loader } from '../loader/Loader';
 import styles from './Details.module.scss';
 
+const ANTI_FLICKER_DELAY = 500;
+
 export function Details(): ReactNode {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [character, setCharacter] = useState<Partial<Character> | null>(null);
   const [isFetchError, setIsFetchError] = useState<boolean>(false);
+  const [fetchResult, setFetchResult] = useState<FetchCharacterResult>({ status: 'aborted' });
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const detailsParam = searchParams.get(SearchParams.DETAILS);
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const handleButtonClick = (): void => {
+    searchParams.delete(SearchParams.DETAILS);
+    setSearchParams(searchParams);
+  };
 
-    const updateCards = async (): Promise<void> => {
+  useEffect(() => {
+    const updateCards = async (controller: AbortController, id: string): Promise<void> => {
+      const loadingTimeout = setTimeout(() => {
+        setIsLoading(true);
+      }, ANTI_FLICKER_DELAY);
       setIsFetchError(false);
-      setIsLoading(true);
 
       try {
-        const data = await fetchCharacterById(+detailsParam!, controller);
+        const fetchCharacterResult = await fetchCharacterById(id, controller);
 
-        if (data) {
-          setCharacter(data);
-        } else {
-          setCharacter(null);
-        }
+        setFetchResult(fetchCharacterResult);
       } catch (error) {
         setIsFetchError(true);
       } finally {
+        clearTimeout(loadingTimeout);
         setIsLoading(false);
       }
     };
 
+    const controller = new AbortController();
+
     if (detailsParam && Number.isInteger(+detailsParam)) {
-      void updateCards();
+      void updateCards(controller, detailsParam);
     } else {
-      setCharacter({ id: null });
+      setFetchResult({ status: 'empty' });
     }
 
     return (): void => {
@@ -51,47 +57,39 @@ export function Details(): ReactNode {
     };
   }, [detailsParam]);
 
-  const handleButtonClick = (): void => {
-    searchParams.delete(SearchParams.DETAILS);
-    setSearchParams(searchParams);
-  };
-
   if (isFetchError) {
-    return <div className={styles.message}>Network connection problem</div>;
+    return <div className={styles.message}>Character details fetching problem</div>;
   }
 
-  if (isLoading || !character) {
-    return <Loader />;
+  if (isLoading || fetchResult.status === 'aborted') {
+    return <Loader secondaryColor className={styles.loader} />;
   }
 
-  if (character.id === null) {
-    return <div className={styles.message}>No characters found</div>;
+  if (fetchResult.status === 'empty' || !fetchResult.data) {
+    return <div className={styles.message}>No character found</div>;
   }
+
+  const character = fetchResult.data;
+  const characterProps = {
+    Species: character.species,
+    Status: character.status,
+    Gender: character.gender,
+    'Episodes count': character.episode.length,
+    Origin: character.origin.name,
+    Location: character.location.name,
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <ImageLoader imageSrc={character.image!} imageAlt={character.name!} />
+        <ImageLoader imageSrc={character.image} imageAlt={character.name} secondaryColor />
         <h2 className={styles.title}>{character.name}</h2>
         <div className={styles.propsContainer}>
-          <p className={styles.prop}>
-            <span className={styles.param}>Species:</span> {character.species}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Status:</span> {character.status}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Gender:</span> {character.gender}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Episodes count:</span> {character.episode!.length}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Origin:</span> {character.origin!.name}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Location:</span> {character.location!.name}
-          </p>
+          {Object.entries(characterProps).map(([param, value]) => (
+            <p key={param} className={styles.prop}>
+              <span className={styles.param}>{param}:</span> {value}
+            </p>
+          ))}
         </div>
       </div>
       <CustomButton variant="cancel" className={styles.button} onClick={handleButtonClick}>
