@@ -1,18 +1,20 @@
 import '@testing-library/jest-dom';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { createMemoryRouter, MemoryRouter, Route, RouterProvider, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchCharacterById } from '@/api/api';
-import { SearchParams } from '@/common/enums';
-import { characterMock } from '@/test/mocks/mocks';
+import { fetchCharacterById, fetchCharacters } from '@/api/api';
+import { routes } from '@/router/routes';
+import { apiResponseMock, characterMock } from '@/test/mocks/mocks';
 
 import { Details } from './Details';
 
 vi.mock('@/api/api', () => ({
   fetchCharacterById: vi.fn(),
+  fetchCharacters: vi.fn(),
+  DEFAULT_PAGE: 1,
 }));
 
 describe('Details Component', () => {
@@ -64,33 +66,34 @@ describe('Details Component', () => {
     expect(screen.getByText(characterMock.gender)).toBeInTheDocument();
   });
 
-  it('hides the component when the close button is clicked', async () => {
+  it('hides the details section when the close button is clicked', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
-    fetchCharacterByIdMock.mockResolvedValueOnce({
+    const fetchCharactersMock = vi.mocked(fetchCharacters);
+    fetchCharacterByIdMock.mockResolvedValue({
       status: 'success',
       data: characterMock,
     });
+    fetchCharactersMock.mockResolvedValue({
+      status: 'success',
+      data: {
+        info: apiResponseMock.info,
+        results: [],
+      },
+    });
 
-    render(
-      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Routes>
-          <Route path="/" element={<Details />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    const router = createMemoryRouter(routes, { initialEntries: [`/?details=${characterMock.id}`] });
+
+    render(<RouterProvider router={router} />);
 
     await waitFor(() =>
       expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
     );
 
-    expect(screen.getByText(characterMock.name)).toBeInTheDocument();
+    expect(await screen.findByText(characterMock.species)).toBeInTheDocument();
 
-    const closeButton = screen.getByText('Close details');
-    await user.click(closeButton);
+    const closeButton = screen.getByRole('button', { name: 'Close details' });
+    void user.click(closeButton);
 
-    await waitFor(() => {
-      const searchParams = new URLSearchParams(window.location.search);
-      expect(searchParams.get(SearchParams.DETAILS)).toBeNull();
-    });
+    await waitForElementToBeRemoved(closeButton);
   });
 });
