@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import type { ReactNode } from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -15,13 +15,9 @@ vi.mock('@/api/api', () => ({
   fetchCharacterById: vi.fn(),
 }));
 
-vi.mock('../image-loader/ImageLoader', () => ({
-  ImageLoader: ({ imageSrc, imageAlt }: { imageSrc: string; imageAlt: string }): ReactNode => (
-    <img src={imageSrc} alt={imageAlt} />
-  ),
-}));
-
 describe('Details Component', () => {
+  const user = userEvent.setup();
+
   it('displays a loading indicator while fetching data', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
     fetchCharacterByIdMock.mockResolvedValueOnce({
@@ -90,7 +86,7 @@ describe('Details Component', () => {
     expect(screen.getByText(characterMock.name)).toBeInTheDocument();
 
     const closeButton = screen.getByText('Close details');
-    fireEvent.click(closeButton);
+    await user.click(closeButton);
 
     await waitFor(() => {
       const searchParams = new URLSearchParams(window.location.search);

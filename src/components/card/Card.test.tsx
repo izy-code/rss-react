@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
@@ -30,6 +31,8 @@ function TestComponent(): ReactNode {
 }
 
 describe('Card Component', () => {
+  const user = userEvent.setup();
+
   it('renders the relevant card data', (): void => {
     render(
       <MemoryRouter>
@@ -41,7 +44,7 @@ describe('Card Component', () => {
     expect(screen.getByAltText(characterMock.name)).toHaveAttribute('src', characterMock.image);
   });
 
-  it('changes URL search params when clicked', (): void => {
+  it('changes URL search params when clicked', async (): Promise<void> => {
     const { container } = render(
       <MemoryRouter>
         <Card character={characterMock} />
@@ -53,7 +56,7 @@ describe('Card Component', () => {
     expect(linkElement).toBeInTheDocument();
 
     if (linkElement) {
-      fireEvent.click(linkElement);
+      await user.click(linkElement);
       expect(screen.getByText(`URL details ID search parameter: ${characterMock.id}`)).toBeInTheDocument();
     }
   });
@@ -83,7 +86,7 @@ describe('Card Component', () => {
 
     const linkElement = screen.getByText(characterMock.name).closest('a');
     if (linkElement) {
-      fireEvent.click(linkElement);
+      await user.click(linkElement);
       await waitFor(() =>
         expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
       );

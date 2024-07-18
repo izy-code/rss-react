@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
@@ -18,6 +19,7 @@ function TestComponent(): ReactNode {
 }
 
 describe('Pagination Component', () => {
+  const user = userEvent.setup();
   const mockPageInfo: CharacterListInfo = { count: 20, pages: 5, next: '', prev: '' };
 
   it('disables the "Prev" button on the first page', () => {
@@ -44,7 +46,7 @@ describe('Pagination Component', () => {
     expect(nextButton).toBeDisabled();
   });
 
-  it('updates URL query parameter when "Next" button is clicked', () => {
+  it('updates URL query parameter when "Next" button is clicked', async () => {
     render(
       <MemoryRouter initialEntries={['/?page=2']}>
         <Pagination pageInfo={mockPageInfo} />
@@ -54,12 +56,12 @@ describe('Pagination Component', () => {
 
     const nextButton = screen.getByRole('button', { name: 'Next' });
 
-    fireEvent.click(nextButton);
+    await user.click(nextButton);
 
     expect(screen.getByText('URL page search parameter: 3')).toBeInTheDocument();
   });
 
-  it('updates URL query parameter when "Prev" button is clicked', () => {
+  it('updates URL query parameter when "Prev" button is clicked', async () => {
     render(
       <MemoryRouter initialEntries={['/?page=2']}>
         <Pagination pageInfo={mockPageInfo} />
@@ -69,7 +71,7 @@ describe('Pagination Component', () => {
 
     const prevButton = screen.getByRole('button', { name: 'Prev' });
 
-    fireEvent.click(prevButton);
+    await user.click(prevButton);
 
     expect(screen.getByText('URL page search parameter: 1')).toBeInTheDocument();
   });
