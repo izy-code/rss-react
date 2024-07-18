@@ -6,12 +6,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { routes } from './routes';
 
 describe('Routes rendering testing', () => {
-  it('should match the snapshot for main routes', () => {
+  it('should match the snapshot for main routes', async () => {
     let container;
 
-    act(() => {
+    await act(async () => {
       const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
       const renderResult = render(<RouterProvider router={memoryRouter} />);
+
+      await Promise.resolve();
 
       container = renderResult.container;
     });
