@@ -12,7 +12,7 @@ describe('Routes rendering testing', () => {
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
     const { container } = render(<RouterProvider router={memoryRouter} />);
 
-    await screen.findByText(/Rick/);
+    await screen.findByRole('heading', { name: /Rick/ });
 
     expect(container).toMatchSnapshot();
   });

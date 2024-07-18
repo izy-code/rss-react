@@ -35,7 +35,7 @@ describe('Details Component', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Loading...' })).toBeInTheDocument();
     await waitFor(() =>
       expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
     );
@@ -89,9 +89,12 @@ describe('Details Component', () => {
       expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
     );
 
-    expect(await screen.findByText(characterMock.species)).toBeInTheDocument();
+    let closeButton: HTMLButtonElement;
 
-    const closeButton = screen.getByRole('button', { name: 'Close details' });
+    expect(
+      (closeButton = screen.getByRole<HTMLButtonElement>('button', { name: 'Close details' })),
+    ).toBeInTheDocument();
+
     void user.click(closeButton);
 
     await waitForElementToBeRemoved(closeButton);

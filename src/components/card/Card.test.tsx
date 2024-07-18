@@ -40,7 +40,7 @@ describe('Card Component', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText(characterMock.name)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: characterMock.name })).toBeInTheDocument();
     expect(screen.getByAltText(characterMock.name)).toHaveAttribute('src', characterMock.image);
   });
 
@@ -84,7 +84,8 @@ describe('Card Component', () => {
       </MemoryRouter>,
     );
 
-    const linkElement = screen.getByText(characterMock.name).closest('a');
+    const linkElement = screen.getByRole('heading', { name: characterMock.name }).closest('a');
+
     if (linkElement) {
       await user.click(linkElement);
       await waitFor(() =>
