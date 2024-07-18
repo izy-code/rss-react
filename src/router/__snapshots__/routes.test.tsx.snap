@@ -1,0 +1,145 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Routes rendering testing > should match the snapshot for 404 page 1`] = `
+<div>
+  <main
+    class="_main_1e53a6"
+  >
+    <div
+      class="_container_1e53a6"
+    >
+      <h1
+        class="_title_1e53a6"
+      >
+        404
+      </h1>
+      <p
+        class="_text_1e53a6"
+      >
+        The page you requested was not found.
+      </p>
+      <div
+        class="_buttons_1e53a6"
+      >
+        <button
+          class="_button_1c0f93 _button--tertiary_1c0f93"
+          type="button"
+        >
+          Previous page
+        </button>
+        <button
+          class="_button_1c0f93 _button--tertiary_1c0f93"
+          type="button"
+        >
+          Home page
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`Routes rendering testing > should match the snapshot for error page 1`] = `
+<div>
+  <main
+    class="_main_6e3859"
+  >
+    <div
+      class="_container_6e3859"
+    >
+      <h1
+        class="_header_6e3859"
+      >
+        Oops!
+      </h1>
+      <p
+        class="_text_6e3859"
+      >
+        Sorry, an unexpected error has occurred.
+      </p>
+      <p
+        class="_errorDesc_6e3859"
+      >
+        Error message:
+      </p>
+      <p
+        class="_error_6e3859"
+      >
+        Error throwing button was clicked
+      </p>
+      <p
+        class="_text_6e3859"
+      >
+        Please try to refresh the page.
+      </p>
+      <button
+        class="_button_1c0f93 _button--primary_1c0f93 _refreshBtn_6e3859"
+        type="button"
+      >
+        Refresh the page
+      </button>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`Routes rendering testing > should match the snapshot for main routes 1`] = `
+<div>
+  <div
+    class="_page_6798d4"
+  >
+    <header
+      class="_header_accb48"
+    >
+      <div
+        class="_container_accb48"
+      >
+        <h1
+          class="visually-hidden"
+        >
+          Rick and Morty characters
+        </h1>
+        <form
+          class="_form_1de04e"
+        >
+          <input
+            autocomplete="off"
+            class="_input_1de04e"
+            placeholder="Enter character name…"
+            type="search"
+            value=""
+          />
+          <button
+            class="_button_1c0f93 _button--secondary_1c0f93"
+            type="submit"
+          >
+            Search
+          </button>
+        </form>
+        <button
+          class="_button_1c0f93 _button--cancel_1c0f93"
+          type="button"
+        >
+          Throw error
+        </button>
+      </div>
+    </header>
+    <main
+      class="_main_6798d4"
+    >
+      <section
+        class="_listSection_6798d4"
+      >
+        <div
+          class="_loaderContainer_523128"
+          data-testid="loader"
+        >
+          <div
+            class="_loader_523128"
+          />
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+`;
