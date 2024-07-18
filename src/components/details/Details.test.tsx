@@ -83,7 +83,6 @@ describe('Details Component', () => {
       expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
     );
 
-    screen.debug();
     expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
     expect(screen.getByText('Human')).toBeInTheDocument();
     expect(screen.getByText('Alive')).toBeInTheDocument();
