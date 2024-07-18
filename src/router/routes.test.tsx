@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { act } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -7,17 +6,9 @@ import { routes } from './routes';
 
 describe('Routes rendering testing', () => {
   it('should match the snapshot for main routes', async () => {
-    let container;
-
-    await act(async () => {
-      const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
-      const renderResult = render(<RouterProvider router={memoryRouter} />);
-
-      await Promise.resolve();
-
-      container = renderResult.container;
-    });
-
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
+    const { container } = render(<RouterProvider router={memoryRouter} />);
+    expect(await screen.findByText(/Rick/)).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 
