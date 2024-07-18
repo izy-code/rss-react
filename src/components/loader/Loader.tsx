@@ -11,7 +11,8 @@ export function Loader({
   secondaryColor?: boolean;
 }): ReactNode {
   return (
-    <div className={clsx(styles.loaderContainer, className)} data-testid="loader">
+    <div className={clsx(styles.loaderContainer, className)}>
+      <h2 className="visually-hidden">Loading...</h2>
       <div className={clsx(styles.loader, secondaryColor && styles.secondary)} />
     </div>
   );

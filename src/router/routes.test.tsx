@@ -8,7 +8,9 @@ describe('Routes rendering testing', () => {
   it('should match the snapshot for main routes', async () => {
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
     const { container } = render(<RouterProvider router={memoryRouter} />);
-    expect(await screen.findByText(/Rick/)).toBeInTheDocument();
+
+    await screen.findByText(/Rick/);
+
     expect(container).toMatchSnapshot();
   });
 
@@ -25,7 +27,7 @@ describe('Routes rendering testing', () => {
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
     const { container } = render(<RouterProvider router={memoryRouter} />);
 
-    const errorButton = screen.getByText('Throw error');
+    const errorButton = screen.getByRole('button', { name: 'Throw error' });
 
     fireEvent.click(errorButton);
 

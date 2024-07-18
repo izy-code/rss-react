@@ -6,8 +6,8 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fetchCharacterById } from '@/api/api';
-import type { CharacterData } from '@/api/types';
 import { SearchParams } from '@/common/enums';
+import { characterMock } from '@/test/mocks/mocks';
 
 import { Details } from '../details/Details';
 import { Card } from './Card';
@@ -30,42 +30,21 @@ function TestComponent(): ReactNode {
 }
 
 describe('Card Component', () => {
-  const mockCharacter: CharacterData = {
-    id: 1,
-    name: 'Rick Sanchez',
-    status: 'Alive',
-    species: 'Human',
-    gender: 'Male',
-    episode: ['1', '2', '3'],
-    origin: {
-      name: '',
-      url: '',
-    },
-    image: '',
-    created: '',
-    url: '',
-    location: {
-      name: '',
-      url: '',
-    },
-    type: '',
-  };
-
   it('renders the relevant card data', (): void => {
     render(
       <MemoryRouter>
-        <Card character={mockCharacter} />
+        <Card character={characterMock} />
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
-    expect(screen.getByAltText('Rick Sanchez')).toHaveAttribute('src', mockCharacter.image);
+    expect(screen.getByText(characterMock.name)).toBeInTheDocument();
+    expect(screen.getByAltText(characterMock.name)).toHaveAttribute('src', characterMock.image);
   });
 
   it('changes URL search params when clicked', (): void => {
     const { container } = render(
       <MemoryRouter>
-        <Card character={mockCharacter} />
+        <Card character={characterMock} />
         <TestComponent />
       </MemoryRouter>,
     );
@@ -75,7 +54,7 @@ describe('Card Component', () => {
 
     if (linkElement) {
       fireEvent.click(linkElement);
-      expect(screen.getByText(`URL details ID search parameter: ${mockCharacter.id}`)).toBeInTheDocument();
+      expect(screen.getByText(`URL details ID search parameter: ${characterMock.id}`)).toBeInTheDocument();
     }
   });
 
@@ -83,17 +62,17 @@ describe('Card Component', () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
     fetchCharacterByIdMock.mockResolvedValue({
       status: 'success',
-      data: mockCharacter,
+      data: characterMock,
     });
 
     render(
-      <MemoryRouter initialEntries={[`/?details=${mockCharacter.id}`]}>
+      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
         <Routes>
           <Route
             path="/"
             element={
               <>
-                <Card character={mockCharacter} />
+                <Card character={characterMock} />
                 <Details />
               </>
             }
@@ -102,11 +81,11 @@ describe('Card Component', () => {
       </MemoryRouter>,
     );
 
-    const linkElement = screen.getByText('Rick Sanchez').closest('a');
+    const linkElement = screen.getByText(characterMock.name).closest('a');
     if (linkElement) {
       fireEvent.click(linkElement);
       await waitFor(() =>
-        expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
+        expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
       );
     }
   });

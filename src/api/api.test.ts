@@ -1,28 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { BASE_URL, fetchCharacterById, fetchCharacters } from './api.ts';
-import type { CharacterData, CharacterListData } from './types';
+import { apiResponseMock, characterMock } from '@/test/mocks/mocks.ts';
 
-const mockCharacter: CharacterData = {
-  id: 1,
-  name: 'Rick Sanchez',
-  status: 'Alive',
-  species: 'Human',
-  gender: 'Male',
-  episode: ['1', '2', '3'],
-  origin: {
-    name: '',
-    url: '',
-  },
-  image: '',
-  created: '',
-  url: '',
-  location: {
-    name: '',
-    url: '',
-  },
-  type: '',
-};
+import { BASE_URL, fetchCharacterById, fetchCharacters } from './api.ts';
 
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
@@ -33,13 +13,13 @@ describe('fetchCharacterById', () => {
   it('fetches character by ID successfully', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => mockCharacter,
+      json: () => characterMock,
     });
 
     const response = await fetchCharacterById('1', controller);
 
     expect(mockFetch).toHaveBeenCalledWith(`${BASE_URL}/1`, { signal: controller.signal });
-    expect(response).toEqual({ status: 'success', data: mockCharacter });
+    expect(response).toEqual({ status: 'success', data: characterMock });
   });
 
   it('handles 404 error response', async () => {
@@ -72,32 +52,31 @@ describe('fetchCharacterById', () => {
 });
 
 describe('fetchCharacters', () => {
-  const mockCharacterList: CharacterListData = {
-    info: { count: 1, pages: 1, next: null, prev: null },
-    results: [mockCharacter],
-  };
-
   const controller = new AbortController();
 
   it('fetches characters successfully with search term', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => mockCharacterList,
+      json: () => apiResponseMock,
     });
 
-    const response = await fetchCharacters('Rick', controller);
+    const initialSearchTerm = 'Rick';
 
-    expect(mockFetch).toHaveBeenCalledWith(`${BASE_URL}/?page=1&name=Rick`, { signal: controller.signal });
+    const response = await fetchCharacters(initialSearchTerm, controller);
+
+    expect(mockFetch).toHaveBeenCalledWith(`${BASE_URL}/?page=1&name=${initialSearchTerm}`, {
+      signal: controller.signal,
+    });
     expect(response).toEqual({
       status: 'success',
-      data: mockCharacterList,
+      data: apiResponseMock,
     });
   });
 
   it('fetches characters successfully without search term', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => mockCharacterList,
+      json: () => apiResponseMock,
     });
 
     const response = await fetchCharacters('', controller);
@@ -105,7 +84,7 @@ describe('fetchCharacters', () => {
     expect(mockFetch).toHaveBeenCalledWith(`${BASE_URL}/?page=1&name=`, { signal: controller.signal });
     expect(response).toEqual({
       status: 'success',
-      data: mockCharacterList,
+      data: apiResponseMock,
     });
   });
 
@@ -132,7 +111,7 @@ describe('fetchCharacters', () => {
 
     mockFetch.mockRejectedValueOnce(new DOMException('The operation was aborted.'));
 
-    const response = await fetchCharacters('Rick', abortController);
+    const response = await fetchCharacters('Any search', abortController);
 
     expect(response).toEqual({ status: 'aborted' });
   });

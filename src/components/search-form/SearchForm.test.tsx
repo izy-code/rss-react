@@ -25,7 +25,7 @@ describe('SearchForm Component', () => {
     );
 
     const searchInput = screen.getByPlaceholderText('Enter character name…');
-    const searchButton = screen.getByText('Search');
+    const searchButton = screen.getByRole('button', { name: 'Search' });
 
     const newSearchTerm = 'Rick';
     fireEvent.change(searchInput, { target: { value: newSearchTerm } });

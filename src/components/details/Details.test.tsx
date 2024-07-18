@@ -6,8 +6,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fetchCharacterById } from '@/api/api';
-import type { CharacterData } from '@/api/types';
 import { SearchParams } from '@/common/enums';
+import { characterMock } from '@/test/mocks/mocks';
 
 import { Details } from './Details';
 
@@ -21,46 +21,25 @@ vi.mock('../image-loader/ImageLoader', () => ({
   ),
 }));
 
-const mockCharacter: CharacterData = {
-  id: 1,
-  name: 'Rick Sanchez',
-  status: 'Alive',
-  species: 'Human',
-  gender: 'Male',
-  episode: ['1', '2', '3'],
-  origin: {
-    name: '',
-    url: '',
-  },
-  image: '',
-  created: '',
-  url: '',
-  location: {
-    name: '',
-    url: '',
-  },
-  type: '',
-};
-
 describe('Details Component', () => {
   it('displays a loading indicator while fetching data', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
     fetchCharacterByIdMock.mockResolvedValueOnce({
       status: 'success',
-      data: mockCharacter,
+      data: characterMock,
     });
 
     render(
-      <MemoryRouter initialEntries={[`/?details=${mockCharacter.id}`]}>
+      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
         <Routes>
           <Route path="/" element={<Details />} />
         </Routes>
       </MemoryRouter>,
     );
 
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
     await waitFor(() =>
-      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
+      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
     );
   });
 
@@ -68,11 +47,11 @@ describe('Details Component', () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
     fetchCharacterByIdMock.mockResolvedValueOnce({
       status: 'success',
-      data: mockCharacter,
+      data: characterMock,
     });
 
     render(
-      <MemoryRouter initialEntries={[`/?details=${mockCharacter.id}`]}>
+      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
         <Routes>
           <Route path="/" element={<Details />} />
         </Routes>
@@ -80,24 +59,24 @@ describe('Details Component', () => {
     );
 
     await waitFor(() =>
-      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
+      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
     );
 
-    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
-    expect(screen.getByText('Human')).toBeInTheDocument();
-    expect(screen.getByText('Alive')).toBeInTheDocument();
-    expect(screen.getByText('Male')).toBeInTheDocument();
+    expect(screen.getByText(characterMock.name)).toBeInTheDocument();
+    expect(screen.getByText(characterMock.species)).toBeInTheDocument();
+    expect(screen.getByText(characterMock.status)).toBeInTheDocument();
+    expect(screen.getByText(characterMock.gender)).toBeInTheDocument();
   });
 
   it('hides the component when the close button is clicked', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
     fetchCharacterByIdMock.mockResolvedValueOnce({
       status: 'success',
-      data: mockCharacter,
+      data: characterMock,
     });
 
     render(
-      <MemoryRouter initialEntries={[`/?details=${mockCharacter.id}`]}>
+      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
         <Routes>
           <Route path="/" element={<Details />} />
         </Routes>
@@ -105,10 +84,10 @@ describe('Details Component', () => {
     );
 
     await waitFor(() =>
-      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(mockCharacter.id.toString(), expect.any(AbortController)),
+      expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
     );
 
-    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
+    expect(screen.getByText(characterMock.name)).toBeInTheDocument();
 
     const closeButton = screen.getByText('Close details');
     fireEvent.click(closeButton);
