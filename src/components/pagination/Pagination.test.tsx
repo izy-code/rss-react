@@ -11,11 +11,13 @@ import { apiResponseMock } from '@/test/mocks/mocks';
 
 import { Pagination } from './Pagination';
 
-function TestComponent(): ReactNode {
+const PAGE_TEST_ID = 'page-display';
+
+function PageSearchParamDisplay(): ReactNode {
   const location = useLocation();
   const pageNumber = new URLSearchParams(location.search).get(SearchParams.PAGE);
 
-  return <p>URL page search parameter: {pageNumber}</p>;
+  return <p data-testid={PAGE_TEST_ID}>{pageNumber}</p>;
 }
 
 describe('Pagination Component', () => {
@@ -54,7 +56,7 @@ describe('Pagination Component', () => {
     render(
       <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
         <Pagination pageInfo={pageInfoMock} />
-        <TestComponent />
+        <PageSearchParamDisplay />
       </MemoryRouter>,
     );
 
@@ -62,7 +64,7 @@ describe('Pagination Component', () => {
 
     await user.click(nextButton);
 
-    expect(screen.getByText(`URL page search parameter: ${initialPage + 1}`)).toBeInTheDocument();
+    expect(screen.getByTestId(PAGE_TEST_ID)).toHaveTextContent(`${initialPage + 1}`);
   });
 
   it('updates URL query parameter when "Prev" button is clicked', async () => {
@@ -71,7 +73,7 @@ describe('Pagination Component', () => {
     render(
       <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
         <Pagination pageInfo={pageInfoMock} />
-        <TestComponent />
+        <PageSearchParamDisplay />
       </MemoryRouter>,
     );
 
@@ -79,6 +81,6 @@ describe('Pagination Component', () => {
 
     await user.click(prevButton);
 
-    expect(screen.getByText(`URL page search parameter: ${initialPage - 1}`)).toBeInTheDocument();
+    expect(screen.getByTestId(PAGE_TEST_ID)).toHaveTextContent(`${initialPage - 1}`);
   });
 });

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fetchCharacterById } from '@/api/api';
@@ -23,11 +23,13 @@ vi.mock('../image-loader/ImageLoader', () => ({
   ),
 }));
 
-function TestComponent(): ReactNode {
+const DETAILS_TEST_ID = 'details-display';
+
+function DetailsSearchParamDisplay(): ReactNode {
   const location = useLocation();
   const detailsID = new URLSearchParams(location.search).get(SearchParams.DETAILS);
 
-  return <span>URL details ID search parameter: {detailsID}</span>;
+  return <p data-testid={DETAILS_TEST_ID}>{detailsID}</p>;
 }
 
 describe('Card Component', () => {
@@ -48,7 +50,7 @@ describe('Card Component', () => {
     const { container } = render(
       <MemoryRouter>
         <Card character={characterMock} />
-        <TestComponent />
+        <DetailsSearchParamDisplay />
       </MemoryRouter>,
     );
 
@@ -57,7 +59,8 @@ describe('Card Component', () => {
 
     if (linkElement) {
       await user.click(linkElement);
-      expect(screen.getByText(`URL details ID search parameter: ${characterMock.id}`)).toBeInTheDocument();
+
+      expect(screen.getByTestId(DETAILS_TEST_ID)).toHaveTextContent(characterMock.id.toString());
     }
   });
 
@@ -70,17 +73,8 @@ describe('Card Component', () => {
 
     render(
       <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Card character={characterMock} />
-                <Details />
-              </>
-            }
-          />
-        </Routes>
+        <Card character={characterMock} />
+        <Details />
       </MemoryRouter>,
     );
 
