@@ -12,7 +12,7 @@ describe('Router render', () => {
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
     const { container } = render(<RouterProvider router={memoryRouter} />);
 
-    await screen.findByRole('heading', { name: /Rick/ });
+    await screen.findByRole('heading', { name: /rick/i });
 
     expect(container).toMatchSnapshot();
   });
