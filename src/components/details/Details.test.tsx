@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
 
-import { render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, MemoryRouter, Route, RouterProvider, Routes } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fetchCharacterById, fetchCharacters } from '@/api/api';
-import { routes } from '@/router/routes';
+import { MainPage } from '@/pages/main-page/MainPage';
 import { apiResponseMock, characterMock } from '@/test/mocks/mocks';
+import { renderWithUserSetup } from '@/utils/utils';
 
 import { Details } from './Details';
 
@@ -18,8 +18,6 @@ vi.mock('@/api/api', () => ({
 }));
 
 describe('Details Component', () => {
-  const user = userEvent.setup();
-
   it('displays a loading indicator while fetching data', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
     fetchCharacterByIdMock.mockResolvedValueOnce({
@@ -69,6 +67,7 @@ describe('Details Component', () => {
   it('hides the details section when the close button is clicked', async () => {
     const fetchCharacterByIdMock = vi.mocked(fetchCharacterById);
     const fetchCharactersMock = vi.mocked(fetchCharacters);
+
     fetchCharacterByIdMock.mockResolvedValue({
       status: 'success',
       data: characterMock,
@@ -81,22 +80,25 @@ describe('Details Component', () => {
       },
     });
 
-    const router = createMemoryRouter(routes, { initialEntries: [`/?details=${characterMock.id}`] });
-
-    render(<RouterProvider router={router} />);
+    const { user } = renderWithUserSetup(
+      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
+        <Routes>
+          <Route path="/" element={<MainPage />}>
+            <Route path="" element={<Details />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>,
+    );
 
     await waitFor(() =>
       expect(fetchCharacterByIdMock).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
     );
 
-    let closeButton: HTMLButtonElement;
+    const closeButton = await screen.findByRole('button', { name: /close details/i });
 
-    expect(
-      (closeButton = screen.getByRole<HTMLButtonElement>('button', { name: 'Close details' })),
-    ).toBeInTheDocument();
+    expect(closeButton).toBeInTheDocument();
 
-    void user.click(closeButton);
-
-    await waitForElementToBeRemoved(closeButton);
+    await user.click(closeButton);
+    expect(screen.queryByRole('button', { name: /close details/i })).not.toBeInTheDocument();
   });
 });
