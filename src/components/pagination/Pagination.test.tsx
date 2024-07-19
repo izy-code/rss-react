@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
 
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 
 import { SearchParams } from '@/common/enums';
 import { apiResponseMock } from '@/test/mocks/mocks';
+import { renderWithUserSetup } from '@/utils/utils';
 
 import { Pagination } from './Pagination';
 
@@ -21,7 +21,6 @@ function PageSearchParamDisplay(): ReactNode {
 }
 
 describe('Pagination Component', () => {
-  const user = userEvent.setup();
   const pageInfoMock = apiResponseMock.info;
 
   it('disables the "Prev" button on the first page', () => {
@@ -53,7 +52,7 @@ describe('Pagination Component', () => {
   it('updates URL query parameter when "Next" button is clicked', async () => {
     const initialPage = 2;
 
-    render(
+    const { user } = renderWithUserSetup(
       <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
         <Pagination pageInfo={pageInfoMock} />
         <PageSearchParamDisplay />
@@ -70,7 +69,7 @@ describe('Pagination Component', () => {
   it('updates URL query parameter when "Prev" button is clicked', async () => {
     const initialPage = 2;
 
-    render(
+    const { user } = renderWithUserSetup(
       <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
         <Pagination pageInfo={pageInfoMock} />
         <PageSearchParamDisplay />

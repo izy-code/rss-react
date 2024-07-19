@@ -1,13 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
+
+import { renderWithUserSetup } from '@/utils/utils';
 
 import { routes } from './routes';
 
 describe('Router render', () => {
-  const user = userEvent.setup();
-
   it('should match the snapshot for main routes', async () => {
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
     const { container } = render(<RouterProvider router={memoryRouter} />);
@@ -28,7 +27,7 @@ describe('Router render', () => {
     const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
-    const { container } = render(<RouterProvider router={memoryRouter} />);
+    const { user, container } = renderWithUserSetup(<RouterProvider router={memoryRouter} />);
 
     const errorButton = screen.getByRole('button', { name: 'Throw error' });
 
