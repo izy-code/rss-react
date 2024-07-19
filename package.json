@@ -30,10 +30,10 @@
   "lint-staged": {
     "*.{ts,tsx,js}": "eslint --report-unused-disable-directives",
     "*.{scss,css}": "stylelint --quiet-deprecation-warnings",
-    "*.html": "prettier"
+    "*.html": "prettier --check"
   },
   "engines": {
-    "node": ">=20.0.0 <21.0.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -42,7 +42,6 @@
     "react-router-dom": "^6.24.1"
   },
   "devDependencies": {
-    "@testing-library/dom": "^10.3.1",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
