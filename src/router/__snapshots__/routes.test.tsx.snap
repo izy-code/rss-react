@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Routes rendering testing > should match the snapshot for 404 page 1`] = `
+exports[`Router render > should match the snapshot for 404 page 1`] = `
 <div>
   <main
     class="_main_1e53a6"
@@ -39,7 +39,7 @@ exports[`Routes rendering testing > should match the snapshot for 404 page 1`] =
 </div>
 `;
 
-exports[`Routes rendering testing > should match the snapshot for error page 1`] = `
+exports[`Router render > should match the snapshot for error page 1`] = `
 <div>
   <main
     class="_main_6e3859"
@@ -83,7 +83,7 @@ exports[`Routes rendering testing > should match the snapshot for error page 1`]
 </div>
 `;
 
-exports[`Routes rendering testing > should match the snapshot for main routes 1`] = `
+exports[`Router render > should match the snapshot for main routes 1`] = `
 <div>
   <div
     class="_page_6798d4"

@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { routes } from './routes';
 
-describe('Routes rendering testing', () => {
+describe('Router render', () => {
   const user = userEvent.setup();
 
   it('should match the snapshot for main routes', async () => {
