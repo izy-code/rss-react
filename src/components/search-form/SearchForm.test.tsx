@@ -24,7 +24,7 @@ describe('SearchForm Component', () => {
       </MemoryRouter>,
     );
 
-    const searchInput = screen.getByPlaceholderText('Enter character name…');
+    const searchInput = screen.getByRole('searchbox');
     const searchButton = screen.getByRole('button', { name: 'Search' });
 
     const newSearchTerm = 'Rick';
