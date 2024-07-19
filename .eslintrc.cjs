@@ -89,8 +89,16 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.js'],
+      files: ['./**/*.+(cjs|js|mjs)'],
       extends: ['plugin:@typescript-eslint/disable-type-checked'],
+    },
+    {
+      extends: [
+        'plugin:vitest/recommended',
+        'plugin:jest-dom/recommended',
+        'plugin:testing-library/react',
+      ],
+      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
     },
   ],
   settings: {
