@@ -107,7 +107,7 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
             class="_input_1de04e"
             placeholder="Enter character name…"
             type="search"
-            value=""
+            value="rick"
           />
           <button
             class="_button_1c0f93 _button--secondary_1c0f93"
@@ -131,17 +131,152 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
         class="_listSection_6798d4"
       >
         <div
-          class="_loaderContainer_523128"
+          class="_container_5bac6f"
         >
-          <h2
-            class="visually-hidden"
+          <button
+            class="_button_1c0f93 _button--primary_1c0f93 _button_5bac6f"
+            disabled=""
+            type="button"
           >
-            Loading...
-          </h2>
-          <div
-            class="_loader_523128"
-          />
+            Prev
+          </button>
+          <p
+            class="_text_5bac6f"
+          >
+            Page 1 of 1
+          </p>
+          <button
+            class="_button_1c0f93 _button--primary_1c0f93 _button_5bac6f"
+            disabled=""
+            type="button"
+          >
+            Next
+          </button>
         </div>
+        <ul
+          class="_list_269ea4"
+        >
+          <li
+            class="_card_c39673"
+          >
+            <a
+              class="_link_c39673"
+              href="/?page=1&name=rick&details=1"
+            >
+              <div
+                class="_placeholder_4c56d5"
+              >
+                <img
+                  alt="Placeholder"
+                  class="_image_4c56d5"
+                  src="/src/assets/images/placeholder.jpeg"
+                />
+                <div
+                  class="_loaderContainer_523128 _loader_4c56d5"
+                >
+                  <h2
+                    class="visually-hidden"
+                  >
+                    Loading...
+                  </h2>
+                  <div
+                    class="_loader_523128"
+                  />
+                </div>
+              </div>
+              <img
+                alt="Rick Sanchez Mocked"
+                class="_image_4c56d5 _hidden_4c56d5"
+                src="https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+              />
+              <h2
+                class="_title_c39673"
+              >
+                Rick Sanchez Mocked
+              </h2>
+            </a>
+          </li>
+          <li
+            class="_card_c39673"
+          >
+            <a
+              class="_link_c39673"
+              href="/?page=1&name=rick&details=8"
+            >
+              <div
+                class="_placeholder_4c56d5"
+              >
+                <img
+                  alt="Placeholder"
+                  class="_image_4c56d5"
+                  src="/src/assets/images/placeholder.jpeg"
+                />
+                <div
+                  class="_loaderContainer_523128 _loader_4c56d5"
+                >
+                  <h2
+                    class="visually-hidden"
+                  >
+                    Loading...
+                  </h2>
+                  <div
+                    class="_loader_523128"
+                  />
+                </div>
+              </div>
+              <img
+                alt="Adjudicator Rick Mocked"
+                class="_image_4c56d5 _hidden_4c56d5"
+                src="https://rickandmortyapi.com/api/character/avatar/8.jpeg"
+              />
+              <h2
+                class="_title_c39673"
+              >
+                Adjudicator Rick Mocked
+              </h2>
+            </a>
+          </li>
+          <li
+            class="_card_c39673"
+          >
+            <a
+              class="_link_c39673"
+              href="/?page=1&name=rick&details=15"
+            >
+              <div
+                class="_placeholder_4c56d5"
+              >
+                <img
+                  alt="Placeholder"
+                  class="_image_4c56d5"
+                  src="/src/assets/images/placeholder.jpeg"
+                />
+                <div
+                  class="_loaderContainer_523128 _loader_4c56d5"
+                >
+                  <h2
+                    class="visually-hidden"
+                  >
+                    Loading...
+                  </h2>
+                  <div
+                    class="_loader_523128"
+                  />
+                </div>
+              </div>
+              <img
+                alt="Alien Rick Mocked"
+                class="_image_4c56d5 _hidden_4c56d5"
+                src="https://rickandmortyapi.com/api/character/avatar/15.jpeg"
+              />
+              <h2
+                class="_title_c39673"
+              >
+                Alien Rick Mocked
+              </h2>
+            </a>
+          </li>
+        </ul>
       </section>
     </main>
   </div>

@@ -1,17 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { describe, expect, it, vi } from 'vitest';
 
+import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
 import { renderWithUserSetup } from '@/utils/utils';
 
 import { routes } from './routes';
 
 describe('Router render', () => {
   it('should match the snapshot for main routes', async () => {
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
+    const memoryRouter = createMemoryRouter(routes, {
+      initialEntries: [`/?page=${MOCK_PAGE_NUMBER}&name=${MOCK_SEARCH_NAME}`],
+    });
     const { container } = render(<RouterProvider router={memoryRouter} />);
 
-    await screen.findByRole('heading', { name: /rick/i });
+    await screen.findByRole('heading', { name: /rick and morty characters/i });
 
     expect(container).toMatchSnapshot();
   });

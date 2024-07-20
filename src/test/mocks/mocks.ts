@@ -2,7 +2,7 @@ import type { CharacterData, CharacterListData } from '@/api/types';
 
 export const characterMock: CharacterData = {
   id: 1,
-  name: 'Rick Sanchez',
+  name: 'Rick Sanchez Mocked',
   status: 'Alive',
   species: 'Human',
   type: '',
@@ -25,7 +25,7 @@ export const characterMock: CharacterData = {
   created: '2017-11-04T18:48:46.250Z',
 };
 
-export const apiResponseMock: CharacterListData = {
+export const charactersDataMock: CharacterListData = {
   info: {
     count: 3,
     pages: 1,
@@ -36,7 +36,7 @@ export const apiResponseMock: CharacterListData = {
     characterMock,
     {
       id: 8,
-      name: 'Adjudicator Rick',
+      name: 'Adjudicator Rick Mocked',
       status: 'Dead',
       species: 'Human',
       type: '',
@@ -56,7 +56,7 @@ export const apiResponseMock: CharacterListData = {
     },
     {
       id: 15,
-      name: 'Alien Rick',
+      name: 'Alien Rick Mocked',
       status: 'unknown',
       species: 'Alien',
       type: '',

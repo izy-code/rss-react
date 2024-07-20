@@ -1,51 +1,41 @@
-import { describe, expect, it, vi } from 'vitest';
+import { characterMock, charactersDataMock } from '@/test/mocks/mocks.ts';
+import { MOCK_SEARCH_NAME, MOCK_STATUS_500 } from '@/test/msw/handlers.ts';
 
-import { apiResponseMock, characterMock } from '@/test/mocks/mocks.ts';
-
-import { BASE_URL, fetchCharacterById, fetchCharacters } from './api.ts';
-
-const mockFetch = vi.fn();
-global.fetch = mockFetch;
+import { fetchCharacterById, fetchCharacters } from './api.ts';
 
 describe('fetchCharacterById', () => {
   const controller = new AbortController();
 
   it('fetches character by ID successfully', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => characterMock,
-    });
+    const response = await fetchCharacterById(characterMock.id.toString(), controller);
 
-    const response = await fetchCharacterById('1', controller);
-
-    expect(mockFetch).toHaveBeenCalledWith(`${BASE_URL}/1`, { signal: controller.signal });
     expect(response).toEqual({ status: 'success', data: characterMock });
   });
 
-  it('handles 404 error response', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 404,
-    });
-
+  it('handles 404 status response', async () => {
     const response = await fetchCharacterById('wrong-ID', controller);
 
     expect(response).toEqual({ status: 'empty' });
   });
 
-  it('handles network error', async () => {
-    mockFetch.mockRejectedValueOnce(new Error('Network error'));
+  it('handles 500 status response', async () => {
+    await expect(fetchCharacterById(MOCK_STATUS_500, controller)).rejects.toThrow(
+      /fetching response status is not ok/i,
+    );
+  });
 
-    await expect(fetchCharacterById('1', controller)).rejects.toThrow('Network error');
+  it('handles network error', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch');
+
+    fetchSpy.mockRejectedValueOnce(new Error('Network error'));
+
+    await expect(fetchCharacterById(characterMock.id.toString(), controller)).rejects.toThrow('Network error');
   });
 
   it('handles request abort', async () => {
-    const abortController = new AbortController();
-    abortController.abort();
+    controller.abort();
 
-    mockFetch.mockRejectedValueOnce(new DOMException('The operation was aborted.'));
-
-    const response = await fetchCharacterById('1', abortController);
+    const response = await fetchCharacterById('Any search', controller);
 
     expect(response).toEqual({ status: 'aborted' });
   });
@@ -55,63 +45,38 @@ describe('fetchCharacters', () => {
   const controller = new AbortController();
 
   it('fetches characters successfully with search term', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => apiResponseMock,
-    });
-
-    const initialSearchTerm = 'Rick';
+    const initialSearchTerm = MOCK_SEARCH_NAME;
 
     const response = await fetchCharacters(initialSearchTerm, controller);
 
-    expect(mockFetch).toHaveBeenCalledWith(`${BASE_URL}/?page=1&name=${initialSearchTerm}`, {
-      signal: controller.signal,
-    });
     expect(response).toEqual({
       status: 'success',
-      data: apiResponseMock,
+      data: charactersDataMock,
     });
   });
 
-  it('fetches characters successfully without search term', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => apiResponseMock,
-    });
-
-    const response = await fetchCharacters('', controller);
-
-    expect(mockFetch).toHaveBeenCalledWith(`${BASE_URL}/?page=1&name=`, { signal: controller.signal });
-    expect(response).toEqual({
-      status: 'success',
-      data: apiResponseMock,
-    });
-  });
-
-  it('handles 404 error response', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 404,
-    });
-
+  it('handles 404 status response', async () => {
     const response = await fetchCharacters('Unknown', controller);
 
     expect(response).toEqual({ status: 'empty' });
   });
 
-  it('handles network error', async () => {
-    mockFetch.mockRejectedValueOnce(new Error('Network error'));
+  it('handles 500 status response', async () => {
+    await expect(fetchCharacters(MOCK_STATUS_500, controller)).rejects.toThrow(/fetching response status is not ok/i);
+  });
 
-    await expect(fetchCharacters('Error', controller)).rejects.toThrow('Network error');
+  it('handles network error', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch');
+
+    fetchSpy.mockRejectedValueOnce(new Error('Network error'));
+
+    await expect(fetchCharacters(characterMock.id.toString(), controller)).rejects.toThrow('Network error');
   });
 
   it('handles request abort', async () => {
-    const abortController = new AbortController();
-    abortController.abort();
+    controller.abort();
 
-    mockFetch.mockRejectedValueOnce(new DOMException('The operation was aborted.'));
-
-    const response = await fetchCharacters('Any search', abortController);
+    const response = await fetchCharacters('Any search', controller);
 
     expect(response).toEqual({ status: 'aborted' });
   });
