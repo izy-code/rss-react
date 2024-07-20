@@ -84,13 +84,14 @@ export function Details(): ReactNode {
       <div className={styles.card}>
         <ImageLoader imageSrc={character.image} imageAlt={character.name} secondaryColor />
         <h2 className={styles.title}>{character.name}</h2>
-        <div className={styles.propsContainer}>
+        <dl className={styles.descriptionList}>
           {Object.entries(characterProps).map(([param, value]) => (
-            <p key={param} className={styles.prop}>
-              <span className={styles.param}>{param}:</span> {value}
-            </p>
+            <div className={styles.descriptionItem} key={param}>
+              <dt className={styles.descriptionTerm}>{`${param}: `}</dt>
+              <dd className={styles.descriptionDetail}>{value}</dd>
+            </div>
           ))}
-        </div>
+        </dl>
       </div>
       <CustomButton variant="cancel" className={styles.button} onClick={handleButtonClick}>
         Close details

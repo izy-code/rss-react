@@ -56,19 +56,29 @@
   text-align: center;
 }
 
-.propsContainer {
+.descriptionList {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
+  gap: 10px;
   justify-content: center;
-}
-
-.prop {
   margin: 0;
 }
 
-.param {
+.descriptionItem {
+  display: inline;
+  line-height: 1.2;
+}
+
+.descriptionTerm {
+  display: inline;
+  margin: 0;
   font-weight: 700;
+}
+
+.descriptionDetail {
+  display: inline;
+  margin: 0;
 }
 
 .message {
