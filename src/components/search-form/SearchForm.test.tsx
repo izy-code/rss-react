@@ -1,8 +1,10 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { beforeEach, describe, expect, it } from 'vitest';
+
+import { MOCK_SEARCH_NAME } from '@/test/msw/handlers.ts';
+import { renderWithUserSetup } from '@/utils/utils';
 
 import { SearchForm } from './SearchForm';
 
@@ -11,8 +13,8 @@ describe('SearchForm Component', () => {
     localStorage.clear();
   });
 
-  it('saves the entered value to localStorage when Search button is clicked', () => {
-    render(
+  it('saves the entered value to localStorage when Search button is clicked', async () => {
+    const { user } = renderWithUserSetup(
       <MemoryRouter>
         <SearchForm
           onSearch={(term) => {
@@ -27,10 +29,9 @@ describe('SearchForm Component', () => {
     const searchInput = screen.getByRole('searchbox');
     const searchButton = screen.getByRole('button', { name: 'Search' });
 
-    const newSearchTerm = 'Rick';
-    fireEvent.change(searchInput, { target: { value: newSearchTerm } });
-    fireEvent.click(searchButton);
+    await user.type(searchInput, MOCK_SEARCH_NAME);
+    await user.click(searchButton);
 
-    expect(localStorage.getItem('LS_KEY')).toBe(newSearchTerm);
+    expect(localStorage.getItem('LS_KEY')).toBe(MOCK_SEARCH_NAME);
   });
 });
