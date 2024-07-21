@@ -26,7 +26,7 @@ export function Details(): ReactNode {
   };
 
   useEffect(() => {
-    const updateCards = async (controller: AbortController, id: string): Promise<void> => {
+    const updateDetails = async (controller: AbortController, id: string): Promise<void> => {
       const loadingTimeout = setTimeout(() => {
         setIsLoading(true);
       }, ANTI_FLICKER_DELAY);
@@ -47,7 +47,7 @@ export function Details(): ReactNode {
     const controller = new AbortController();
 
     if (detailsParam && Number.isInteger(+detailsParam)) {
-      void updateCards(controller, detailsParam);
+      void updateDetails(controller, detailsParam);
     } else {
       setFetchResult({ status: 'empty' });
     }
