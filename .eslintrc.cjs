@@ -94,7 +94,6 @@ module.exports = {
     },
     {
       extends: [
-        'plugin:vitest/recommended',
         'plugin:jest-dom/recommended',
         'plugin:testing-library/react',
       ],
