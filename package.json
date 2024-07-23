@@ -17,7 +17,8 @@
     "tsc": "tsc --noEmit --project ./tsconfig.json",
     "tsc:watch": "tsc --noEmit --project --watch ./tsconfig.json",
     "prepare": "husky",
-    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e class-components -b netlify"
+    "test": "vitest run --coverage",
+    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e hooks-and-routing -b netlify"
   },
   "browserslist": [
     "last 2 versions",
@@ -29,22 +30,27 @@
   "lint-staged": {
     "*.{ts,tsx,js}": "eslint --report-unused-disable-directives",
     "*.{scss,css}": "stylelint --quiet-deprecation-warnings",
-    "*.html": "prettier"
+    "*.html": "prettier --check"
   },
   "engines": {
-    "node": ">=20.0.0 <21.0.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.24.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^2.0.2",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -53,6 +59,7 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest-dom": "^5.4.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-react": "^7.34.1",
@@ -60,9 +67,12 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "eslint-plugin-simple-import-sort": "^12.1.0",
+    "eslint-plugin-testing-library": "^6.2.2",
     "gh-pages": "^6.1.1",
     "husky": "^9.0.11",
+    "jsdom": "^24.1.0",
     "lint-staged": "^15.2.2",
+    "msw": "^2.3.2",
     "postcss": "^8.4.35",
     "postcss-media-minmax": "^5.0.0",
     "prettier": "^3.2.5",
@@ -73,6 +83,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.3.1",
     "vite-plugin-checker": "0.6.0",
-    "vite-tsconfig-paths": "^4.3.2"
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^2.0.2"
   }
 }

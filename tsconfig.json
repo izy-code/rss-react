@@ -22,7 +22,10 @@
     "baseUrl": "",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": [
+      "vitest/globals"
+    ]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"],

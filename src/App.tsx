@@ -1,10 +1,12 @@
 import type { ReactNode } from 'react';
-import { Component } from 'react';
+import { Outlet } from 'react-router-dom';
 
-import { MainPage } from '@/pages/main-page/MainPage';
+import { ErrorBoundary } from './components/error-boundary/ErrorBoundary';
 
-export class App extends Component {
-  public render(): ReactNode {
-    return <MainPage />;
-  }
+export function App(): ReactNode {
+  return (
+    <ErrorBoundary>
+      <Outlet />
+    </ErrorBoundary>
+  );
 }

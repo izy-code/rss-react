@@ -1,58 +1,72 @@
 import type { FormEvent, ReactNode } from 'react';
-import { Component, createRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+import { SearchParams } from '@/common/enums';
 
 import { CustomButton } from '../custom-button/CustomButton';
-import styles from './styles.module.scss';
+import styles from './SearchForm.module.scss';
 
-type Props = {
+interface Props {
   onSearch: (term: string) => void;
-  initialTerm: string;
-  isLoading: boolean;
-};
+  initialSearchTerm: string;
+  isDisabled: boolean;
+}
 
-export class SearchForm extends Component<Props> {
-  private inputRef = createRef<HTMLInputElement>();
+export function SearchForm({ onSearch, initialSearchTerm, isDisabled }: Props): ReactNode {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  public componentDidMount(): void {
-    this.inputRef.current?.focus();
-  }
-
-  public componentDidUpdate(prevProps: Props): void {
-    const { isLoading } = this.props;
-
-    if (prevProps.isLoading && !isLoading) {
-      this.inputRef.current?.focus();
+  useEffect(() => {
+    if (!isDisabled) {
+      inputRef.current?.focus();
     }
-  }
+  }, [isDisabled]);
 
-  private handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  useEffect(() => {
+    const urlSearchTerm = searchParams.get(SearchParams.NAME) ?? '';
+
+    if (inputRef.current) {
+      inputRef.current.value = urlSearchTerm;
+    }
+
+    if (initialSearchTerm !== urlSearchTerm) {
+      onSearch(urlSearchTerm);
+    }
+  }, [searchParams, onSearch, initialSearchTerm]);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
-    if (event.target instanceof HTMLFormElement) {
-      const { onSearch } = this.props;
+    const inputSearchTerm = inputRef.current?.value.trim() ?? '';
 
-      onSearch(this.inputRef.current?.value.trim() ?? '');
+    onSearch(inputSearchTerm);
+
+    if (inputSearchTerm) {
+      searchParams.set(SearchParams.NAME, inputSearchTerm);
+      searchParams.delete(SearchParams.PAGE);
+      setSearchParams(searchParams);
+    } else {
+      searchParams.delete(SearchParams.NAME);
+      searchParams.delete(SearchParams.PAGE);
+      setSearchParams(searchParams);
     }
-  };
-
-  public render(): ReactNode {
-    const { isLoading, initialTerm } = this.props;
-
-    return (
-      <form className={styles.form} onSubmit={this.handleSubmit}>
-        <input
-          ref={this.inputRef}
-          className={styles.input}
-          type="search"
-          placeholder="Enter character name…"
-          defaultValue={initialTerm}
-          disabled={isLoading}
-          autoComplete="off"
-        />
-        <CustomButton type="submit" variant="secondary" disabled={isLoading}>
-          Search
-        </CustomButton>
-      </form>
-    );
   }
+
+  return (
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <input
+        ref={inputRef}
+        className={styles.input}
+        type="search"
+        placeholder="Enter character name…"
+        defaultValue={initialSearchTerm}
+        disabled={isDisabled}
+        autoComplete="off"
+      />
+      <CustomButton type="submit" variant="secondary" disabled={isDisabled}>
+        Search
+      </CustomButton>
+    </form>
+  );
 }

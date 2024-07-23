@@ -1,14 +1,19 @@
+import clsx from 'clsx';
 import type { ReactNode } from 'react';
-import { Component } from 'react';
 
-import styles from './styles.module.scss';
+import styles from './Loader.module.scss';
 
-export class Loader extends Component {
-  public render(): ReactNode {
-    return (
-      <div className={styles.loaderContainer}>
-        <div className={styles.loader} />
-      </div>
-    );
-  }
+export function Loader({
+  className,
+  secondaryColor = false,
+}: {
+  className?: string;
+  secondaryColor?: boolean;
+}): ReactNode {
+  return (
+    <div className={clsx(styles.loaderContainer, className)}>
+      <h2 className="visually-hidden">Loading...</h2>
+      <div className={clsx(styles.loader, secondaryColor && styles.secondary)} />
+    </div>
+  );
 }

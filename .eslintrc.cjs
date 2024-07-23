@@ -43,6 +43,7 @@ module.exports = {
     'no-param-reassign': ['error', { props: false }],
     'jsx-a11y/no-static-element-interactions': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
     'import/no-absolute-path': 'off',
@@ -51,9 +52,12 @@ module.exports = {
     'react/prefer-stateless-function': 'off',
     'react/button-has-type': 'off',
     curly: ['error', 'all'],
-    "react/jsx-props-no-spreading": ['error', {
-      "html": "ignore"
-    }],
+    'react/jsx-props-no-spreading': [
+      'error',
+      {
+        html: 'ignore',
+      },
+    ],
     '@typescript-eslint/no-inferrable-types': 'error',
     '@typescript-eslint/explicit-member-accessibility': [
       'error',
@@ -85,8 +89,15 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.js'],
+      files: ['./**/*.+(cjs|js|mjs)'],
       extends: ['plugin:@typescript-eslint/disable-type-checked'],
+    },
+    {
+      extends: [
+        'plugin:jest-dom/recommended',
+        'plugin:testing-library/react',
+      ],
+      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
     },
   ],
   settings: {

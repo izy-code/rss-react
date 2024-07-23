@@ -1,43 +1,36 @@
-import type { ReactNode } from 'react';
-import { Component } from 'react';
+import clsx from 'clsx';
+import { type ReactNode } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 
-import type { Character } from '@/api/types';
+import type { CharacterData } from '@/api/types';
+import { SearchParams } from '@/common/enums';
 
-import styles from './styles.module.scss';
+import { ImageLoader } from '../image-loader/ImageLoader';
+import styles from './Card.module.scss';
 
 interface Props {
-  character: Character;
+  character: CharacterData;
 }
 
-export class Card extends Component<Props> {
-  public render(): ReactNode {
-    const { character } = this.props;
+export function Card({ character }: Props): ReactNode {
+  const [searchParams] = useSearchParams();
 
-    return (
-      <li className={styles.card}>
-        <img className={styles.image} src={character.image} alt={character.name} />
+  const isActive = searchParams.get(SearchParams.DETAILS) === character.id.toString();
+
+  const getLinkPath = (): string => {
+    const updatedSearchParams = new URLSearchParams(searchParams);
+
+    updatedSearchParams.set(SearchParams.DETAILS, character.id.toString());
+
+    return `?${updatedSearchParams.toString()}`;
+  };
+
+  return (
+    <li className={styles.card}>
+      <Link className={clsx(isActive ? styles.active : '', styles.link)} to={getLinkPath()}>
+        <ImageLoader imageSrc={character.image} imageAlt={character.name} />
         <h2 className={styles.title}>{character.name}</h2>
-        <div className={styles.propsContainer}>
-          <p className={styles.prop}>
-            <span className={styles.param}>Species:</span> {character.species}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Status:</span> {character.status}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Gender:</span> {character.gender}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Episodes count:</span> {character.episode.length}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Origin:</span> {character.origin.name}
-          </p>
-          <p className={styles.prop}>
-            <span className={styles.param}>Location:</span> {character.location.name}
-          </p>
-        </div>
-      </li>
-    );
-  }
+      </Link>
+    </li>
+  );
 }

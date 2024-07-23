@@ -1,84 +1,95 @@
 import type { ReactNode } from 'react';
-import { Component } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-import { fetchCharacters } from '@/api/api';
-import type { Character } from '@/api/types';
+import type { FetchCharacterListResult } from '@/api/api';
+import { DEFAULT_PAGE, fetchCharacters } from '@/api/api';
+import { SearchParams } from '@/common/enums';
 import { Card } from '@/components/card/Card';
 import { Loader } from '@/components/loader/Loader';
 
-import styles from './styles.module.scss';
+import { Pagination } from '../pagination/Pagination';
+import styles from './CardList.module.scss';
 
-type Props = {
+interface Props {
   searchTerm: string;
-  onLoadingStateChange: (isLoading: boolean) => void;
   lastSearchTime: Date | null;
   isLoading: boolean;
-};
+  setIsLoading: (isLoading: boolean) => void;
+}
 
-type State = {
-  cards: Character[];
-};
+const ANTI_FLICKER_DELAY = 500;
 
-export class CardList extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      cards: [],
-    };
-  }
+export function CardList({ searchTerm, lastSearchTime, isLoading, setIsLoading }: Props): ReactNode {
+  const [isFetchError, setIsFetchError] = useState<boolean>(false);
+  const [fetchResult, setFetchResult] = useState<FetchCharacterListResult>({ status: 'aborted' });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const listRef = useRef(null);
 
-  public componentDidMount(): void {
-    const { searchTerm } = this.props;
+  const currentPage = Number(searchParams.get(SearchParams.PAGE));
 
-    void this.updateCards(searchTerm);
-  }
-
-  public componentDidUpdate(prevProps: Props): void {
-    const { lastSearchTime, searchTerm } = this.props;
-
-    if (prevProps.lastSearchTime !== lastSearchTime) {
-      void this.updateCards(searchTerm);
-    }
-  }
-
-  private updateCards = async (searchTerm: string): Promise<void> => {
-    const { onLoadingStateChange } = this.props;
-
-    onLoadingStateChange(true);
-
-    try {
-      const data = await fetchCharacters(searchTerm);
-
-      if (data) {
-        this.setState({ cards: data.results });
-      } else {
-        this.setState({ cards: [] });
-      }
-    } catch (error) {
-      console.error('Error fetching characters:', error);
-    } finally {
-      onLoadingStateChange(false);
+  const handleListClick = (evt: React.MouseEvent): void => {
+    if (evt.target === listRef.current) {
+      searchParams.delete(SearchParams.DETAILS);
+      setSearchParams(searchParams);
     }
   };
 
-  public render(): ReactNode {
-    const { cards } = this.state;
-    const { isLoading } = this.props;
+  useEffect(() => {
+    const updateCards = async (controller: AbortController): Promise<void> => {
+      const loadingTimeout = setTimeout(() => {
+        setIsLoading(true);
+      }, ANTI_FLICKER_DELAY);
+      setIsFetchError(false);
 
-    if (isLoading) {
-      return <Loader />;
+      try {
+        const fetchCharactersResult = await fetchCharacters(searchTerm, controller, currentPage);
+
+        setFetchResult(fetchCharactersResult);
+      } catch (error) {
+        setIsFetchError(true);
+      } finally {
+        clearTimeout(loadingTimeout);
+        setIsLoading(false);
+      }
+    };
+
+    const controller = new AbortController();
+
+    void updateCards(controller);
+
+    return (): void => {
+      controller.abort();
+    };
+  }, [searchTerm, lastSearchTime, currentPage, setIsLoading]);
+
+  useEffect(() => {
+    if (!Number.isInteger(currentPage) || currentPage < DEFAULT_PAGE) {
+      searchParams.set(SearchParams.PAGE, DEFAULT_PAGE.toString());
+      setSearchParams(searchParams);
     }
+  }, [currentPage, searchParams, setSearchParams]);
 
-    if (cards.length === 0) {
-      return <div className={styles.noResults}>No characters found</div>;
-    }
+  if (isFetchError) {
+    return <div className={styles.message}>Characters list fetching problem</div>;
+  }
 
-    return (
-      <ul className={styles.list}>
-        {cards.map((card) => (
-          <Card key={card.id} character={card} />
+  if (isLoading || fetchResult.status === 'aborted') {
+    return <Loader />;
+  }
+
+  if (fetchResult.status === 'empty' || !fetchResult.data) {
+    return <div className={styles.message}>No characters found</div>;
+  }
+
+  return (
+    <>
+      <Pagination pageInfo={fetchResult.data.info} />
+      <ul className={styles.list} ref={listRef} onClick={handleListClick}>
+        {fetchResult.data.results.map((characterData) => (
+          <Card key={characterData.id} character={characterData} />
         ))}
       </ul>
-    );
-  }
+    </>
+  );
 }
