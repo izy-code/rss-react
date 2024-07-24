@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 
 import { LocalStorageKeys, SearchParams } from '@/common/enums';
@@ -15,24 +15,22 @@ import styles from './MainPage.module.scss';
 export function MainPage(): ReactNode {
   const { getStoredValue, setStoredValue } = useLocalStorage<string>();
   const [searchTerm, setSearchTerm] = useState<string>(getStoredValue(LocalStorageKeys.SEARCH) || '');
-  const [isCardListLoading, setIsCardListLoading] = useState<boolean>(false);
-  const [lastSearchTime, setLastSearchTime] = useState<Date | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sectionRef = useRef(null);
-  const mainRef = useRef(null);
+  const details = searchParams.get(SearchParams.DETAILS);
 
   const handleSearch = useCallback(
     (term: string): void => {
       setStoredValue(LocalStorageKeys.SEARCH, term);
       setSearchTerm(term);
-      setLastSearchTime(new Date());
     },
     [setStoredValue],
   );
 
   const handleMainClick = (evt: React.MouseEvent): void => {
-    if (evt.target === sectionRef.current || evt.target === mainRef.current) {
+    evt.stopPropagation();
+
+    if (details) {
       searchParams.delete(SearchParams.DETAILS);
       setSearchParams(searchParams);
     }
@@ -43,18 +41,13 @@ export function MainPage(): ReactNode {
   return (
     <div className={styles.page}>
       <Header>
-        <SearchForm initialSearchTerm={searchTerm} onSearch={handleSearch} isDisabled={isCardListLoading} />
+        <SearchForm initialSearchTerm={searchTerm} onSearch={handleSearch} />
         <ThrowErrorButton />
         <ThemeButton />
       </Header>
-      <main className={styles.main} onClick={handleMainClick} ref={mainRef}>
-        <section className={styles.listSection} ref={sectionRef}>
-          <CardList
-            searchTerm={searchTerm}
-            lastSearchTime={lastSearchTime}
-            isLoading={isCardListLoading}
-            setIsLoading={setIsCardListLoading}
-          />
+      <main className={styles.main} onClick={(evt) => handleMainClick(evt)}>
+        <section className={styles.listSection}>
+          <CardList searchTerm={searchTerm} />
         </section>
         {isDetailsSectionShown && (
           <section className={styles.detailsSection}>

@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
+import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './SearchForm.module.scss';
@@ -10,12 +11,18 @@ import styles from './SearchForm.module.scss';
 interface Props {
   onSearch: (term: string) => void;
   initialSearchTerm: string;
-  isDisabled: boolean;
 }
 
-export function SearchForm({ onSearch, initialSearchTerm, isDisabled }: Props): ReactNode {
+export function SearchForm({ onSearch, initialSearchTerm }: Props): ReactNode {
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const currentPage = Number(searchParams.get(SearchParams.PAGE));
+
+  const { isFetching: isDisabled } = useGetCharactersListQuery({
+    searchTerm: initialSearchTerm,
+    page: currentPage,
+  });
 
   useEffect(() => {
     if (!isDisabled) {
@@ -44,11 +51,11 @@ export function SearchForm({ onSearch, initialSearchTerm, isDisabled }: Props): 
 
     if (inputSearchTerm) {
       searchParams.set(SearchParams.NAME, inputSearchTerm);
-      searchParams.delete(SearchParams.PAGE);
+      searchParams.set(SearchParams.PAGE, DEFAULT_PAGE.toString());
       setSearchParams(searchParams);
     } else {
       searchParams.delete(SearchParams.NAME);
-      searchParams.delete(SearchParams.PAGE);
+      searchParams.set(SearchParams.PAGE, DEFAULT_PAGE.toString());
       setSearchParams(searchParams);
     }
   }
