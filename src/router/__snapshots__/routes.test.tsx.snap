@@ -122,6 +122,16 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
         >
           Throw error
         </button>
+        <button
+          class="_button_1c0f93 _button--secondary_1c0f93 _button_628325 __628325"
+          type="button"
+        >
+          <span
+            class="visually-hidden"
+          >
+            Switch to dark theme
+          </span>
+        </button>
       </div>
     </header>
     <main
@@ -169,7 +179,7 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
                 <img
                   alt="Placeholder"
                   class="_image_4c56d5"
-                  src="/src/assets/images/placeholder.jpeg"
+                  src="/src/assets/images/placeholder.svg"
                 />
                 <div
                   class="_loaderContainer_523128 _loader_4c56d5"
@@ -209,7 +219,7 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
                 <img
                   alt="Placeholder"
                   class="_image_4c56d5"
-                  src="/src/assets/images/placeholder.jpeg"
+                  src="/src/assets/images/placeholder.svg"
                 />
                 <div
                   class="_loaderContainer_523128 _loader_4c56d5"
@@ -249,7 +259,7 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
                 <img
                   alt="Placeholder"
                   class="_image_4c56d5"
-                  src="/src/assets/images/placeholder.jpeg"
+                  src="/src/assets/images/placeholder.svg"
                 />
                 <div
                   class="_loaderContainer_523128 _loader_4c56d5"
