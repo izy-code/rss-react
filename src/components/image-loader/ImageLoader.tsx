@@ -23,7 +23,7 @@ export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Prop
     <>
       {isLoading && (
         <div className={styles.placeholder}>
-          <img className={styles.image} src={placeholder} alt="Placeholder" />
+          <img className={clsx(styles.image, styles.placeholderImage)} src={placeholder} alt="Placeholder" />
           <Loader className={styles.loader} secondaryColor={secondaryColor} />
         </div>
       )}
