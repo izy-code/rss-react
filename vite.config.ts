@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -18,6 +20,11 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   test: {
     coverage: {
       all: true,
