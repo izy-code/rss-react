@@ -1,101 +1,66 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import type { FetchCharacterResult } from '@/api/api';
-import { fetchCharacterById } from '@/api/api';
 import { SearchParams } from '@/common/enums';
+import { useGetCharacterByIdQuery } from '@/store/api/api-slice';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import { ImageLoader } from '../image-loader/ImageLoader';
 import { Loader } from '../loader/Loader';
 import styles from './Details.module.scss';
 
-const ANTI_FLICKER_DELAY = 500;
-
 export function Details(): ReactNode {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isFetchError, setIsFetchError] = useState<boolean>(false);
-  const [fetchResult, setFetchResult] = useState<FetchCharacterResult>({ status: 'aborted' });
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const detailsParam = searchParams.get(SearchParams.DETAILS);
+  const detailsParam = searchParams.get(SearchParams.DETAILS) || 'no-details';
+
+  const { data: characterData, isFetching, isSuccess, isError, error } = useGetCharacterByIdQuery(detailsParam);
 
   const handleButtonClick = (): void => {
     searchParams.delete(SearchParams.DETAILS);
     setSearchParams(searchParams);
   };
 
-  useEffect(() => {
-    const updateDetails = async (controller: AbortController, id: string): Promise<void> => {
-      const loadingTimeout = setTimeout(() => {
-        setIsLoading(true);
-      }, ANTI_FLICKER_DELAY);
-      setIsFetchError(false);
+  let content: ReactNode = null;
 
-      try {
-        const fetchCharacterResult = await fetchCharacterById(id, controller);
-
-        setFetchResult(fetchCharacterResult);
-      } catch (error) {
-        setIsFetchError(true);
-      } finally {
-        clearTimeout(loadingTimeout);
-        setIsLoading(false);
-      }
-    };
-
-    const controller = new AbortController();
-
-    if (detailsParam && Number.isInteger(+detailsParam)) {
-      void updateDetails(controller, detailsParam);
+  if (isFetching) {
+    content = <Loader secondaryColor className={styles.loader} />;
+  } else if (isError) {
+    if (!Number.isInteger(+detailsParam) || ('status' in error && error.status === 404)) {
+      content = <div className={styles.message}>No character found</div>;
     } else {
-      setFetchResult({ status: 'empty' });
+      content = <div className={styles.message}>Character details fetching problem</div>;
     }
-
-    return (): void => {
-      controller.abort();
+  } else if (isSuccess && characterData) {
+    const characterProps = {
+      Species: characterData.species,
+      Status: characterData.status,
+      Gender: characterData.gender,
+      'Episodes count': characterData.episode.length,
+      Origin: characterData.origin.name,
+      Location: characterData.location.name,
     };
-  }, [detailsParam]);
 
-  if (isFetchError) {
-    return <div className={styles.message}>Character details fetching problem</div>;
-  }
-
-  if (isLoading || fetchResult.status === 'aborted') {
-    return <Loader secondaryColor className={styles.loader} />;
-  }
-
-  if (fetchResult.status === 'empty' || !fetchResult.data) {
-    return <div className={styles.message}>No character found</div>;
-  }
-
-  const character = fetchResult.data;
-  const characterProps = {
-    Species: character.species,
-    Status: character.status,
-    Gender: character.gender,
-    'Episodes count': character.episode.length,
-    Origin: character.origin.name,
-    Location: character.location.name,
-  };
-
-  return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <ImageLoader imageSrc={character.image} imageAlt={character.name} secondaryColor />
-        <h2 className={styles.title}>{character.name}</h2>
-        <dl className={styles.descriptionList}>
-          {Object.entries(characterProps).map(([param, value]) => (
-            <div className={styles.descriptionItem} key={param}>
-              <dt className={styles.descriptionTerm}>{`${param}: `}</dt>
-              <dd className={styles.descriptionDetail}>{value}</dd>
-            </div>
-          ))}
-        </dl>
+    content = (
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <ImageLoader imageSrc={characterData.image} imageAlt={characterData.name} secondaryColor />
+          <h2 className={styles.title}>{characterData.name}</h2>
+          <dl className={styles.descriptionList}>
+            {Object.entries(characterProps).map(([param, value]) => (
+              <div className={styles.descriptionItem} key={param}>
+                <dt className={styles.descriptionTerm}>{`${param}: `}</dt>
+                <dd className={styles.descriptionDetail}>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <CustomButton variant="cancel" className={styles.button} onClick={handleButtonClick}>
+          Close details
+        </CustomButton>
       </div>
-      <CustomButton variant="cancel" className={styles.button} onClick={handleButtonClick}>
-        Close details
-      </CustomButton>
-    </div>
-  );
+    );
+  }
+
+  return content;
 }
