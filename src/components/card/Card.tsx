@@ -25,8 +25,12 @@ export function Card({ character }: Props): ReactNode {
     return `?${updatedSearchParams.toString()}`;
   };
 
+  const handleListItemClick = (evt: React.MouseEvent): void => {
+    evt.stopPropagation();
+  };
+
   return (
-    <li className={styles.card}>
+    <li className={styles.card} onClick={(evt) => handleListItemClick(evt)}>
       <Link className={clsx(isActive ? styles.active : '', styles.link)} to={getLinkPath()}>
         <ImageLoader imageSrc={character.image} imageAlt={character.name} />
         <h2 className={styles.title}>{character.name}</h2>

@@ -21,11 +21,17 @@ export function Pagination({ pageInfo }: Props): ReactNode {
     setSearchParams(searchParams);
   };
 
+  const handleButtonClick = (evt: React.MouseEvent, nextPage: number): void => {
+    evt.stopPropagation();
+
+    handlePageChange(nextPage);
+  };
+
   return (
     <div className={styles.container}>
       <CustomButton
         className={styles.button}
-        onClick={() => handlePageChange(currentPage - 1)}
+        onClick={(evt) => handleButtonClick(evt, currentPage - 1)}
         disabled={currentPage === 1}
       >
         Prev
@@ -33,7 +39,7 @@ export function Pagination({ pageInfo }: Props): ReactNode {
       <p className={styles.text}>{`Page ${currentPage} of ${pageInfo.pages}`}</p>
       <CustomButton
         className={styles.button}
-        onClick={() => handlePageChange(currentPage + 1)}
+        onClick={(evt) => handleButtonClick(evt, currentPage + 1)}
         disabled={currentPage === pageInfo.pages}
       >
         Next
