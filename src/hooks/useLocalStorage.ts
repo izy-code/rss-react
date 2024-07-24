@@ -1,21 +1,31 @@
 import { useCallback, useState } from 'react';
 
-const LOCAL_STORAGE_KEY = 'izy-search-term-task-2';
-const INITIAL_VALUE = '';
+import type { LocalStorageKeys } from '@/common/enums';
 
-function getInitialState(): string {
+const LOCAL_STORAGE_KEY = 'izy-search-term-task-3';
+
+function getInitialState<T>(): Record<string, T> {
   const item = localStorage.getItem(LOCAL_STORAGE_KEY);
-
-  return item || INITIAL_VALUE;
+  return item ? (JSON.parse(item) as Record<string, T>) : {};
 }
 
-export function useLocalStorage(): [string, (value: string) => void] {
-  const [storedValue, setStoredValue] = useState<string>(() => getInitialState());
+export function useLocalStorage<T>(): {
+  getStoredValue: (key: LocalStorageKeys) => T | null;
+  setStoredValue: (key: LocalStorageKeys, value: T) => void;
+} {
+  const [storedMap, setStoredMap] = useState<Record<string, T>>(() => getInitialState<T>());
 
-  const setValue = useCallback((value: string) => {
-    setStoredValue(value);
-    localStorage.setItem(LOCAL_STORAGE_KEY, value);
+  const setStoredValue = useCallback((key: LocalStorageKeys, value: T) => {
+    setStoredMap((prevMap) => {
+      const updatedMap = { ...prevMap, [key]: value };
+
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedMap));
+
+      return updatedMap;
+    });
   }, []);
 
-  return [storedValue, setValue] as const;
+  const getStoredValue = useCallback((key: LocalStorageKeys): T | null => storedMap[key] ?? null, [storedMap]);
+
+  return { getStoredValue, setStoredValue };
 }
