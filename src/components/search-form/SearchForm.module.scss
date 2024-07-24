@@ -13,5 +13,19 @@
   border-radius: 6px;
   transition:
     border-color 0.6s ease-out,
+    background-color 0.6s ease-out,
     color 0.6s ease-out,;
+
+  &::placeholder {
+    transition: color 0.6s ease;
+  }
+
+  :global(.dark-theme) & {
+    background-color: var(--color-bg-page);
+    border-color: var(--color-disabled);
+
+    &::placeholder {
+      color: #afaaaa;
+    }
+  }
 }

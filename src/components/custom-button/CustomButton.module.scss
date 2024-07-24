@@ -11,8 +11,8 @@
   border: none;
   border-radius: 6px;
   box-shadow:
-    0 8px 16px 0 rgb(0 0 0 / 20%),
-    0 6px 20px 0 rgb(0 0 0 / 19%);
+    0 8px 16px 0 var(--color-shadow),
+    0 6px 20px 0 var(--color-shadow);
   cursor: pointer;
   user-select: none;
   transition:
@@ -32,12 +32,15 @@
   &:focus-visible:not(:disabled) {
     @media (hover: hover) {
       background-color: var(--color-primary-accent);
+      box-shadow:
+        0 8px 8px 0 var(--color-shadow),
+        0 6px 10px 0 var(--color-shadow);
     }
   }
 
   &:active:not(:disabled) {
     color: var(--color-text-dark);
-    background-color: var(--color-primary-dark);
+    background-color: var(--color-primary-active);
     box-shadow: none;
   }
 
@@ -52,7 +55,7 @@
     }
 
     &:active:not(:disabled) {
-      background-color: var(--color-error-dark);
+      background-color: var(--color-error-active);
     }
   }
 
@@ -67,7 +70,22 @@
     }
 
     &:active:not(:disabled) {
-      background-color: var(--color-second-dark);
+      background-color: var(--color-second-active);
+    }
+  }
+
+  &--tertiary {
+    background-color: var(--color-third);
+
+    &:hover:not(:disabled),
+    &:focus-visible:not(:disabled) {
+      @media (hover: hover) {
+        background-color: var(--color-third-accent);
+      }
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--color-third-active);
     }
   }
 }
