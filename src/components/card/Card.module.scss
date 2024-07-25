@@ -50,3 +50,16 @@
   }
 }
 
+.content {
+  display: flex;
+  gap: 10px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.checkbox {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
