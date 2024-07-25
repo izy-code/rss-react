@@ -46,6 +46,27 @@ $color-black-transparent: #00000050;
 
   --min-width: 360px;
   --max-width: 1440px;
+
+  &:has(.dark-theme) {
+    --color-text-primary: #{#e3e3e3};
+    --color-text-dark: #{#e3e3e3};
+    --color-bg-page: #{#1b1b1d};
+    --color-bg-container: #{#3a3b31};
+    --color-primary: #{$color-dark-slate-blue};
+    --color-primary-accent: #{$color-major-blue};
+    --color-primary-active: #{$color-medium-purple};
+    --color-second: #{$color-dark-blue};
+    --color-second-accent: #{$color-blue};
+    --color-second-active: #{$color-light-blue};
+    --color-third: #{$color-dark-green};
+    --color-third-accent: #{$color-green};
+    --color-third-active: #{$color-iguana-green};
+    --color-error: #af2323;
+    --color-error-accent: #{$color-red};
+    --color-error-active: #{$color-light-red};
+    --color-disabled: #{$color-granite};
+    --color-shadow: #20310f80;
+  }
 }
 
 *,
@@ -68,27 +89,6 @@ body {
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  &.dark-theme {
-    --color-text-primary: #{#e3e3e3};
-    --color-text-dark: #{#e3e3e3};
-    --color-bg-page: #{#1b1b1d};
-    --color-bg-container: #{#3a3b31};
-    --color-primary: #{$color-dark-slate-blue};
-    --color-primary-accent: #{$color-major-blue};
-    --color-primary-active: #{$color-medium-purple};
-    --color-second: #{$color-dark-blue};
-    --color-second-accent: #{$color-blue};
-    --color-second-active: #{$color-light-blue};
-    --color-third: #{$color-dark-green};
-    --color-third-accent: #{$color-green};
-    --color-third-active: #{$color-iguana-green};
-    --color-error: #af2323;
-    --color-error-accent: #{$color-red};
-    --color-error-active: #{$color-light-red};
-    --color-disabled: #{$color-granite};
-    --color-shadow: #20310f80;
-  }
 }
 
 .root {
