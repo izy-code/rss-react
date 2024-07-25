@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import type { CharacterListInfo } from '@/api/types';
 import { SearchParams } from '@/common/enums';
+import type { CharacterListInfo } from '@/store/api/types';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './Pagination.module.scss';
