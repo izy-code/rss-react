@@ -10,15 +10,12 @@ import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
 import { Pagination } from '../pagination/Pagination';
 import styles from './CardList.module.scss';
 
-interface Props {
-  searchTerm: string;
-}
-
-export function CardList({ searchTerm }: Props): ReactNode {
+export function CardList(): ReactNode {
   const [searchParams, setSearchParams] = useSearchParams();
   const listRef = useRef(null);
 
-  const currentPage = Number(searchParams.get(SearchParams.PAGE));
+  const pageParam = Number(searchParams.get(SearchParams.PAGE));
+  const nameParam = searchParams.get(SearchParams.NAME) ?? '';
 
   const {
     data: characterListData,
@@ -27,16 +24,16 @@ export function CardList({ searchTerm }: Props): ReactNode {
     isError,
     error,
   } = useGetCharactersListQuery({
-    searchTerm,
-    page: currentPage,
+    searchTerm: nameParam,
+    page: pageParam,
   });
 
   useEffect(() => {
-    if (!Number.isInteger(currentPage) || currentPage < DEFAULT_PAGE) {
+    if (!Number.isInteger(pageParam) || pageParam < DEFAULT_PAGE) {
       searchParams.set(SearchParams.PAGE, DEFAULT_PAGE.toString());
       setSearchParams(searchParams);
     }
-  }, [currentPage, searchParams, setSearchParams]);
+  }, [pageParam, searchParams, setSearchParams]);
 
   let content: ReactNode = null;
 
