@@ -16,10 +16,13 @@ export const favoriteItemsSlice = createSlice({
     unselectItem: (state, action) => {
       favoriteItemsAdapter.removeOne(state, action);
     },
+    unselectAll: (state) => {
+      favoriteItemsAdapter.removeAll(state);
+    },
   },
 });
 
-export const { selectItem, unselectItem } = favoriteItemsSlice.actions;
+export const { selectItem, unselectItem, unselectAll } = favoriteItemsSlice.actions;
 
 export const { selectAll: selectAllFavoriteItems, selectById: selectFavoriteItemById } =
   favoriteItemsAdapter.getSelectors((state: RootState) => state.favoriteItems);

@@ -7,6 +7,7 @@ import { Card } from '@/components/card/Card';
 import { Loader } from '@/components/loader/Loader';
 import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
 
+import { Flyout } from '../flyout/Flyout';
 import { Pagination } from '../pagination/Pagination';
 import styles from './CardList.module.scss';
 
@@ -54,6 +55,7 @@ export function CardList(): ReactNode {
             <Card key={characterData.id} character={characterData} />
           ))}
         </ul>
+        <Flyout />
       </>
     );
   }
