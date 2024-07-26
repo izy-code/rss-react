@@ -58,8 +58,39 @@
 }
 
 .checkbox {
+  display: grid;
   flex-shrink: 0;
-  width: 30px;
-  height: 30px;
+  place-items: center;
   cursor: pointer;
+  transition: transform 0.6s ease;
+  appearance: none;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    grid-area: 1 / 2 / 1 / 2;
+    width: 26px;
+    height: 26px;
+    background-color: var(--color-star-empty);
+    transition: background-color 0.6s ease;
+    mask: url("@/assets/icons/star.svg") no-repeat center / contain;
+  }
+
+  &::before {
+    width: 32px;
+    height: 32px;
+    background-color: var(--color-bd);
+  }
+
+  &:checked::after {
+    background-color: var(--color-star-filled);
+  }
+
+  &:hover,
+  &:focus-visible {
+    @media (hover: hover) {
+      transform: scale(1.3);
+    }
+  }
 }
