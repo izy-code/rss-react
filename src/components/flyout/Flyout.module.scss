@@ -14,7 +14,7 @@
   background-color: var(--color-second);
   border-radius: 10px;
   box-shadow: 0 0 15px 15px var(--color-shadow);
-  transition: transform 0.6s ease;
+  transition: transform 0.6s ease, background-color 0.6s ease;
   transform: translate(-50%, 120%);
 
   &.show {
@@ -27,6 +27,7 @@
   font-size: 22px;
   font-weight: 700;
   text-align: center;
+  transition: color 0.6s ease;
 }
 
 .buttonsContainer {
@@ -54,9 +55,9 @@
   cursor: pointer;
   user-select: none;
   transition:
-    background-color 0.6s ease-out,
-    color 0.6s ease-out,
-    box-shadow 0.6s ease-out;
+    background-color 0.6s ease,
+    color 0.6s ease,
+    box-shadow 0.6s ease;
 
   &:hover,
   &:focus-visible {
