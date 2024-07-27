@@ -1,18 +1,4 @@
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import type { ReactNode } from 'react';
-
 export type DataObject = Record<string, string | Record<string, string>>;
-
-export function renderWithUserSetup(node: ReactNode): {
-  user: ReturnType<typeof userEvent.setup>;
-  container: HTMLElement;
-} {
-  return {
-    user: userEvent.setup(),
-    ...render(node),
-  };
-}
 
 export const getCsvObjectUrl = (data: DataObject[]): string => {
   if (data.length === 0 || !data[0]) {
