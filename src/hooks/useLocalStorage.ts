@@ -4,7 +4,7 @@ import type { LocalStorageKeys } from '@/common/enums';
 
 export const LOCAL_STORAGE_KEY = 'izy-react-task-3';
 
-function getLocalStorage<T>(): Record<string, T> {
+export function getLocalStorage<T>(): Record<string, T> {
   const item = localStorage.getItem(LOCAL_STORAGE_KEY);
   return item ? (JSON.parse(item) as Record<string, T>) : {};
 }
