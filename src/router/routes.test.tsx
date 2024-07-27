@@ -31,7 +31,7 @@ describe('Router render', () => {
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
     const { user, container } = renderWithProvidersAndUser(<RouterProvider router={memoryRouter} />);
 
-    const errorButton = screen.getByRole('button', { name: 'Throw error' });
+    const errorButton = screen.getByRole('button', { name: /throw error/i });
 
     await user.click(errorButton);
 

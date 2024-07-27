@@ -24,7 +24,7 @@ describe('Details Component', () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByRole('heading', { name: 'Loading...' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /loading.../i })).toBeInTheDocument();
 
     await waitFor(() =>
       expect(fetchSpy).toHaveBeenCalledWith(

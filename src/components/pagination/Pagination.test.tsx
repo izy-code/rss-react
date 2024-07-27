@@ -31,7 +31,7 @@ describe('Pagination Component', () => {
       </MemoryRouter>,
     );
 
-    const prevButton = screen.getByRole('button', { name: 'Prev' });
+    const prevButton = screen.getByRole('button', { name: /prev/i });
 
     expect(prevButton).toBeDisabled();
   });
@@ -43,7 +43,7 @@ describe('Pagination Component', () => {
       </MemoryRouter>,
     );
 
-    const nextButton = screen.getByRole('button', { name: 'Next' });
+    const nextButton = screen.getByRole('button', { name: /next/i });
 
     expect(nextButton).toBeDisabled();
   });
@@ -58,7 +58,7 @@ describe('Pagination Component', () => {
       </MemoryRouter>,
     );
 
-    const nextButton = screen.getByRole('button', { name: 'Next' });
+    const nextButton = screen.getByRole('button', { name: /next/i });
 
     await user.click(nextButton);
 
@@ -75,7 +75,7 @@ describe('Pagination Component', () => {
       </MemoryRouter>,
     );
 
-    const prevButton = screen.getByRole('button', { name: 'Prev' });
+    const prevButton = screen.getByRole('button', { name: /prev/i });
 
     await user.click(prevButton);
 
