@@ -92,7 +92,9 @@ describe('Card Component', () => {
     }
 
     await user.click(checkboxes[0]);
-
     await waitFor(() => expect(counter).toHaveTextContent(/items selected: 1/i));
+
+    await user.click(checkboxes[0]);
+    await waitFor(() => expect(counter).toHaveTextContent(/items selected: 0/i));
   });
 });
