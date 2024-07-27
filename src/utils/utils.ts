@@ -12,7 +12,10 @@ export const getCsvObjectUrl = (data: DataObject[]): string => {
   ): Record<string, string> => {
     Object.entries(obj).forEach(([key, value]) => {
       const newKey = parentKey ? `${parentKey}.${key}` : key;
-      if (typeof value === 'object' && value !== null) {
+      if (key === 'episode' && typeof value === 'object') {
+        const episodeValues = Object.values(value);
+        result[newKey] = episodeValues.join(', ');
+      } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         flattenObject(value, newKey, result);
       } else {
         result[newKey] = String(value);
