@@ -19,7 +19,7 @@
   gap: 10px;
   width: 100%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 20px 10px;
   text-decoration: none;
   color: var(--color-text-primary);
   background-color: var(--color-bg-container);
@@ -52,6 +52,7 @@
 
 .content {
   display: flex;
+  flex-grow: 1;
   gap: 10px;
   justify-content: space-around;
   align-items: center;
