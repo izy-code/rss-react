@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
-import { renderWithUserSetup } from '@/utils/utils';
+import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { routes } from './routes';
 
@@ -11,9 +11,9 @@ describe('Router render', () => {
     const memoryRouter = createMemoryRouter(routes, {
       initialEntries: [`/?page=${MOCK_PAGE_NUMBER}&name=${MOCK_SEARCH_NAME}`],
     });
-    const { container } = render(<RouterProvider router={memoryRouter} />);
+    const { container } = renderWithProvidersAndUser(<RouterProvider router={memoryRouter} />);
 
-    await screen.findByRole('heading', { name: /rick and morty characters/i });
+    await screen.findByRole('button', { name: /prev/i });
 
     expect(container).toMatchSnapshot();
   });
@@ -29,7 +29,7 @@ describe('Router render', () => {
     const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
-    const { user, container } = renderWithUserSetup(<RouterProvider router={memoryRouter} />);
+    const { user, container } = renderWithProvidersAndUser(<RouterProvider router={memoryRouter} />);
 
     const errorButton = screen.getByRole('button', { name: 'Throw error' });
 

@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import * as api from '@/api/api';
 import { MainPage } from '@/pages/main-page/MainPage';
+import { BASE_URL } from '@/store/api/api-slice';
 import { characterMock } from '@/test/mocks/mocks';
-import { renderWithUserSetup } from '@/utils/utils';
+import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { Details } from './Details';
 
@@ -15,34 +15,37 @@ describe('Details Component', () => {
     vi.clearAllMocks();
   });
 
-  const fetchCharacterByIdSpy = vi.spyOn(api, 'fetchCharacterById');
-
   it('displays a loading indicator while fetching data', async () => {
-    render(
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+    renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Routes>
-          <Route path="/" element={<Details />} />
-        </Routes>
+        <Details />
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('heading', { name: 'Loading...' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Loading...' })).toBeInTheDocument();
+
     await waitFor(() =>
-      expect(fetchCharacterByIdSpy).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ url: `${BASE_URL}character/${characterMock.id}` }),
+      ),
     );
   });
 
   it('displays the detailed card data correctly', async () => {
-    render(
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+    renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Routes>
-          <Route path="/" element={<Details />} />
-        </Routes>
+        <Details />
       </MemoryRouter>,
     );
 
     await waitFor(() =>
-      expect(fetchCharacterByIdSpy).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ url: `${BASE_URL}character/${characterMock.id}` }),
+      ),
     );
 
     expect(screen.getByText(characterMock.name)).toBeInTheDocument();
@@ -52,7 +55,8 @@ describe('Details Component', () => {
   });
 
   it('hides the details section when the close button is clicked', async () => {
-    const { user } = renderWithUserSetup(
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const { user } = renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
         <Routes>
           <Route path="/" element={<MainPage />}>
@@ -63,7 +67,9 @@ describe('Details Component', () => {
     );
 
     await waitFor(() =>
-      expect(fetchCharacterByIdSpy).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ url: `${BASE_URL}character/${characterMock.id}` }),
+      ),
     );
 
     const closeButton = await screen.findByRole('button', { name: /close details/i });

@@ -1,10 +1,12 @@
 import '@testing-library/jest-dom';
 
-import { screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { LocalStorageKeys } from '@/common/enums';
+import { LOCAL_STORAGE_KEY } from '@/hooks/useLocalStorage';
 import { MOCK_SEARCH_NAME } from '@/test/msw/handlers.ts';
-import { renderWithUserSetup } from '@/utils/utils';
+import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { SearchForm } from './SearchForm';
 
@@ -14,24 +16,36 @@ describe('SearchForm Component', () => {
   });
 
   it('saves the entered value to localStorage when Search button is clicked', async () => {
-    const { user } = renderWithUserSetup(
+    const { user } = renderWithProvidersAndUser(
       <MemoryRouter>
-        <SearchForm
-          onSearch={(term) => {
-            localStorage.setItem('LS_KEY', term);
-          }}
-          initialSearchTerm=""
-          isDisabled={false}
-        />
+        <SearchForm />
       </MemoryRouter>,
     );
 
     const searchInput = screen.getByRole('searchbox');
     const searchButton = screen.getByRole('button', { name: 'Search' });
 
-    await user.type(searchInput, MOCK_SEARCH_NAME);
+    fireEvent.change(searchInput, { target: { value: MOCK_SEARCH_NAME } });
+
     await user.click(searchButton);
 
-    expect(localStorage.getItem('LS_KEY')).toBe(MOCK_SEARCH_NAME);
+    await waitFor(() => {
+      const localStorageMap = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) as Record<string, string>;
+      expect(localStorageMap).toEqual({ [LocalStorageKeys.SEARCH]: MOCK_SEARCH_NAME });
+    });
+  });
+
+  it('retrieves the value from localStorage upon mounting', () => {
+    const storedValue = { [LocalStorageKeys.SEARCH]: MOCK_SEARCH_NAME };
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(storedValue));
+
+    renderWithProvidersAndUser(
+      <MemoryRouter>
+        <SearchForm />
+      </MemoryRouter>,
+    );
+
+    const searchInput = screen.getByRole('searchbox');
+    expect(searchInput).toHaveValue(MOCK_SEARCH_NAME);
   });
 });
