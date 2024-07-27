@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { LocalStorageKeys } from '@/common/enums';
@@ -25,8 +25,8 @@ describe('SearchForm Component', () => {
     const searchInput = screen.getByRole('searchbox');
     const searchButton = screen.getByRole('button', { name: /search/i });
 
-    fireEvent.change(searchInput, { target: { value: MOCK_SEARCH_NAME } });
-
+    await user.click(searchInput);
+    await user.type(searchInput, MOCK_SEARCH_NAME);
     await user.click(searchButton);
 
     const localStorageMap = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) as Record<string, string>;
