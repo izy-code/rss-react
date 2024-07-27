@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import type { LocalStorageKeys } from '@/common/enums';
 
-const LOCAL_STORAGE_KEY = 'izy-react-task-3';
+export const LOCAL_STORAGE_KEY = 'izy-react-task-3';
 
 function getLocalStorage<T>(): Record<string, T> {
   const item = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -20,7 +20,7 @@ export function useLocalStorage<T>(): {
 
     localStorageMap = { ...localStorageMap, [key]: value };
 
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...localStorageMap, [key]: value }));
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localStorageMap));
   }, []);
 
   return { getStoredValue, setStoredValue };
