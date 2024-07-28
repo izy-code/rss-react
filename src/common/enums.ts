@@ -3,3 +3,8 @@ export enum SearchParams {
   PAGE = 'page',
   DETAILS = 'details',
 }
+
+export enum LocalStorageKeys {
+  SEARCH = 'search-term',
+  THEME = 'is-dark-theme',
+}

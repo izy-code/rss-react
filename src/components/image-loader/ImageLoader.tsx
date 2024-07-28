@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { type ReactNode, useState } from 'react';
 
-import placeholder from '@/assets/images/placeholder.jpeg';
+import placeholder from '@/assets/images/placeholder.svg';
 
 import { Loader } from '../loader/Loader';
 import styles from './ImageLoader.module.scss';
@@ -23,7 +23,7 @@ export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Prop
     <>
       {isLoading && (
         <div className={styles.placeholder}>
-          <img className={styles.image} src={placeholder} alt="Placeholder" />
+          <img className={clsx(styles.image, styles.placeholderImage)} src={placeholder} alt="Placeholder" />
           <Loader className={styles.loader} secondaryColor={secondaryColor} />
         </div>
       )}

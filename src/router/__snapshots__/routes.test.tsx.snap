@@ -122,6 +122,16 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
         >
           Throw error
         </button>
+        <button
+          class="_button_1c0f93 _button--secondary_1c0f93 _button_628325 __628325"
+          type="button"
+        >
+          <span
+            class="visually-hidden"
+          >
+            Switch to dark theme
+          </span>
+        </button>
       </div>
     </header>
     <main
@@ -168,8 +178,8 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
               >
                 <img
                   alt="Placeholder"
-                  class="_image_4c56d5"
-                  src="/src/assets/images/placeholder.jpeg"
+                  class="_image_4c56d5 _placeholderImage_4c56d5"
+                  src="/src/assets/images/placeholder.svg"
                 />
                 <div
                   class="_loaderContainer_523128 _loader_4c56d5"
@@ -189,11 +199,19 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
                 class="_image_4c56d5 _hidden_4c56d5"
                 src="https://rickandmortyapi.com/api/character/avatar/1.jpeg"
               />
-              <h2
-                class="_title_c39673"
+              <div
+                class="_content_c39673"
               >
-                Rick Sanchez Mocked
-              </h2>
+                <h2
+                  class="_title_c39673"
+                >
+                  Rick Sanchez Mocked
+                </h2>
+                <input
+                  class="_checkbox_c39673"
+                  type="checkbox"
+                />
+              </div>
             </a>
           </li>
           <li
@@ -208,8 +226,8 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
               >
                 <img
                   alt="Placeholder"
-                  class="_image_4c56d5"
-                  src="/src/assets/images/placeholder.jpeg"
+                  class="_image_4c56d5 _placeholderImage_4c56d5"
+                  src="/src/assets/images/placeholder.svg"
                 />
                 <div
                   class="_loaderContainer_523128 _loader_4c56d5"
@@ -229,11 +247,19 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
                 class="_image_4c56d5 _hidden_4c56d5"
                 src="https://rickandmortyapi.com/api/character/avatar/8.jpeg"
               />
-              <h2
-                class="_title_c39673"
+              <div
+                class="_content_c39673"
               >
-                Adjudicator Rick Mocked
-              </h2>
+                <h2
+                  class="_title_c39673"
+                >
+                  Adjudicator Rick Mocked
+                </h2>
+                <input
+                  class="_checkbox_c39673"
+                  type="checkbox"
+                />
+              </div>
             </a>
           </li>
           <li
@@ -248,8 +274,8 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
               >
                 <img
                   alt="Placeholder"
-                  class="_image_4c56d5"
-                  src="/src/assets/images/placeholder.jpeg"
+                  class="_image_4c56d5 _placeholderImage_4c56d5"
+                  src="/src/assets/images/placeholder.svg"
                 />
                 <div
                   class="_loaderContainer_523128 _loader_4c56d5"
@@ -269,14 +295,50 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
                 class="_image_4c56d5 _hidden_4c56d5"
                 src="https://rickandmortyapi.com/api/character/avatar/15.jpeg"
               />
-              <h2
-                class="_title_c39673"
+              <div
+                class="_content_c39673"
               >
-                Alien Rick Mocked
-              </h2>
+                <h2
+                  class="_title_c39673"
+                >
+                  Alien Rick Mocked
+                </h2>
+                <input
+                  class="_checkbox_c39673"
+                  type="checkbox"
+                />
+              </div>
             </a>
           </li>
         </ul>
+        <div
+          aria-hidden="true"
+          class="_flyout_8b00b0"
+        >
+          <p
+            class="_counter_8b00b0"
+          >
+            Items selected: 
+            0
+          </p>
+          <div
+            class="_buttonsContainer_8b00b0"
+          >
+            <button
+              class="_button_1c0f93 _button--cancel_1c0f93"
+              type="button"
+            >
+              Unselect all
+            </button>
+            <a
+              class="_link_8b00b0"
+              download="0_characters.csv"
+              href="#"
+            >
+              Download
+            </a>
+          </div>
+        </div>
       </section>
     </main>
   </div>

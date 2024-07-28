@@ -1,21 +1,27 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
-const LOCAL_STORAGE_KEY = 'izy-search-term-task-2';
-const INITIAL_VALUE = '';
+import type { LocalStorageKeys } from '@/common/enums';
 
-function getInitialState(): string {
+export const LOCAL_STORAGE_KEY = 'izy-react-task-3';
+
+export function getLocalStorage<T>(): Record<string, T> {
   const item = localStorage.getItem(LOCAL_STORAGE_KEY);
-
-  return item || INITIAL_VALUE;
+  return item ? (JSON.parse(item) as Record<string, T>) : {};
 }
 
-export function useLocalStorage(): [string, (value: string) => void] {
-  const [storedValue, setStoredValue] = useState<string>(() => getInitialState());
+export function useLocalStorage<T>(): {
+  getStoredValue: (key: LocalStorageKeys) => T | null;
+  setStoredValue: (key: LocalStorageKeys, value: T) => void;
+} {
+  const getStoredValue = useCallback((key: LocalStorageKeys): T | null => getLocalStorage<T>()[key] ?? null, []);
 
-  const setValue = useCallback((value: string) => {
-    setStoredValue(value);
-    localStorage.setItem(LOCAL_STORAGE_KEY, value);
+  const setStoredValue = useCallback((key: LocalStorageKeys, value: T) => {
+    let localStorageMap = getLocalStorage<T>();
+
+    localStorageMap = { ...localStorageMap, [key]: value };
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localStorageMap));
   }, []);
 
-  return [storedValue, setValue] as const;
+  return { getStoredValue, setStoredValue };
 }

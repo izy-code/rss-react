@@ -1,12 +1,11 @@
 import '@testing-library/jest-dom';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import * as api from '@/api/api';
 import { MainPage } from '@/pages/main-page/MainPage';
 import { characterMock } from '@/test/mocks/mocks';
-import { renderWithUserSetup } from '@/utils/utils';
+import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { Details } from './Details';
 
@@ -15,44 +14,31 @@ describe('Details Component', () => {
     vi.clearAllMocks();
   });
 
-  const fetchCharacterByIdSpy = vi.spyOn(api, 'fetchCharacterById');
-
   it('displays a loading indicator while fetching data', async () => {
-    render(
+    renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Routes>
-          <Route path="/" element={<Details />} />
-        </Routes>
+        <Details />
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('heading', { name: 'Loading...' })).toBeInTheDocument();
-    await waitFor(() =>
-      expect(fetchCharacterByIdSpy).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
-    );
+    expect(await screen.findByRole('heading', { name: /loading.../i })).toBeInTheDocument();
   });
 
   it('displays the detailed card data correctly', async () => {
-    render(
+    renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Routes>
-          <Route path="/" element={<Details />} />
-        </Routes>
+        <Details />
       </MemoryRouter>,
     );
 
-    await waitFor(() =>
-      expect(fetchCharacterByIdSpy).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
-    );
-
-    expect(screen.getByText(characterMock.name)).toBeInTheDocument();
+    expect(await screen.findByText(characterMock.name)).toBeInTheDocument();
     expect(screen.getByText(characterMock.species)).toBeInTheDocument();
     expect(screen.getByText(characterMock.status)).toBeInTheDocument();
     expect(screen.getByText(characterMock.gender)).toBeInTheDocument();
   });
 
   it('hides the details section when the close button is clicked', async () => {
-    const { user } = renderWithUserSetup(
+    const { user } = renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
         <Routes>
           <Route path="/" element={<MainPage />}>
@@ -60,10 +46,6 @@ describe('Details Component', () => {
           </Route>
         </Routes>
       </MemoryRouter>,
-    );
-
-    await waitFor(() =>
-      expect(fetchCharacterByIdSpy).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
     );
 
     const closeButton = await screen.findByRole('button', { name: /close details/i });

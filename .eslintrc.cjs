@@ -93,10 +93,7 @@ module.exports = {
       extends: ['plugin:@typescript-eslint/disable-type-checked'],
     },
     {
-      extends: [
-        'plugin:jest-dom/recommended',
-        'plugin:testing-library/react',
-      ],
+      extends: ['plugin:jest-dom/recommended', 'plugin:testing-library/react'],
       files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
     },
   ],

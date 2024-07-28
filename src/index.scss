@@ -16,27 +16,62 @@ $color-dark-blue: #1f7ba3;
 $color-light-red: #e47272;
 $color-red: #db3232;
 $color-dark-red: #c42323;
+$color-medium-purple: #6554c2;
+$color-major-blue: #5746bb;
+$color-dark-slate-blue: #383069;
+$color-black-transparent: #00000050;
+
 
 :root {
+  --color-star-filled: #{$color-yellow};
+  --color-star-empty: #{$color-anti-flash-white};
   --color-text-primary: #{$color-black-olive};
   --color-text-dark: #{$color-black};
+  --color-bd: #{$color-black-olive};
   --color-bg-page: #{$color-iguana-green};
   --color-bg-container: #{$color-anti-flash-white};
   --color-primary: #{$color-sandy-brown};
   --color-primary-accent: #{$color-pastel-yellow};
-  --color-primary-dark: #{$color-chinese-bronze};
+  --color-primary-active: #{$color-chinese-bronze};
   --color-second: #{$color-light-blue};
   --color-second-accent: #{$color-blue};
-  --color-second-dark: #{$color-dark-blue};
+  --color-second-active: #{$color-dark-blue};
+  --color-third: #{$color-iguana-green};
+  --color-third-accent: #{$color-green};
+  --color-third-active: #{$color-dark-green};
   --color-error: #{$color-light-red};
   --color-error-accent: #{$color-red};
-  --color-error-dark: #{$color-dark-red};
+  --color-error-active: #{$color-dark-red};
   --color-disabled: #{$color-granite};
+  --color-shadow: #{$color-black-transparent};
 
   --primary-font: "Inter", system-ui, "Avenir", "Helvetica", "Arial", sans-serif;
 
   --min-width: 360px;
   --max-width: 1440px;
+
+  &:has(.dark-theme),
+  & .dark-theme {
+    --color-text-primary: #{#e3e3e3};
+    --color-text-dark: #{#e3e3e3};
+    --color-bg-page: #{#1b1b1d};
+    --color-bg-container: #{#3a3b31};
+    --color-bd: #{$color-black};
+    --color-primary: #{$color-dark-slate-blue};
+    --color-primary-accent: #{$color-major-blue};
+    --color-primary-active: #{$color-medium-purple};
+    --color-second: #{$color-dark-blue};
+    --color-second-accent: #{$color-blue};
+    --color-second-active: #{$color-light-blue};
+    --color-third: #{$color-dark-green};
+    --color-third-accent: #{$color-green};
+    --color-third-active: #{$color-iguana-green};
+    --color-error: #af2323;
+    --color-error-accent: #{$color-red};
+    --color-error-active: #{$color-light-red};
+    --color-disabled: #{$color-granite};
+    --color-shadow: #20310f80;
+  }
 }
 
 *,
@@ -55,6 +90,7 @@ body {
   font-weight: 400;
   color: var(--color-text-primary);
   background-color: var(--color-bg-page);
+  transition: background-color 0.6s ease;
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

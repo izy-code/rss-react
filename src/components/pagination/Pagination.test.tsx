@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';
-import { renderWithUserSetup } from '@/utils/utils';
+import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { Pagination } from './Pagination';
 
@@ -25,25 +25,25 @@ describe('Pagination Component', () => {
   it('disables the "Prev" button on the first page', () => {
     const initialPage = 1;
 
-    render(
+    renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
         <Pagination pageInfo={pageInfoMock} />
       </MemoryRouter>,
     );
 
-    const prevButton = screen.getByRole('button', { name: 'Prev' });
+    const prevButton = screen.getByRole('button', { name: /prev/i });
 
     expect(prevButton).toBeDisabled();
   });
 
   it('disables the "Next" button on the last page', () => {
-    render(
+    renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?page=${pageInfoMock.pages}`]}>
         <Pagination pageInfo={pageInfoMock} />
       </MemoryRouter>,
     );
 
-    const nextButton = screen.getByRole('button', { name: 'Next' });
+    const nextButton = screen.getByRole('button', { name: /next/i });
 
     expect(nextButton).toBeDisabled();
   });
@@ -51,14 +51,14 @@ describe('Pagination Component', () => {
   it('updates URL query parameter when "Next" button is clicked', async () => {
     const initialPage = 2;
 
-    const { user } = renderWithUserSetup(
+    const { user } = renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
         <Pagination pageInfo={pageInfoMock} />
         <PageSearchParamDisplay />
       </MemoryRouter>,
     );
 
-    const nextButton = screen.getByRole('button', { name: 'Next' });
+    const nextButton = screen.getByRole('button', { name: /next/i });
 
     await user.click(nextButton);
 
@@ -68,14 +68,14 @@ describe('Pagination Component', () => {
   it('updates URL query parameter when "Prev" button is clicked', async () => {
     const initialPage = 2;
 
-    const { user } = renderWithUserSetup(
+    const { user } = renderWithProvidersAndUser(
       <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
         <Pagination pageInfo={pageInfoMock} />
         <PageSearchParamDisplay />
       </MemoryRouter>,
     );
 
-    const prevButton = screen.getByRole('button', { name: 'Prev' });
+    const prevButton = screen.getByRole('button', { name: /prev/i });
 
     await user.click(prevButton);
 

@@ -9,7 +9,7 @@
   font-weight: 700;
   text-align: center;
   text-decoration: underline;
-  transition: text-decoration-color 0.6s ease;
+  transition: text-decoration-color 0.6s ease, color 0.6s ease;
   text-decoration-color: transparent;
 }
 
@@ -19,19 +19,19 @@
   gap: 10px;
   width: 100%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 20px 10px;
   text-decoration: none;
   color: var(--color-text-primary);
   background-color: var(--color-bg-container);
   border-radius: 10px;
-  box-shadow: 8px 8px 10px 4px rgb(0 0 0 / 20%),;
+  box-shadow: 8px 8px 10px 4px var(--color-shadow),;
   cursor: pointer;
-  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+  transition: background-color 0.6s ease, box-shadow 0.6s ease;
 
   &:hover:not(.active),
   &:focus-visible:not(.active) {
     @media (hover: hover) {
-      box-shadow: 5px 5px 10px 4px rgb(0 0 0 / 20%),;
+      box-shadow: 5px 5px 10px 4px var(--color-shadow),;
 
       & .title {
         text-decoration-color: var(--color-text-primary);
@@ -50,3 +50,48 @@
   }
 }
 
+.content {
+  display: flex;
+  flex-grow: 1;
+  gap: 10px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.checkbox {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.6s ease;
+  appearance: none;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    grid-area: 1 / 2 / 1 / 2;
+    width: 26px;
+    height: 26px;
+    background-color: var(--color-star-empty);
+    transition: background-color 0.6s ease;
+    mask: url("@/assets/icons/star.svg") no-repeat center / contain;
+  }
+
+  &::before {
+    width: 32px;
+    height: 32px;
+    background-color: var(--color-bd);
+  }
+
+  &:checked::after {
+    background-color: var(--color-star-filled);
+  }
+
+  &:hover,
+  &:focus-visible {
+    @media (hover: hover) {
+      transform: scale(1.3);
+    }
+  }
+}

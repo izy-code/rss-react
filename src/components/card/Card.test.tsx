@@ -1,24 +1,22 @@
 import '@testing-library/jest-dom';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { createMemoryRouter, MemoryRouter, RouterProvider, useLocation } from 'react-router-dom';
 
-import * as api from '@/api/api';
 import { SearchParams } from '@/common/enums';
 import { Details } from '@/components/details/Details';
+import { routes } from '@/router/routes';
+import { BASE_URL } from '@/store/api/api-slice';
 import { characterMock } from '@/test/mocks/mocks';
-import { renderWithUserSetup } from '@/utils/utils';
+import { MOCK_SEARCH_NAME } from '@/test/msw/handlers';
+import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { Card } from './Card';
 
-vi.mock('@/components/image-loader/ImageLoader', () => ({
-  ImageLoader: ({ imageSrc, imageAlt }: { imageSrc: string; imageAlt: string }): ReactNode => (
-    <img src={imageSrc} alt={imageAlt} />
-  ),
-}));
-
 const DETAILS_TEST_ID = 'details-display';
+
+global.URL.createObjectURL = vi.fn(() => 'mockedURL');
 
 function DetailsSearchParamDisplay(): ReactNode {
   const location = useLocation();
@@ -29,7 +27,7 @@ function DetailsSearchParamDisplay(): ReactNode {
 
 describe('Card Component', () => {
   it('renders the relevant card data', (): void => {
-    render(
+    renderWithProvidersAndUser(
       <MemoryRouter>
         <Card character={characterMock} />
       </MemoryRouter>,
@@ -40,7 +38,7 @@ describe('Card Component', () => {
   });
 
   it('changes URL search params when clicked', async (): Promise<void> => {
-    const { user } = renderWithUserSetup(
+    const { user } = renderWithProvidersAndUser(
       <MemoryRouter>
         <Card character={characterMock} />
         <DetailsSearchParamDisplay />
@@ -57,10 +55,10 @@ describe('Card Component', () => {
   });
 
   it('triggers an additional API call to fetch detailed information when clicked', async (): Promise<void> => {
-    const fetchCharacterByIdSpy = vi.spyOn(api, 'fetchCharacterById');
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
 
-    const { user } = renderWithUserSetup(
-      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
+    const { user } = renderWithProvidersAndUser(
+      <MemoryRouter initialEntries={[`/`]}>
         <Card character={characterMock} />
         <Details />
       </MemoryRouter>,
@@ -68,9 +66,35 @@ describe('Card Component', () => {
 
     const linkElement = screen.getByRole('link');
 
+    expect(fetchSpy).not.toHaveBeenCalled();
+
     await user.click(linkElement);
     await waitFor(() =>
-      expect(fetchCharacterByIdSpy).toHaveBeenCalledWith(characterMock.id.toString(), expect.any(AbortController)),
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ url: `${BASE_URL}character/${characterMock.id}` }),
+      ),
     );
+
+    expect(fetchSpy).toHaveBeenCalled();
+  });
+
+  it('triggers flyout counter change when input clicked', async (): Promise<void> => {
+    const router = createMemoryRouter(routes, {
+      initialEntries: [`/?${SearchParams.NAME}=${MOCK_SEARCH_NAME}`],
+    });
+    const { user } = renderWithProvidersAndUser(<RouterProvider router={router} />);
+
+    const checkboxes = await screen.findAllByRole('checkbox');
+    const counter = screen.getByText(/items selected: 0/i);
+
+    if (!checkboxes[0]) {
+      return;
+    }
+
+    await user.click(checkboxes[0]);
+    await waitFor(() => expect(counter).toHaveTextContent(/items selected: 1/i));
+
+    await user.click(checkboxes[0]);
+    await waitFor(() => expect(counter).toHaveTextContent(/items selected: 0/i));
   });
 });
