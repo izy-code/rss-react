@@ -39,7 +39,9 @@ export const getCsvObjectUrl = (data: DataObject[]): string => {
     csvString += `${row.join(';')}\n`;
   });
 
-  const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8' });
+  const BOM = new Uint8Array([0xef, 0xbb, 0xbf]);
+
+  const blob = new Blob([BOM, csvString], { type: 'text/csv;charset=utf-8' });
 
   return URL.createObjectURL(blob);
 };
