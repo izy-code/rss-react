@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2022" /* Ignored by Vite bundler https://vitejs.dev/guide/features.html#target */,
+    "target": "ES2022",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "preserve",
@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     /* Linting */
     "strict": true,
     "noImplicitAny": true,
@@ -23,13 +23,17 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    /* Next.js settings */
+    "allowJs": true,
+    "incremental": true,
+    "forceConsistentCasingInFileNames": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "include": ["./src/**/*.ts", "./src/**/*.d.ts", "./src/**/*.tsx", "./dist/types/**/*.ts", "./next-env.d.ts"],
+  "exclude": ["node_modules"]
 }

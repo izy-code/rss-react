@@ -16,19 +16,18 @@ module.exports = {
     'airbnb-typescript',
     'airbnb/hooks',
     'plugin:@typescript-eslint/recommended-type-checked',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:react/jsx-runtime',
+    'next/core-web-vitals',
     'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'postcss.config.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'postcss.config.cjs', 'vitest.config.ts', 'lint-staged.config.js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
+    project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
   },
   rules: {
@@ -52,12 +51,8 @@ module.exports = {
     'react/prefer-stateless-function': 'off',
     'react/button-has-type': 'off',
     curly: ['error', 'all'],
-    'react/jsx-props-no-spreading': [
-      'error',
-      {
-        html: 'ignore',
-      },
-    ],
+    'react/jsx-props-no-spreading': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
     '@typescript-eslint/no-inferrable-types': 'error',
     '@typescript-eslint/explicit-member-accessibility': [
       'error',
