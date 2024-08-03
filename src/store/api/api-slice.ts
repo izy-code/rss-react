@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { HYDRATE } from 'next-redux-wrapper';
 
 import { SearchParams } from '@/common/enums';
 
@@ -14,6 +15,7 @@ interface CharactersQueryParamsType {
 
 export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+
   endpoints: (builder) => ({
     getCharactersList: builder.query<CharacterListData, CharactersQueryParamsType>({
       query: ({ searchTerm, page = DEFAULT_PAGE }) => {
@@ -29,6 +31,12 @@ export const apiSlice = createApi({
       query: (id) => `character/${id}`,
     }),
   }),
+
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
 });
 
 export const { useGetCharactersListQuery, useGetCharacterByIdQuery } = apiSlice;
