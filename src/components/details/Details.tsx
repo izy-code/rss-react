@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
+import { SearchParams } from '@/common/enums';
 import { useGetCharacterByIdQuery } from '@/store/api/api-slice';
 
 import { CustomButton } from '../custom-button/CustomButton';
@@ -9,6 +10,7 @@ import { Loader } from '../loader/Loader';
 import styles from './Details.module.scss';
 
 export function Details(): ReactNode {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const { details } = router.query;
@@ -25,9 +27,33 @@ export function Details(): ReactNode {
     }
   };
 
+  useEffect(() => {
+    const onRouteChangeStart = (url: string): void => {
+      const urlParams = new URL(url, window.location.href).searchParams;
+      const newDetails = urlParams.get(SearchParams.DETAILS);
+
+      if (newDetails !== detailsParam) {
+        setIsLoading(true);
+      }
+    };
+    const onRouteChangeEnd = (): void => {
+      setIsLoading(false);
+    };
+
+    router.events.on('routeChangeStart', onRouteChangeStart);
+    router.events.on('routeChangeComplete', onRouteChangeEnd);
+    router.events.on('routeChangeError', onRouteChangeEnd);
+
+    return (): void => {
+      router.events.off('routeChangeStart', onRouteChangeStart);
+      router.events.off('routeChangeComplete', onRouteChangeEnd);
+      router.events.off('routeChangeError', onRouteChangeEnd);
+    };
+  }, [detailsParam, router]);
+
   let content: ReactNode = null;
 
-  if (isFetching) {
+  if (isLoading || isFetching) {
     content = <Loader secondaryColor className={styles.loader} />;
   } else if (isError) {
     if (!Number.isInteger(+detailsParam) || ('status' in error && error.status === 404)) {
