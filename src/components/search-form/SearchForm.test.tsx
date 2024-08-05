@@ -1,7 +1,6 @@
-import '@testing-library/jest-dom';
-
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { useRouter } from 'next/router';
+import type { Mock } from 'vitest';
 
 import { LocalStorageKeys } from '@/common/enums';
 import { LOCAL_STORAGE_KEY } from '@/hooks/useLocalStorage';
@@ -10,17 +9,19 @@ import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { SearchForm } from './SearchForm';
 
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(),
+}));
+
+(useRouter as Mock).mockReturnValue({ query: {}, push: vi.fn() });
+
 describe('SearchForm Component', () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
   it('saves the entered value to localStorage when Search button is clicked', async () => {
-    const { user } = renderWithProvidersAndUser(
-      <MemoryRouter>
-        <SearchForm />
-      </MemoryRouter>,
-    );
+    const { user } = renderWithProvidersAndUser(<SearchForm />);
 
     const searchInput = screen.getByRole('searchbox');
     const searchButton = screen.getByRole('button', { name: /search/i });
@@ -37,11 +38,7 @@ describe('SearchForm Component', () => {
     const storedValue = { [LocalStorageKeys.SEARCH]: MOCK_SEARCH_NAME };
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(storedValue));
 
-    renderWithProvidersAndUser(
-      <MemoryRouter>
-        <SearchForm />
-      </MemoryRouter>,
-    );
+    renderWithProvidersAndUser(<SearchForm />);
 
     const searchInput = screen.getByRole('searchbox');
     expect(searchInput).toHaveValue(MOCK_SEARCH_NAME);
