@@ -1,14 +1,13 @@
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
-import { useContext } from 'react';
 
-import { ThemeContext } from '@/contexts/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './ThemeButton.module.scss';
 
 export function ThemeButton(): ReactNode {
-  const { isDarkTheme, toggleTheme } = useContext(ThemeContext);
+  const { isDarkTheme, toggleTheme } = useTheme();
 
   return (
     <CustomButton
