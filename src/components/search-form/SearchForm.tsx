@@ -1,8 +1,8 @@
+import { useRouter } from 'next/router';
 import type { FormEvent, ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
-import { LocalStorageKeys, SearchParams } from '@/common/enums';
+import { LocalStorageKeys } from '@/common/enums';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
 
@@ -11,11 +11,14 @@ import styles from './SearchForm.module.scss';
 
 export function SearchForm(): ReactNode {
   const { getStoredValue, setStoredValue } = useLocalStorage<string>();
-  const [searchTerm, setSearchTerm] = useState<string>(getStoredValue(LocalStorageKeys.SEARCH) || '');
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const pageParam = Number(searchParams.get(SearchParams.PAGE));
+  const { page, name } = router.query;
+
+  const pageParam = Number(page?.toString() || DEFAULT_PAGE);
+  const nameParam = name?.toString() ?? '';
 
   const { isFetching: isDisabled } = useGetCharactersListQuery({
     searchTerm,
@@ -31,17 +34,18 @@ export function SearchForm(): ReactNode {
   );
 
   useEffect(() => {
-    const nameParam = searchParams.get(SearchParams.NAME) ?? '';
+    setSearchTerm(getStoredValue(LocalStorageKeys.SEARCH) || '');
+  }, [getStoredValue]);
 
-    if (searchTerm && searchParams.size === 1) {
+  useEffect(() => {
+    if (searchTerm && Object.keys(router.query).length === 0) {
       inputRef.current!.value = searchTerm;
-      searchParams.set(SearchParams.NAME, searchTerm);
-      setSearchParams(searchParams);
-    } else if (searchTerm !== nameParam && searchParams.size > 1) {
+      void router.push({ query: { ...router.query, name: searchTerm } });
+    } else if (searchTerm !== nameParam && Object.keys(router.query).length > 0) {
       updateSearchTerm(nameParam);
       inputRef.current!.value = nameParam;
     }
-  }, [searchTerm, searchParams, setSearchParams, updateSearchTerm]);
+  }, [searchTerm, updateSearchTerm, nameParam, router]);
 
   useEffect(() => {
     if (!isDisabled) {
@@ -55,15 +59,14 @@ export function SearchForm(): ReactNode {
     const inputSearchTerm = inputRef.current?.value.trim() ?? '';
 
     updateSearchTerm(inputSearchTerm);
-    searchParams.set(SearchParams.PAGE, DEFAULT_PAGE.toString());
 
     if (inputSearchTerm) {
-      searchParams.set(SearchParams.NAME, inputSearchTerm);
+      void router.push({ query: { ...router.query, name: inputSearchTerm, page: DEFAULT_PAGE.toString() } });
     } else {
-      searchParams.delete(SearchParams.NAME);
-    }
+      const { name: deletedName, ...rest } = router.query;
 
-    setSearchParams(searchParams);
+      void router.push({ query: { ...rest, page: DEFAULT_PAGE.toString() } });
+    }
   }
 
   return (
