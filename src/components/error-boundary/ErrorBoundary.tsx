@@ -1,7 +1,7 @@
 import type { ErrorInfo, ReactNode } from 'react';
 import { Component } from 'react';
 
-import { ErrorPage } from '@/pages/error-page/ErrorPage';
+import { ErrorPage } from '@/components/error-page/ErrorPage';
 
 type Props = {
   children: ReactNode;
