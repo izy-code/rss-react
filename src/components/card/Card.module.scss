@@ -75,7 +75,7 @@
     height: 26px;
     background-color: var(--color-star-empty);
     transition: background-color 0.6s ease;
-    mask: url("@/assets/icons/star.svg") no-repeat center / contain;
+    mask: url("/icons/star.svg") no-repeat center / contain;
   }
 
   &::before {
