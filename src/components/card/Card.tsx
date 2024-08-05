@@ -1,8 +1,8 @@
 import clsx from 'clsx';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { type ReactNode } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
 
-import { SearchParams } from '@/common/enums';
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
 import type { CharacterData } from '@/store/api/types';
 import { selectFavoriteItemById, selectItem, unselectItem } from '@/store/favorite-items/favorite-items-slice';
@@ -16,19 +16,14 @@ interface Props {
 }
 
 export function Card({ character }: Props): ReactNode {
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const storeItemData = useAppSelector((state: RootState) => selectFavoriteItemById(state, character.id));
 
-  const isActive = searchParams.get(SearchParams.DETAILS) === character.id.toString();
+  const { details } = router.query;
+  const detailsParam = details?.toString();
 
-  const getLinkPath = (): string => {
-    const updatedSearchParams = new URLSearchParams(searchParams);
-
-    updatedSearchParams.set(SearchParams.DETAILS, character.id.toString());
-
-    return `?${updatedSearchParams.toString()}`;
-  };
+  const isActive = detailsParam && detailsParam === character.id.toString();
 
   const handleListItemClick = (evt: React.MouseEvent): void => {
     evt.stopPropagation();
@@ -44,7 +39,11 @@ export function Card({ character }: Props): ReactNode {
 
   return (
     <li className={styles.card} onClick={(evt) => handleListItemClick(evt)}>
-      <Link className={clsx(isActive ? styles.active : '', styles.link)} to={getLinkPath()}>
+      <Link
+        className={clsx(isActive ? styles.active : '', styles.link)}
+        href={{ query: { ...router.query, details: character.id.toString() } }}
+        scroll={false}
+      >
         <ImageLoader imageSrc={character.image} imageAlt={character.name} />
         <div className={styles.content}>
           <h2 className={styles.title}>{character.name}</h2>

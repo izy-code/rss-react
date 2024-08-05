@@ -1,7 +1,7 @@
+import { useRouter } from 'next/router';
 import { type ReactNode } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
-import { SearchParams } from '@/common/enums';
+import { DEFAULT_PAGE } from '@/store/api/api-slice';
 import type { CharacterListInfo } from '@/store/api/types';
 
 import { CustomButton } from '../custom-button/CustomButton';
@@ -12,13 +12,13 @@ interface Props {
 }
 
 export function Pagination({ pageInfo }: Props): ReactNode {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const { page } = router.query;
 
-  const currentPage = Number(searchParams.get(SearchParams.PAGE));
+  const currentPage = Number(page?.toString() || DEFAULT_PAGE);
 
   const handlePageChange = (pageNumber: number): void => {
-    searchParams.set(SearchParams.PAGE, pageNumber.toString());
-    setSearchParams(searchParams);
+    void router.push({ query: { ...router.query, page: pageNumber.toString() } });
   };
 
   const handleButtonClick = (evt: React.MouseEvent, nextPage: number): void => {

@@ -1,7 +1,6 @@
+import { useRouter } from 'next/router';
 import { type ReactNode } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
-import { SearchParams } from '@/common/enums';
 import { useGetCharacterByIdQuery } from '@/store/api/api-slice';
 
 import { CustomButton } from '../custom-button/CustomButton';
@@ -10,15 +9,20 @@ import { Loader } from '../loader/Loader';
 import styles from './Details.module.scss';
 
 export function Details(): ReactNode {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
 
-  const detailsParam = searchParams.get(SearchParams.DETAILS) || 'no-details';
+  const { details } = router.query;
+
+  const detailsParam = details?.toString() || 'no-details';
 
   const { data: characterData, isFetching, isSuccess, isError, error } = useGetCharacterByIdQuery(detailsParam);
 
   const handleButtonClick = (): void => {
-    searchParams.delete(SearchParams.DETAILS);
-    setSearchParams(searchParams);
+    const { details: deletedDetails, ...rest } = router.query;
+
+    if (detailsParam) {
+      void router.push({ query: rest });
+    }
   };
 
   let content: ReactNode = null;

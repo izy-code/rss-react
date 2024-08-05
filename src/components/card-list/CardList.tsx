@@ -1,8 +1,7 @@
+import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
 import { useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
-import { SearchParams } from '@/common/enums';
 import { Card } from '@/components/card/Card';
 import { Loader } from '@/components/loader/Loader';
 import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
@@ -12,11 +11,13 @@ import { Pagination } from '../pagination/Pagination';
 import styles from './CardList.module.scss';
 
 export function CardList(): ReactNode {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
   const listRef = useRef(null);
 
-  const pageParam = Number(searchParams.get(SearchParams.PAGE));
-  const nameParam = searchParams.get(SearchParams.NAME) ?? '';
+  const { page, name } = router.query;
+
+  const pageParam = Number(page?.toString() || DEFAULT_PAGE);
+  const nameParam = name?.toString() ?? '';
 
   const {
     data: characterListData,
@@ -31,10 +32,9 @@ export function CardList(): ReactNode {
 
   useEffect(() => {
     if (!Number.isInteger(pageParam) || pageParam < DEFAULT_PAGE) {
-      searchParams.set(SearchParams.PAGE, DEFAULT_PAGE.toString());
-      setSearchParams(searchParams);
+      void router.push({ query: { ...router.query, page: DEFAULT_PAGE.toString() } });
     }
-  }, [pageParam, searchParams, setSearchParams]);
+  }, [pageParam, router]);
 
   let content: ReactNode = null;
 
