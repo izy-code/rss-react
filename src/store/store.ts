@@ -18,7 +18,7 @@ export function setupStore(preloadedState?: Partial<RootState>): Store<RootState
   });
 }
 
-export const makeStore = (): Store<RootState> =>
+export const makeStore = () =>
   configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),

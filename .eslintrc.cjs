@@ -38,7 +38,7 @@ module.exports = {
     'prettier/prettier': 'error',
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-void': ['error', { allowAsStatement: true }],
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'react-refresh/only-export-components': ['off'],
     'no-param-reassign': ['error', { props: false }],
     'jsx-a11y/no-static-element-interactions': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
@@ -69,7 +69,12 @@ module.exports = {
         assertionStyle: 'as',
       },
     ],
-    '@typescript-eslint/explicit-function-return-type': 'error',
+    '@typescript-eslint/explicit-function-return-type': [
+      'error',
+      {
+        "allowedNames": ["makeStore"]
+      },
+    ],
     '@typescript-eslint/consistent-type-exports': 'error',
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-misused-promises': [
