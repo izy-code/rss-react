@@ -1,8 +1,8 @@
-import '@testing-library/jest-dom';
-
 import { screen } from '@testing-library/react';
+import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import type { Mock } from 'vitest';
+import { vi } from 'vitest';
 
 import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';
@@ -12,9 +12,15 @@ import { Pagination } from './Pagination';
 
 const PAGE_TEST_ID = 'page-display';
 
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(),
+}));
+
+const mockedUseRouter = useRouter as Mock;
+
 function PageSearchParamDisplay(): ReactNode {
-  const location = useLocation();
-  const pageNumber = new URLSearchParams(location.search).get(SearchParams.PAGE);
+  const { query } = useRouter();
+  const pageNumber = query[SearchParams.PAGE];
 
   return <p data-testid={PAGE_TEST_ID}>{pageNumber}</p>;
 }
@@ -22,13 +28,27 @@ function PageSearchParamDisplay(): ReactNode {
 describe('Pagination Component', () => {
   const pageInfoMock = charactersDataMock.info;
 
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
+  });
+
   it('disables the "Prev" button on the first page', () => {
     const initialPage = 1;
 
+    mockedUseRouter.mockReturnValue({
+      query: { [SearchParams.PAGE]: initialPage.toString() },
+      push: vi.fn(),
+    });
+
     renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
+      <>
         <Pagination pageInfo={pageInfoMock} />
-      </MemoryRouter>,
+        <PageSearchParamDisplay />
+      </>,
     );
 
     const prevButton = screen.getByRole('button', { name: /prev/i });
@@ -37,10 +57,16 @@ describe('Pagination Component', () => {
   });
 
   it('disables the "Next" button on the last page', () => {
+    mockedUseRouter.mockReturnValue({
+      query: { [SearchParams.PAGE]: pageInfoMock.pages.toString() },
+      push: vi.fn(),
+    });
+
     renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${pageInfoMock.pages}`]}>
+      <>
         <Pagination pageInfo={pageInfoMock} />
-      </MemoryRouter>,
+        <PageSearchParamDisplay />
+      </>,
     );
 
     const nextButton = screen.getByRole('button', { name: /next/i });
@@ -50,35 +76,55 @@ describe('Pagination Component', () => {
 
   it('updates URL query parameter when "Next" button is clicked', async () => {
     const initialPage = 2;
+    const pushMock = vi.fn();
+
+    mockedUseRouter.mockReturnValue({
+      query: { [SearchParams.PAGE]: initialPage.toString() },
+      push: pushMock,
+    });
 
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
+      <>
         <Pagination pageInfo={pageInfoMock} />
         <PageSearchParamDisplay />
-      </MemoryRouter>,
+      </>,
     );
 
     const nextButton = screen.getByRole('button', { name: /next/i });
 
     await user.click(nextButton);
 
-    expect(screen.getByTestId(PAGE_TEST_ID)).toHaveTextContent(`${initialPage + 1}`);
+    expect(pushMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: { [SearchParams.PAGE]: (initialPage + 1).toString() },
+      }),
+    );
   });
 
   it('updates URL query parameter when "Prev" button is clicked', async () => {
     const initialPage = 2;
+    const pushMock = vi.fn();
+
+    mockedUseRouter.mockReturnValue({
+      query: { [SearchParams.PAGE]: initialPage.toString() },
+      push: pushMock,
+    });
 
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
+      <>
         <Pagination pageInfo={pageInfoMock} />
         <PageSearchParamDisplay />
-      </MemoryRouter>,
+      </>,
     );
 
     const prevButton = screen.getByRole('button', { name: /prev/i });
 
     await user.click(prevButton);
 
-    expect(screen.getByTestId(PAGE_TEST_ID)).toHaveTextContent(`${initialPage - 1}`);
+    expect(pushMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: { [SearchParams.PAGE]: (initialPage - 1).toString() },
+      }),
+    );
   });
 });
