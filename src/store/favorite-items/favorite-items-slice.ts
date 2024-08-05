@@ -25,10 +25,9 @@ export const favoriteItemsSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder.addCase(hydrate, (state, action) => ({
-      ...state,
-      ...action.payload.favoriteItems,
-    }));
+    builder.addCase(hydrate, (state, action) => {
+      favoriteItemsAdapter.upsertMany(state, action.payload.favoriteItems.entities);
+    });
   },
 });
 
