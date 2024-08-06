@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { LocalStorageKeys } from '@/common/enums';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
+import { DEFAULT_PAGE } from '@/store/api/api-slice';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './SearchForm.module.scss';
@@ -15,15 +15,9 @@ export function SearchForm(): ReactNode {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { page, name } = router.query;
+  const { name } = router.query;
 
-  const pageParam = Number(page?.toString() || DEFAULT_PAGE);
   const nameParam = name?.toString() ?? '';
-
-  const { isFetching: isDisabled } = useGetCharactersListQuery({
-    searchTerm,
-    page: pageParam,
-  });
 
   const updateSearchTerm = useCallback(
     (newTerm: string): void => {
@@ -48,10 +42,8 @@ export function SearchForm(): ReactNode {
   }, [searchTerm, updateSearchTerm, nameParam, router]);
 
   useEffect(() => {
-    if (!isDisabled) {
-      inputRef.current?.focus();
-    }
-  }, [isDisabled]);
+    inputRef.current?.focus();
+  });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -77,10 +69,9 @@ export function SearchForm(): ReactNode {
         type="search"
         placeholder="Enter character name…"
         defaultValue={searchTerm}
-        disabled={isDisabled}
         autoComplete="off"
       />
-      <CustomButton type="submit" variant="secondary" disabled={isDisabled}>
+      <CustomButton type="submit" variant="secondary">
         Search
       </CustomButton>
     </form>

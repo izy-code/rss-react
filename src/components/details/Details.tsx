@@ -17,7 +17,7 @@ export function Details(): ReactNode {
 
   const detailsParam = details?.toString() || 'no-details';
 
-  const { data: characterData, isFetching, isSuccess, isError, error } = useGetCharacterByIdQuery(detailsParam);
+  const { data: characterData, isSuccess, isError, error } = useGetCharacterByIdQuery(detailsParam);
 
   const handleButtonClick = (): void => {
     const { details: deletedDetails, ...rest } = router.query;
@@ -53,7 +53,7 @@ export function Details(): ReactNode {
 
   let content: ReactNode = null;
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     content = <Loader secondaryColor className={styles.loader} />;
   } else if (isError) {
     if (!Number.isInteger(+detailsParam) || ('status' in error && error.status === 404)) {
