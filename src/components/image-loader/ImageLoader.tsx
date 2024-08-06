@@ -28,6 +28,8 @@ export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Prop
             alt="Placeholder"
             width="300"
             height="300"
+            placeholder="blur"
+            blurDataURL={imageSrc}
           />
           <Loader className={styles.loader} secondaryColor={secondaryColor} />
         </div>
@@ -39,6 +41,8 @@ export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Prop
         onLoad={handleImageLoad}
         width="300"
         height="300"
+        placeholder="blur"
+        blurDataURL={imageSrc}
       />
     </>
   );
