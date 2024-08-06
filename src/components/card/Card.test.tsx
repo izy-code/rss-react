@@ -1,67 +1,61 @@
-import '@testing-library/jest-dom';
-
 import { screen, waitFor } from '@testing-library/react';
-import type { ReactNode } from 'react';
-import { createMemoryRouter, MemoryRouter, RouterProvider, useLocation } from 'react-router-dom';
+import mockRouter from 'next-router-mock';
+import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
 
 import { SearchParams } from '@/common/enums';
-import { Details } from '@/components/details/Details';
-import { routes } from '@/router/routes';
+import Home from '@/pages';
 import { BASE_URL } from '@/store/api/api-slice';
 import { characterMock } from '@/test/mocks/mocks';
 import { MOCK_SEARCH_NAME } from '@/test/msw/handlers';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
+import { Details } from '../details/Details';
 import { Card } from './Card';
 
-const DETAILS_TEST_ID = 'details-display';
-
-global.URL.createObjectURL = vi.fn(() => 'mockedURL');
-
-function DetailsSearchParamDisplay(): ReactNode {
-  const location = useLocation();
-  const detailsID = new URLSearchParams(location.search).get(SearchParams.DETAILS);
-
-  return <p data-testid={DETAILS_TEST_ID}>{detailsID}</p>;
-}
-
 describe('Card Component', () => {
+  afterEach((): void => {
+    vi.clearAllMocks();
+  });
+
   it('renders the relevant card data', (): void => {
     renderWithProvidersAndUser(
-      <MemoryRouter>
+      <MemoryRouterProvider>
         <Card character={characterMock} />
-      </MemoryRouter>,
+      </MemoryRouterProvider>,
     );
 
     expect(screen.getByRole('heading', { name: characterMock.name })).toBeInTheDocument();
-    expect(screen.getByAltText(characterMock.name)).toHaveAttribute('src', characterMock.image);
+    expect(screen.getByAltText(characterMock.name)).toBeInTheDocument();
   });
 
   it('changes URL search params when clicked', async (): Promise<void> => {
+    vi.mock('next/router', () => vi.importActual('next-router-mock'));
+
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter>
+      <MemoryRouterProvider>
         <Card character={characterMock} />
-        <DetailsSearchParamDisplay />
-      </MemoryRouter>,
+      </MemoryRouterProvider>,
     );
 
     const linkElement = screen.getByRole('link');
 
-    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).toHaveAttribute('href', `/?${SearchParams.DETAILS}=${characterMock.id}`);
 
     await user.click(linkElement);
 
-    expect(screen.getByTestId(DETAILS_TEST_ID)).toHaveTextContent(characterMock.id.toString());
+    expect(mockRouter).toMatchObject({
+      query: { [SearchParams.DETAILS]: characterMock.id.toString() },
+    });
   });
 
   it('triggers an additional API call to fetch detailed information when clicked', async (): Promise<void> => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
 
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/`]}>
+      <MemoryRouterProvider>
         <Card character={characterMock} />
         <Details />
-      </MemoryRouter>,
+      </MemoryRouterProvider>,
     );
 
     const linkElement = screen.getByRole('link');
@@ -69,32 +63,30 @@ describe('Card Component', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
 
     await user.click(linkElement);
+
     await waitFor(() =>
       expect(fetchSpy).toHaveBeenCalledWith(
         expect.objectContaining({ url: `${BASE_URL}character/${characterMock.id}` }),
       ),
     );
-
-    expect(fetchSpy).toHaveBeenCalled();
   });
 
   it('triggers flyout counter change when input clicked', async (): Promise<void> => {
-    const router = createMemoryRouter(routes, {
-      initialEntries: [`/?${SearchParams.NAME}=${MOCK_SEARCH_NAME}`],
-    });
-    const { user } = renderWithProvidersAndUser(<RouterProvider router={router} />);
+    global.URL.createObjectURL = vi.fn(() => 'mockedURL');
+
+    const { user } = renderWithProvidersAndUser(
+      <MemoryRouterProvider url={`/?${SearchParams.NAME}=${MOCK_SEARCH_NAME}`}>
+        <Home />
+      </MemoryRouterProvider>,
+    );
 
     const checkboxes = await screen.findAllByRole('checkbox');
     const counter = screen.getByText(/items selected: 0/i);
 
-    if (!checkboxes[0]) {
-      return;
-    }
-
-    await user.click(checkboxes[0]);
+    await user.click(checkboxes[0]!);
     await waitFor(() => expect(counter).toHaveTextContent(/items selected: 1/i));
 
-    await user.click(checkboxes[0]);
+    await user.click(checkboxes[0]!);
     await waitFor(() => expect(counter).toHaveTextContent(/items selected: 0/i));
   });
 });
