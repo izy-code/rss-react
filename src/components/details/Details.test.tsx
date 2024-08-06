@@ -1,11 +1,9 @@
-import '@testing-library/jest-dom';
-
 import { screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { MainPage } from '@/pages/main-page/MainPage';
+import { SearchParams } from '@/common/enums';
+import Home from '@/pages';
 import { characterMock } from '@/test/mocks/mocks';
-import { renderWithProvidersAndUser } from '@/utils/test-utils';
+import { getMockedNextRouter, renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { Details } from './Details';
 
@@ -15,20 +13,24 @@ describe('Details Component', () => {
   });
 
   it('displays a loading indicator while fetching data', async () => {
+    const { NextProvider } = getMockedNextRouter({ query: { [SearchParams.DETAILS]: characterMock.id.toString() } });
+
     renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
+      <NextProvider>
         <Details />
-      </MemoryRouter>,
+      </NextProvider>,
     );
 
     expect(await screen.findByRole('heading', { name: /loading.../i })).toBeInTheDocument();
   });
 
   it('displays the detailed card data correctly', async () => {
+    const { NextProvider } = getMockedNextRouter({ query: { [SearchParams.DETAILS]: characterMock.id.toString() } });
+
     renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
+      <NextProvider>
         <Details />
-      </MemoryRouter>,
+      </NextProvider>,
     );
 
     expect(await screen.findByText(characterMock.name)).toBeInTheDocument();
@@ -37,15 +39,15 @@ describe('Details Component', () => {
     expect(screen.getByText(characterMock.gender)).toBeInTheDocument();
   });
 
-  it('hides the details section when the close button is clicked', async () => {
+  it('hides the details section when the close button is clicked by deleting the query param', async () => {
+    const { NextProvider, nextRouter } = getMockedNextRouter({
+      query: { [SearchParams.DETAILS]: characterMock.id.toString() },
+    });
+
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Routes>
-          <Route path="/" element={<MainPage />}>
-            <Route path="" element={<Details />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <NextProvider>
+        <Home />
+      </NextProvider>,
     );
 
     const closeButton = await screen.findByRole('button', { name: /close details/i });
@@ -53,6 +55,7 @@ describe('Details Component', () => {
     expect(closeButton).toBeInTheDocument();
 
     await user.click(closeButton);
-    expect(screen.queryByRole('button', { name: /close details/i })).not.toBeInTheDocument();
+
+    expect(nextRouter.push).toHaveBeenCalledWith({ query: {} });
   });
 });
