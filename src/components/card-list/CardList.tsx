@@ -1,10 +1,8 @@
 import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-import { SearchParams } from '@/common/enums';
 import { Card } from '@/components/card/Card';
-import { Loader } from '@/components/loader/Loader';
 import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
 
 import { Flyout } from '../flyout/Flyout';
@@ -12,7 +10,6 @@ import { Pagination } from '../pagination/Pagination';
 import styles from './CardList.module.scss';
 
 export function CardList(): ReactNode {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const listRef = useRef(null);
 
@@ -37,38 +34,9 @@ export function CardList(): ReactNode {
     }
   }, [pageParam, router]);
 
-  useEffect(() => {
-    const onRouteChangeStart = (url: string): void => {
-      const urlParams = new URL(url, window.location.href).searchParams;
-      const newPage = urlParams.get(SearchParams.PAGE) || '';
-      const newName = urlParams.get(SearchParams.NAME) || '';
-      const oldPage = page?.toString() || '';
-      const oldName = name?.toString() || '';
-
-      if (newPage !== oldPage || newName !== oldName) {
-        setIsLoading(true);
-      }
-    };
-    const onRouteChangeEnd = (): void => {
-      setIsLoading(false);
-    };
-
-    router.events.on('routeChangeStart', onRouteChangeStart);
-    router.events.on('routeChangeComplete', onRouteChangeEnd);
-    router.events.on('routeChangeError', onRouteChangeEnd);
-
-    return (): void => {
-      router.events.off('routeChangeStart', onRouteChangeStart);
-      router.events.off('routeChangeComplete', onRouteChangeEnd);
-      router.events.off('routeChangeError', onRouteChangeEnd);
-    };
-  }, [page, name, router]);
-
   let content: ReactNode = null;
 
-  if (isLoading) {
-    content = <Loader />;
-  } else if (isError) {
+  if (isError) {
     if ('status' in error && error.status === 404) {
       content = <div className={styles.message}>No characters found</div>;
     } else {

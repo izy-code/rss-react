@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 import { CardList } from '@/components/card-list/CardList';
 import { Details } from '@/components/details/Details';
 import { ThrowErrorButton } from '@/components/error-button/ThrowErrorButton';
 import { Header } from '@/components/header/Header';
+import { Loader } from '@/components/loader/Loader';
 import { SearchForm } from '@/components/search-form/SearchForm';
 import { ThemeButton } from '@/components/theme-button/ThemeButton';
 import { DEFAULT_PAGE, getCharacterById, getCharactersList, getRunningQueriesThunk } from '@/store/api/api-slice';
@@ -34,6 +35,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
 
 export default function Home(): ReactNode {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { details } = router.query;
 
@@ -45,6 +47,24 @@ export default function Home(): ReactNode {
     }
   };
 
+  useEffect(() => {
+    const onRouteChangeStart = (): void => {
+      setIsLoading(true);
+    };
+    const onRouteChangeComplete = (): void => {
+      setIsLoading(false);
+    };
+    router.events.on('routeChangeStart', onRouteChangeStart);
+    router.events.on('routeChangeComplete', onRouteChangeComplete);
+    router.events.on('routeChangeError', onRouteChangeComplete);
+
+    return (): void => {
+      router.events.off('routeChangeStart', onRouteChangeStart);
+      router.events.off('routeChangeComplete', onRouteChangeComplete);
+      router.events.off('routeChangeError', onRouteChangeComplete);
+    };
+  }, [router.events]);
+
   return (
     <div className={styles.page}>
       <Header>
@@ -52,16 +72,20 @@ export default function Home(): ReactNode {
         <ThrowErrorButton />
         <ThemeButton />
       </Header>
-      <main className={styles.main} onClick={handleMainClick}>
-        <section className={styles.listSection}>
-          <CardList />
-        </section>
-        {details && (
-          <section className={styles.detailsSection}>
-            <Details />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <main className={styles.main} onClick={handleMainClick}>
+          <section className={styles.listSection}>
+            <CardList />
           </section>
-        )}
-      </main>
+          {details && (
+            <section className={styles.detailsSection}>
+              <Details />
+            </section>
+          )}
+        </main>
+      )}
     </div>
   );
 }
