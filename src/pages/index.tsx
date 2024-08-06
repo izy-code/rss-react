@@ -40,10 +40,10 @@ export default function Home(): ReactNode {
   const { details } = router.query;
 
   const handleMainClick = (): void => {
-    const { details: detailsParam, ...rest } = router.query;
+    const { details: removedDetails, ...rest } = router.query;
 
-    if (detailsParam) {
-      void router.push({ query: rest });
+    if (removedDetails) {
+      void router.push({ query: rest }, undefined, { shallow: true, scroll: false });
     }
   };
 

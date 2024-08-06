@@ -9,7 +9,6 @@ import styles from './Details.module.scss';
 
 export function Details(): ReactNode {
   const router = useRouter();
-
   const { details } = router.query;
 
   const detailsParam = details?.toString() || 'no-details';
@@ -23,11 +22,13 @@ export function Details(): ReactNode {
     skip: !details,
   });
 
-  const handleButtonClick = (): void => {
-    const { details: deletedDetails, ...rest } = router.query;
+  const handleButtonClick = (evt: React.MouseEvent): void => {
+    evt.stopPropagation();
 
-    if (detailsParam) {
-      void router.push({ query: rest });
+    const { details: removedDetails, ...rest } = router.query;
+
+    if (removedDetails) {
+      void router.push({ query: rest }, undefined, { shallow: true, scroll: false });
     }
   };
 
