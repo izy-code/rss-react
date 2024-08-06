@@ -23,7 +23,6 @@ export function CardList(): ReactNode {
 
   const {
     data: characterListData,
-    isFetching,
     isSuccess,
     isError,
     error,
@@ -41,10 +40,12 @@ export function CardList(): ReactNode {
   useEffect(() => {
     const onRouteChangeStart = (url: string): void => {
       const urlParams = new URL(url, window.location.href).searchParams;
-      const newPage = urlParams.get(SearchParams.PAGE);
-      const newName = urlParams.get(SearchParams.NAME);
+      const newPage = urlParams.get(SearchParams.PAGE) || '';
+      const newName = urlParams.get(SearchParams.NAME) || '';
+      const oldPage = page?.toString() || '';
+      const oldName = name?.toString() || '';
 
-      if (newPage !== page?.toString() || newName !== name?.toString()) {
+      if (newPage !== oldPage || newName !== oldName) {
         setIsLoading(true);
       }
     };
@@ -65,7 +66,7 @@ export function CardList(): ReactNode {
 
   let content: ReactNode = null;
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     content = <Loader />;
   } else if (isError) {
     if ('status' in error && error.status === 404) {
