@@ -72,7 +72,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': [
       'error',
       {
-        "allowedNames": ["makeStore"]
+        allowedNames: ['makeStore'],
       },
     ],
     '@typescript-eslint/consistent-type-exports': 'error',
