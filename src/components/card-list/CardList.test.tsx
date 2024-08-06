@@ -1,36 +1,42 @@
-import '@testing-library/jest-dom';
-
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';
 import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
-import { renderWithProvidersAndUser } from '@/utils/test-utils';
+import { getMockedNextRouter, renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { CardList } from './CardList';
 
 describe('CardList Component', () => {
-  afterEach((): void => {
+  afterEach(() => {
     vi.clearAllMocks();
   });
 
   it('renders the specified number of cards', async (): Promise<void> => {
+    const { NextProvider } = getMockedNextRouter({
+      query: { [SearchParams.PAGE]: MOCK_PAGE_NUMBER, [SearchParams.NAME]: MOCK_SEARCH_NAME },
+    });
+
     renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${MOCK_PAGE_NUMBER}&name=${MOCK_SEARCH_NAME}`]}>
+      <NextProvider>
         <CardList />
-      </MemoryRouter>,
+      </NextProvider>,
     );
 
     const cards = await screen.findAllByRole('listitem');
+
     expect(cards).toHaveLength(charactersDataMock.info.count);
   });
 
   it('displays an appropriate message if no cards are present', async (): Promise<void> => {
+    const { NextProvider } = getMockedNextRouter({
+      query: { [SearchParams.NAME]: 'wrong' },
+    });
+
     renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?name=wrong`]}>
+      <NextProvider>
         <CardList />
-      </MemoryRouter>,
+      </NextProvider>,
     );
 
     const message = await screen.findByText('No characters found');
@@ -46,10 +52,14 @@ describe('CardList Component', () => {
       };
     });
 
+    const { NextProvider } = getMockedNextRouter({
+      query: { [SearchParams.NAME]: MOCK_SEARCH_NAME },
+    });
+
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?${SearchParams.NAME}=${MOCK_SEARCH_NAME}`]}>
+      <NextProvider>
         <CardList />
-      </MemoryRouter>,
+      </NextProvider>,
     );
 
     const checkboxes = await screen.findAllByRole('checkbox');
