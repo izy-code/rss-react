@@ -8,13 +8,12 @@ export default defineConfig({
     coverage: {
       all: true,
       exclude: [
-        'src/test/**/*',
         '**/types.ts',
         '**/types/*',
         '**/*.d.ts',
-        '**/index.ts',
-        'src/config/**/*',
         'src/**/*/enums.ts',
+        'src/pages/_app.tsx',
+        'src/test/**/*',
       ],
       extension: ['.ts', '.tsx'],
       include: ['src/**/*'],
