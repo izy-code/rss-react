@@ -1,13 +1,10 @@
-import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { HYDRATE } from 'next-redux-wrapper';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '../store';
 
 const favoriteItemsAdapter = createEntityAdapter();
 
 const initialState = favoriteItemsAdapter.getInitialState();
-
-const hydrate = createAction<RootState>(HYDRATE);
 
 export const favoriteItemsSlice = createSlice({
   name: 'favoriteItems',
@@ -22,12 +19,6 @@ export const favoriteItemsSlice = createSlice({
     unselectAll: (state) => {
       favoriteItemsAdapter.removeAll(state);
     },
-  },
-
-  extraReducers: (builder) => {
-    builder.addCase(hydrate, (state, action) => {
-      favoriteItemsAdapter.upsertMany(state, action.payload.favoriteItems.entities);
-    });
   },
 });
 
