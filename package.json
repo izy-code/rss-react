@@ -17,7 +17,7 @@
     "tsc:watch": "tsc --noEmit --project --watch ./tsconfig.json",
     "prepare": "husky",
     "test": "vitest run --coverage",
-    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e app-state-management -b netlify"
+    "deploy": "npm run build && npx gh-pages-clean && npx gh-pages -d dist -e nextjs-pages-api -b netlify"
   },
   "browserslist": [
     "last 2 versions",
