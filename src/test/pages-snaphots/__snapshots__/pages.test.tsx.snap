@@ -222,7 +222,7 @@ exports[`Pages render > should match the snapshot for main routes 1`] = `
                   height="300"
                   loading="lazy"
                   src="/placeholder.svg"
-                  style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"
+                  style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat; background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);"
                   width="300"
                 />
                 <div
@@ -247,7 +247,7 @@ exports[`Pages render > should match the snapshot for main routes 1`] = `
                 loading="lazy"
                 src="/_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F1.jpeg&w=640&q=75"
                 srcset="/_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F1.jpeg&w=384&q=75 1x, /_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F1.jpeg&w=640&q=75 2x"
-                style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"
+                style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat; background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);"
                 width="300"
               />
               <div
@@ -283,7 +283,7 @@ exports[`Pages render > should match the snapshot for main routes 1`] = `
                   height="300"
                   loading="lazy"
                   src="/placeholder.svg"
-                  style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"
+                  style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat; background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);"
                   width="300"
                 />
                 <div
@@ -308,7 +308,7 @@ exports[`Pages render > should match the snapshot for main routes 1`] = `
                 loading="lazy"
                 src="/_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F8.jpeg&w=640&q=75"
                 srcset="/_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F8.jpeg&w=384&q=75 1x, /_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F8.jpeg&w=640&q=75 2x"
-                style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"
+                style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat; background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);"
                 width="300"
               />
               <div
@@ -344,7 +344,7 @@ exports[`Pages render > should match the snapshot for main routes 1`] = `
                   height="300"
                   loading="lazy"
                   src="/placeholder.svg"
-                  style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"
+                  style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat; background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);"
                   width="300"
                 />
                 <div
@@ -369,7 +369,7 @@ exports[`Pages render > should match the snapshot for main routes 1`] = `
                 loading="lazy"
                 src="/_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F15.jpeg&w=640&q=75"
                 srcset="/_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F15.jpeg&w=384&q=75 1x, /_next/image?url=https%3A%2F%2Frickandmortyapi.com%2Fapi%2Fcharacter%2Favatar%2F15.jpeg&w=640&q=75 2x"
-                style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"
+                style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat; background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);"
                 width="300"
               />
               <div

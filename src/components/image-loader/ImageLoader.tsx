@@ -11,6 +11,8 @@ interface Props {
   secondaryColor?: boolean;
 }
 
+const TRANSPARENT_ENCODED_IMG = 'gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
 export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Props): ReactNode {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,8 +30,7 @@ export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Prop
             alt="Placeholder"
             width="300"
             height="300"
-            placeholder="blur"
-            blurDataURL={imageSrc}
+            placeholder={`data:image/${TRANSPARENT_ENCODED_IMG}`}
           />
           <Loader className={styles.loader} secondaryColor={secondaryColor} />
         </div>
@@ -41,8 +42,7 @@ export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Prop
         onLoad={handleImageLoad}
         width="300"
         height="300"
-        placeholder="blur"
-        blurDataURL={imageSrc}
+        placeholder={`data:image/${TRANSPARENT_ENCODED_IMG}`}
       />
     </>
   );
