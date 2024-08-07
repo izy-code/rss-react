@@ -50,7 +50,7 @@ export default function Home(): ReactNode {
       evt.target === mainRef.current || evt.target === sectionRef.current || evt.target === listRef.current;
 
     if (removedDetails && isTargetRef) {
-      void router.push({ query: rest }, undefined, { shallow: true, scroll: false });
+      void router.push({ query: rest });
     }
   };
 

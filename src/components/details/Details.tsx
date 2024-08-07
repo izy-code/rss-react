@@ -26,7 +26,7 @@ export function Details(): ReactNode {
     const { details: removedDetails, ...rest } = router.query;
 
     if (removedDetails) {
-      void router.push({ query: rest }, undefined, { shallow: true, scroll: false });
+      void router.push({ query: rest });
     }
   };
 
