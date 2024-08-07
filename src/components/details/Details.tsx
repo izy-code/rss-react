@@ -22,9 +22,7 @@ export function Details(): ReactNode {
     skip: !details,
   });
 
-  const handleButtonClick = (evt: React.MouseEvent): void => {
-    evt.stopPropagation();
-
+  const handleButtonClick = (): void => {
     const { details: removedDetails, ...rest } = router.query;
 
     if (removedDetails) {

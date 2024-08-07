@@ -56,6 +56,9 @@ describe('Details Component', () => {
 
     await user.click(closeButton);
 
-    expect(nextRouter.push).toHaveBeenCalledWith({ query: {} });
+    expect(nextRouter.push).toHaveBeenCalledWith({ query: {} }, undefined, {
+      scroll: false,
+      shallow: true,
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
-import { useEffect, useRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 
 import { Card } from '@/components/card/Card';
 import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
@@ -9,9 +9,8 @@ import { Flyout } from '../flyout/Flyout';
 import { Pagination } from '../pagination/Pagination';
 import styles from './CardList.module.scss';
 
-export function CardList(): ReactNode {
+export const CardList = forwardRef<HTMLUListElement>(function CardList(_, listRef): ReactNode {
   const router = useRouter();
-  const listRef = useRef(null);
 
   const { page, name } = router.query;
 
@@ -57,4 +56,4 @@ export function CardList(): ReactNode {
   }
 
   return content;
-}
+});

@@ -45,6 +45,7 @@ module.exports = {
     'jsx-a11y/no-noninteractive-element-interactions': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
+    'prefer-arrow-callback': ['error', { allowNamedFunctions: true }],
     'import/no-absolute-path': 'off',
     'import/extensions': 'off',
     'react/require-default-props': 'off',

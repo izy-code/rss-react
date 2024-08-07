@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { type ReactNode } from 'react';
+import { type ChangeEvent, type ReactNode } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
 import type { CharacterData } from '@/store/api/types';
@@ -25,11 +25,7 @@ export function Card({ character }: Props): ReactNode {
 
   const isActive = detailsParam && detailsParam === character.id.toString();
 
-  const handleListItemClick = (evt: React.MouseEvent): void => {
-    evt.stopPropagation();
-  };
-
-  const handleCheckboxChange = (evt: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleCheckboxChange = (evt: ChangeEvent<HTMLInputElement>): void => {
     if (evt.target.checked) {
       dispatch(selectItem(character));
     } else {
@@ -38,7 +34,7 @@ export function Card({ character }: Props): ReactNode {
   };
 
   return (
-    <li className={styles.card} onClick={(evt) => handleListItemClick(evt)}>
+    <li className={styles.card}>
       <Link
         className={clsx(isActive ? styles.active : '', styles.link)}
         href={{ query: { ...router.query, details: character.id.toString() } }}
@@ -52,7 +48,7 @@ export function Card({ character }: Props): ReactNode {
             type="checkbox"
             checked={Boolean(storeItemData)}
             onChange={handleCheckboxChange}
-            onClick={(evt) => handleListItemClick(evt)}
+            onClick={(evt) => evt.stopPropagation()}
           />
         </div>
       </Link>

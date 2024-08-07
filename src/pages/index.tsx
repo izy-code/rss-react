@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type MouseEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { CardList } from '@/components/card-list/CardList';
 import { Details } from '@/components/details/Details';
@@ -37,12 +37,19 @@ export default function Home(): ReactNode {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  const mainRef = useRef(null);
+  const sectionRef = useRef(null);
+  const listRef = useRef(null);
+
   const { details } = router.query;
 
-  const handleMainClick = (): void => {
+  const handleMainClick = (evt: MouseEvent): void => {
     const { details: removedDetails, ...rest } = router.query;
 
-    if (removedDetails) {
+    const isTargetRef =
+      evt.target === mainRef.current || evt.target === sectionRef.current || evt.target === listRef.current;
+
+    if (removedDetails && isTargetRef) {
       void router.push({ query: rest }, undefined, { shallow: true, scroll: false });
     }
   };
@@ -75,9 +82,9 @@ export default function Home(): ReactNode {
       {isLoading ? (
         <Loader />
       ) : (
-        <main className={styles.main} onClick={handleMainClick}>
-          <section className={styles.listSection}>
-            <CardList />
+        <main className={styles.main} onClick={handleMainClick} ref={mainRef}>
+          <section className={styles.listSection} ref={sectionRef}>
+            <CardList ref={listRef} />
           </section>
           {details && (
             <section className={styles.detailsSection}>
