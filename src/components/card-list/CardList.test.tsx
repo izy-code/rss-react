@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 
 import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';
-import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
+import { MOCK_SEARCH_NAME } from '@/test/msw/handlers';
 import { getMockedNextRouter, renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { CardList } from './CardList';
@@ -12,16 +12,24 @@ describe('CardList Component', () => {
     vi.clearAllMocks();
   });
 
-  it('renders the specified number of cards', async (): Promise<void> => {
-    const { NextProvider } = getMockedNextRouter({
-      query: { [SearchParams.PAGE]: MOCK_PAGE_NUMBER, [SearchParams.NAME]: MOCK_SEARCH_NAME },
-    });
+  vi.mock('next/navigation', async () => {
+    const actual = await vi.importActual('next/navigation');
+    return {
+      ...actual,
+      useRouter: vi.fn(() => ({
+        push: vi.fn(),
+        replace: vi.fn(),
+      })),
+      useSearchParams: vi.fn(() => {
+        const searchParams = new URLSearchParams({});
+        return searchParams;
+      }),
+      usePathname: vi.fn(),
+    };
+  });
 
-    renderWithProvidersAndUser(
-      <NextProvider>
-        <CardList />
-      </NextProvider>,
-    );
+  it('renders the specified number of cards', async (): Promise<void> => {
+    renderWithProvidersAndUser(<CardList characters={{ status: 'success', data: charactersDataMock }} />);
 
     const cards = await screen.findAllByRole('listitem');
 
@@ -29,15 +37,7 @@ describe('CardList Component', () => {
   });
 
   it('displays an appropriate message if no cards are present', async (): Promise<void> => {
-    const { NextProvider } = getMockedNextRouter({
-      query: { [SearchParams.NAME]: 'wrong' },
-    });
-
-    renderWithProvidersAndUser(
-      <NextProvider>
-        <CardList />
-      </NextProvider>,
-    );
+    renderWithProvidersAndUser(<CardList characters={{ status: 'empty' }} />);
 
     const message = await screen.findByText('No characters found');
     expect(message).toBeInTheDocument();
@@ -52,14 +52,8 @@ describe('CardList Component', () => {
       };
     });
 
-    const { NextProvider } = getMockedNextRouter({
-      query: { [SearchParams.NAME]: MOCK_SEARCH_NAME },
-    });
-
     const { user } = renderWithProvidersAndUser(
-      <NextProvider>
-        <CardList />
-      </NextProvider>,
+      <CardList characters={{ status: 'success', data: charactersDataMock }} />,
     );
 
     const checkboxes = await screen.findAllByRole('checkbox');
