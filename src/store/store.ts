@@ -1,6 +1,5 @@
 import type { Store } from '@reduxjs/toolkit';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { createWrapper } from 'next-redux-wrapper';
 
 import { favoriteItemsSlice } from './favorite-items/favorite-items-slice';
 
@@ -23,5 +22,3 @@ export const makeStore = () =>
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppDispatch = AppStore['dispatch'];
-
-export const wrapper = createWrapper<AppStore>(makeStore);
