@@ -4,24 +4,22 @@ import { MOCK_SEARCH_NAME, MOCK_STATUS_500 } from '@/test/msw/handlers.ts';
 import { fetchCharacterById, fetchCharacters } from './api.ts';
 
 describe('fetchCharacterById', () => {
-  const controller = new AbortController();
-
   it('fetches character by ID successfully', async () => {
-    const response = await fetchCharacterById(characterMock.id.toString(), controller);
+    const response = await fetchCharacterById(characterMock.id.toString());
 
     expect(response).toEqual({ status: 'success', data: characterMock });
   });
 
   it('handles 404 status response', async () => {
-    const response = await fetchCharacterById('wrong-ID', controller);
+    const response = await fetchCharacterById('wrong-ID');
 
     expect(response).toEqual({ status: 'empty' });
   });
 
   it('handles 500 status response', async () => {
-    await expect(fetchCharacterById(MOCK_STATUS_500, controller)).rejects.toThrow(
-      /fetching response status is not ok/i,
-    );
+    const response = await fetchCharacterById(MOCK_STATUS_500);
+
+    expect(response).toEqual({ status: 'error' });
   });
 
   it('handles network error', async () => {
@@ -29,25 +27,15 @@ describe('fetchCharacterById', () => {
 
     fetchSpy.mockRejectedValueOnce(new Error('Network error'));
 
-    await expect(fetchCharacterById(characterMock.id.toString(), controller)).rejects.toThrow('Network error');
-  });
+    const response = await fetchCharacterById(characterMock.id.toString());
 
-  it('handles request abort', async () => {
-    controller.abort();
-
-    const response = await fetchCharacterById('Any search', controller);
-
-    expect(response).toEqual({ status: 'aborted' });
+    expect(response).toEqual({ status: 'error' });
   });
 });
 
 describe('fetchCharacters', () => {
-  const controller = new AbortController();
-
   it('fetches characters successfully with search term', async () => {
-    const initialSearchTerm = MOCK_SEARCH_NAME;
-
-    const response = await fetchCharacters(initialSearchTerm, controller);
+    const response = await fetchCharacters(MOCK_SEARCH_NAME);
 
     expect(response).toEqual({
       status: 'success',
@@ -56,13 +44,15 @@ describe('fetchCharacters', () => {
   });
 
   it('handles 404 status response', async () => {
-    const response = await fetchCharacters('Unknown', controller);
+    const response = await fetchCharacters('Unknown');
 
     expect(response).toEqual({ status: 'empty' });
   });
 
   it('handles 500 status response', async () => {
-    await expect(fetchCharacters(MOCK_STATUS_500, controller)).rejects.toThrow(/fetching response status is not ok/i);
+    const response = await fetchCharacters(MOCK_STATUS_500);
+
+    expect(response).toEqual({ status: 'error' });
   });
 
   it('handles network error', async () => {
@@ -70,14 +60,8 @@ describe('fetchCharacters', () => {
 
     fetchSpy.mockRejectedValueOnce(new Error('Network error'));
 
-    await expect(fetchCharacters(characterMock.id.toString(), controller)).rejects.toThrow('Network error');
-  });
+    const response = await fetchCharacters(characterMock.id.toString());
 
-  it('handles request abort', async () => {
-    controller.abort();
-
-    const response = await fetchCharacters('Any search', controller);
-
-    expect(response).toEqual({ status: 'aborted' });
+    expect(response).toEqual({ status: 'error' });
   });
 });

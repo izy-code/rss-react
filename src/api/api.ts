@@ -6,11 +6,12 @@ import type { CharacterData, CharacterListData } from './types';
 export const BASE_URL = 'https://rickandmortyapi.com/api/character';
 export const DEFAULT_PAGE = 1;
 
-export type FetchStatusType = 'aborted' | 'success' | 'empty' | 'error';
+export type FetchStatusType = 'success' | 'empty' | 'error';
 export type FetchCharacterListResult = { status: FetchStatusType; data?: CharacterListData };
 export type FetchCharacterResult = { status: FetchStatusType; data?: CharacterData };
 
 const emptyResult = { status: 'empty' } as const;
+const errorResult = { status: 'error' } as const;
 
 export const fetchCharacters = async (searchTerm: string, page = DEFAULT_PAGE): Promise<FetchCharacterListResult> => {
   const searchParams = new URLSearchParams({
@@ -39,7 +40,7 @@ export const fetchCharacters = async (searchTerm: string, page = DEFAULT_PAGE): 
 
     return emptyResult;
   } catch (error) {
-    return { status: 'error' };
+    return errorResult;
   }
 };
 
@@ -65,6 +66,6 @@ export const fetchCharacterById = async (id: string): Promise<FetchCharacterResu
 
     return emptyResult;
   } catch (error) {
-    return { status: 'error' };
+    return errorResult;
   }
 };
