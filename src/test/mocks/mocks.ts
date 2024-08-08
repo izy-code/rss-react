@@ -1,4 +1,4 @@
-import type { CharacterData, CharacterListData } from '@/store/api/types';
+import type { CharacterData, CharacterListData } from '@/api/types';
 
 export const characterMock: CharacterData = {
   id: 1,
