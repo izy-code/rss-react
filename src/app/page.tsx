@@ -17,7 +17,7 @@ interface SearchParamsType {
   [SearchParams.DETAILS]?: string;
 }
 
-async function Wrapper({ searchParams }: { searchParams: SearchParamsType }): Promise<AwaitedReactNode> {
+export async function Wrapper({ searchParams }: { searchParams: SearchParamsType }): Promise<AwaitedReactNode> {
   const name = searchParams[SearchParams.NAME] || '';
   const page = Number(searchParams[SearchParams.PAGE] || DEFAULT_PAGE);
   const details = searchParams[SearchParams.DETAILS] || '';

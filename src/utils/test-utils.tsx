@@ -3,11 +3,11 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
 import type { NextRouter } from 'next/router';
-import type { FC, PropsWithChildren, ReactElement, ReactNode } from 'react';
+import { type FC, type PropsWithChildren, type ReactElement, type ReactNode, useRef } from 'react';
 import { Provider } from 'react-redux';
 
 import type { AppStore, RootState } from '@/store/store';
-import { setupStore } from '@/store/store';
+import { makeStore, setupStore } from '@/store/store';
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedState?: Partial<RootState>;
@@ -19,7 +19,13 @@ export function renderWithProvidersAndUser(
   { preloadedState = {}, store = setupStore(preloadedState), ...renderOptions }: ExtendedRenderOptions = {},
 ): { store: AppStore; user: ReturnType<typeof userEvent.setup>; container: HTMLElement } {
   function Wrapper({ children }: PropsWithChildren): ReactElement {
-    return <Provider store={store}>{children}</Provider>;
+    const storeRef = useRef<AppStore>();
+
+    if (!storeRef.current) {
+      storeRef.current = makeStore();
+    }
+
+    return <Provider store={storeRef.current}>{children}</Provider>;
   }
 
   return { store, user: userEvent.setup(), ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
