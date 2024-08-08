@@ -1,3 +1,5 @@
+'use client';
+
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';

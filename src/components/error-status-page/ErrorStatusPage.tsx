@@ -1,4 +1,6 @@
-import { useRouter } from 'next/router';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import { CustomButton } from '@/components/custom-button/CustomButton';

@@ -1,53 +1,30 @@
-import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
-import { forwardRef, useEffect } from 'react';
+import { forwardRef } from 'react';
 
+import { type FetchCharacterListResult } from '@/api/api';
 import { Card } from '@/components/card/Card';
-import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
 
 import { Flyout } from '../flyout/Flyout';
 import { Pagination } from '../pagination/Pagination';
 import styles from './CardList.module.scss';
 
-export const CardList = forwardRef<HTMLUListElement>(function CardList(_, listRef): ReactNode {
-  const router = useRouter();
-
-  const { page, name } = router.query;
-
-  const pageParam = Number(page?.toString() || DEFAULT_PAGE);
-  const nameParam = name?.toString() ?? '';
-
-  const {
-    data: characterListData,
-    isSuccess,
-    isError,
-    error,
-  } = useGetCharactersListQuery({
-    searchTerm: nameParam,
-    page: pageParam,
-  });
-
-  useEffect(() => {
-    if (!Number.isInteger(pageParam) || pageParam < DEFAULT_PAGE) {
-      void router.push({ query: { ...router.query, page: DEFAULT_PAGE.toString() } });
-    }
-  }, [pageParam, router]);
-
+export const CardList = forwardRef<HTMLUListElement, { characters: FetchCharacterListResult }>(function CardList(
+  { characters },
+  listRef,
+): ReactNode {
   let content: ReactNode = null;
 
-  if (isError) {
-    if ('status' in error && error.status === 404) {
-      content = <div className={styles.message}>No characters found</div>;
-    } else {
-      content = <div className={styles.message}>Characters list fetching problem</div>;
-    }
-  } else if (isSuccess && characterListData) {
+  if (characters.status === 'error') {
+    content = <div className={styles.message}>Characters list fetching problem</div>;
+  } else if (characters.status === 'empty' || !characters.data) {
+    content = <div className={styles.message}>No characters found</div>;
+  } else {
     content = (
       <>
-        <Pagination pageInfo={characterListData.info} />
+        <Pagination pageInfo={characters.data.info} />
         <ul className={styles.list} ref={listRef}>
-          {characterListData.results.map((characterData) => (
-            <Card key={characterData.id} character={characterData} />
+          {characters.data.results.map((character) => (
+            <Card key={character.id} character={character} />
           ))}
         </ul>
         <Flyout />

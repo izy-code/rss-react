@@ -1,10 +1,12 @@
-import { useRouter } from 'next/router';
+'use client';
+
 import type { FormEvent, ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { LocalStorageKeys } from '@/common/enums';
+import { DEFAULT_PAGE } from '@/api/api';
+import { LocalStorageKeys, SearchParams } from '@/common/enums';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { DEFAULT_PAGE } from '@/store/api/api-slice';
+import { useQueries } from '@/hooks/useQueries';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './SearchForm.module.scss';
@@ -12,12 +14,8 @@ import styles from './SearchForm.module.scss';
 export function SearchForm(): ReactNode {
   const { getStoredValue, setStoredValue } = useLocalStorage<string>();
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const router = useRouter();
+  const { queryParams, name, setSearchParam, router } = useQueries();
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const { name } = router.query;
-
-  const nameParam = name?.toString() ?? '';
 
   const updateSearchTerm = useCallback(
     (newTerm: string): void => {
@@ -32,14 +30,14 @@ export function SearchForm(): ReactNode {
   }, [getStoredValue]);
 
   useEffect(() => {
-    if (searchTerm && Object.keys(router.query).length === 0) {
+    if (searchTerm && queryParams.size === 0) {
       inputRef.current!.value = searchTerm;
-      void router.push({ query: { ...router.query, name: searchTerm } });
-    } else if (searchTerm !== nameParam && Object.keys(router.query).length > 0) {
-      updateSearchTerm(nameParam);
-      inputRef.current!.value = nameParam;
+      setSearchParam(SearchParams.NAME, searchTerm);
+    } else if (searchTerm !== name && queryParams.size > 0) {
+      updateSearchTerm(name);
+      inputRef.current!.value = name;
     }
-  }, [searchTerm, updateSearchTerm, nameParam, router]);
+  }, [searchTerm, updateSearchTerm, name, queryParams.size, setSearchParam]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -52,13 +50,17 @@ export function SearchForm(): ReactNode {
 
     updateSearchTerm(inputSearchTerm);
 
-    if (inputSearchTerm) {
-      void router.push({ query: { ...router.query, name: inputSearchTerm, page: DEFAULT_PAGE.toString() } });
-    } else {
-      const { name: deletedName, ...rest } = router.query;
+    const params = new URLSearchParams(queryParams.toString());
 
-      void router.push({ query: { ...rest, page: DEFAULT_PAGE.toString() } });
+    params.set(SearchParams.PAGE, DEFAULT_PAGE.toString());
+
+    if (inputSearchTerm) {
+      params.set(SearchParams.NAME, inputSearchTerm);
+    } else {
+      params.delete(SearchParams.NAME);
     }
+
+    router.push(`?${params.toString()}`);
   }
 
   return (
