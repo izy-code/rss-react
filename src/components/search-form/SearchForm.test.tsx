@@ -1,6 +1,4 @@
 import { screen } from '@testing-library/react';
-import { useRouter } from 'next/router';
-import type { Mock } from 'vitest';
 
 import { LocalStorageKeys } from '@/common/enums';
 import { LOCAL_STORAGE_KEY } from '@/hooks/useLocalStorage';
@@ -9,11 +7,19 @@ import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { SearchForm } from './SearchForm';
 
-vi.mock('next/router', () => ({
-  useRouter: vi.fn(),
-}));
-
-(useRouter as Mock).mockReturnValue({ query: {}, push: vi.fn() });
+vi.mock('next/navigation', async () => {
+  const actual = await vi.importActual('next/navigation');
+  return {
+    ...actual,
+    useRouter: vi.fn(() => ({
+      push: vi.fn(),
+    })),
+    useSearchParams: vi.fn(() => {
+      const searchParams = new URLSearchParams({});
+      return searchParams;
+    }),
+  };
+});
 
 describe('SearchForm Component', () => {
   beforeEach(() => {
