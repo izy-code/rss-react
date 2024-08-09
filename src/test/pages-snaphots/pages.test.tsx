@@ -1,38 +1,52 @@
 import { screen } from '@testing-library/react';
+import React from 'react';
 
+import RootLayout from '@/app/layout';
+import Page404 from '@/app/not-found';
+import Home, { AsyncWrapper } from '@/app/page';
 import { SearchParams } from '@/common/enums';
-import { ErrorBoundary } from '@/components/error-boundary/ErrorBoundary';
-import Home from '@/pages';
-import Page404 from '@/pages/404';
-import Page500 from '@/pages/500';
+import { ThrowErrorButton } from '@/components/error-button/ThrowErrorButton';
 import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
-import { getMockedNextRouter, renderWithProvidersAndUser } from '@/utils/test-utils';
+import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 describe('Pages render', () => {
-  it('should match the snapshot for main routes', async () => {
-    const { NextProvider } = getMockedNextRouter({
-      query: { [SearchParams.PAGE]: MOCK_PAGE_NUMBER, [SearchParams.NAME]: MOCK_SEARCH_NAME },
+  vi.mock('next/navigation', async () => {
+    const actual = await vi.importActual('next/navigation');
+    return {
+      ...actual,
+      useRouter: vi.fn(() => ({
+        push: vi.fn(),
+      })),
+      useSearchParams: vi.fn(() => {
+        const searchParams = new URLSearchParams({});
+        return searchParams;
+      }),
+    };
+  });
+
+  it('should match the snapshot for main page', async () => {
+    const Awaited = await AsyncWrapper({
+      searchParams: {
+        [SearchParams.NAME]: MOCK_SEARCH_NAME,
+        [SearchParams.PAGE]: MOCK_PAGE_NUMBER,
+      },
     });
 
     const { container } = renderWithProvidersAndUser(
-      <NextProvider>
-        <Home />
-      </NextProvider>,
+      <Home
+        searchParams={{
+          [SearchParams.NAME]: MOCK_SEARCH_NAME,
+          [SearchParams.PAGE]: MOCK_PAGE_NUMBER,
+        }}
+        TestPlaceholder={() => Awaited}
+      />,
     );
-
-    await screen.findByRole('button', { name: /prev/i });
 
     expect(container).toMatchSnapshot();
   });
 
-  it('should match the snapshot for 404 and 500 pages', () => {
-    const { NextProvider } = getMockedNextRouter();
-    const { container } = renderWithProvidersAndUser(
-      <NextProvider>
-        <Page404 />
-        <Page500 />
-      </NextProvider>,
-    );
+  it('should match the snapshot for 404 page', () => {
+    const { container } = renderWithProvidersAndUser(<Page404 />);
 
     expect(container).toMatchSnapshot();
   });
@@ -40,14 +54,10 @@ describe('Pages render', () => {
   it('should match the snapshot for error page', async () => {
     const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    const { NextProvider } = getMockedNextRouter();
-
     const { container, user } = renderWithProvidersAndUser(
-      <NextProvider>
-        <ErrorBoundary>
-          <Home />
-        </ErrorBoundary>
-      </NextProvider>,
+      <RootLayout>
+        <ThrowErrorButton />
+      </RootLayout>,
     );
 
     const errorButton = screen.getByRole('button', { name: /throw error/i });
