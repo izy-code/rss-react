@@ -1,10 +1,9 @@
 import { screen, waitFor } from '@testing-library/react';
 import mockRouter from 'next-router-mock';
 import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
-import { createElement } from 'react';
 
 import { BASE_URL } from '@/api/api';
-import { Wrapper } from '@/app/page';
+import { AsyncWrapper } from '@/app/page';
 import { SearchParams } from '@/common/enums';
 import { characterMock } from '@/test/mocks/mocks';
 import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
@@ -23,13 +22,11 @@ describe('Card Component', () => {
       ...actual,
       useRouter: vi.fn(() => ({
         push: vi.fn(),
-        replace: vi.fn(),
       })),
       useSearchParams: vi.fn(() => {
         const searchParams = new URLSearchParams({});
         return searchParams;
       }),
-      usePathname: vi.fn(),
     };
   });
 
@@ -63,7 +60,7 @@ describe('Card Component', () => {
   it('triggers an additional API call to fetch detailed information with right URL', async (): Promise<void> => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
 
-    const Awaited = (await Wrapper({
+    const Awaited = (await AsyncWrapper({
       searchParams: {
         [SearchParams.NAME]: MOCK_SEARCH_NAME,
         [SearchParams.PAGE]: MOCK_PAGE_NUMBER,
@@ -71,7 +68,7 @@ describe('Card Component', () => {
       },
     })) as JSX.Element;
 
-    renderWithProvidersAndUser(createElement(MemoryRouterProvider, null, Awaited));
+    renderWithProvidersAndUser(Awaited);
 
     await waitFor(() => expect(fetchSpy).toHaveBeenCalledWith(`${BASE_URL}/${characterMock.id}`));
   });
@@ -79,14 +76,14 @@ describe('Card Component', () => {
   it('triggers flyout counter change when input clicked', async (): Promise<void> => {
     global.URL.createObjectURL = vi.fn(() => 'mockedURL');
 
-    const Awaited = (await Wrapper({
+    const Awaited = (await AsyncWrapper({
       searchParams: {
         [SearchParams.NAME]: MOCK_SEARCH_NAME,
         [SearchParams.PAGE]: MOCK_PAGE_NUMBER,
       },
     })) as JSX.Element;
 
-    const { user } = renderWithProvidersAndUser(createElement(MemoryRouterProvider, null, Awaited));
+    const { user } = renderWithProvidersAndUser(Awaited);
 
     const checkboxes = await screen.findAllByRole('checkbox');
     const counter = screen.getByText(/items selected: 0/i);
