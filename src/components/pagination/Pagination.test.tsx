@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { AsyncWrapper } from '@/app/page';
 import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';
 import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
+import { AsyncWrapper } from '../async-wrapper/AsyncWrapper';
 import { Pagination } from './Pagination';
 
 const mockedRouterPush = vi.fn();

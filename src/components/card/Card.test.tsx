@@ -3,12 +3,12 @@ import mockRouter from 'next-router-mock';
 import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
 
 import { BASE_URL } from '@/api/api';
-import { AsyncWrapper } from '@/app/page';
 import { SearchParams } from '@/common/enums';
 import { characterMock } from '@/test/mocks/mocks';
 import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
+import { AsyncWrapper } from '../async-wrapper/AsyncWrapper';
 import { Card } from './Card';
 
 describe('Card Component', () => {
