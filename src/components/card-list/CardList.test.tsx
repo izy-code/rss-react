@@ -1,9 +1,7 @@
 import { screen } from '@testing-library/react';
 
-import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';
-import { MOCK_SEARCH_NAME } from '@/test/msw/handlers';
-import { getMockedNextRouter, renderWithProvidersAndUser } from '@/utils/test-utils';
+import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { CardList } from './CardList';
 
@@ -18,13 +16,11 @@ describe('CardList Component', () => {
       ...actual,
       useRouter: vi.fn(() => ({
         push: vi.fn(),
-        replace: vi.fn(),
       })),
       useSearchParams: vi.fn(() => {
         const searchParams = new URLSearchParams({});
         return searchParams;
       }),
-      usePathname: vi.fn(),
     };
   });
 
