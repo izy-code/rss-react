@@ -1,9 +1,10 @@
 import { screen } from '@testing-library/react';
+import type { AwaitedReactNode } from 'react';
 import React from 'react';
 
 import RootLayout from '@/app/layout';
 import Page404 from '@/app/not-found';
-import Home, { AsyncWrapper } from '@/app/page';
+import Home from '@/app/page';
 import { SearchParams } from '@/common/enums';
 import { ThrowErrorButton } from '@/components/error-button/ThrowErrorButton';
 import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
@@ -24,13 +25,10 @@ describe('Pages render', () => {
     };
   });
 
-  it('should match the snapshot for main page', async () => {
-    const Awaited = await AsyncWrapper({
-      searchParams: {
-        [SearchParams.NAME]: MOCK_SEARCH_NAME,
-        [SearchParams.PAGE]: MOCK_PAGE_NUMBER,
-      },
-    });
+  it('should match the snapshot for main page', () => {
+    vi.mock('@/components/async-wrapper/AsyncWrapper', () => ({
+      AsyncWrapper: (): AwaitedReactNode => <p>AsyncWrapper</p>,
+    }));
 
     const { container } = renderWithProvidersAndUser(
       <Home
@@ -38,7 +36,6 @@ describe('Pages render', () => {
           [SearchParams.NAME]: MOCK_SEARCH_NAME,
           [SearchParams.PAGE]: MOCK_PAGE_NUMBER,
         }}
-        TestPlaceholder={() => Awaited}
       />,
     );
 
