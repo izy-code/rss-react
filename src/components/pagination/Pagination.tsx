@@ -2,8 +2,8 @@ import { useSearchParams } from '@remix-run/react';
 import { type ReactNode, useEffect } from 'react';
 
 import { DEFAULT_PAGE } from '@/api/api';
+import type { CharacterListInfo } from '@/api/types';
 import { SearchParams } from '@/common/enums';
-import type { CharacterListInfo } from '@/store/api/types';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './Pagination.module.scss';

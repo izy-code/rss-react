@@ -2,6 +2,7 @@ import { Outlet, useNavigation, useSearchParams } from '@remix-run/react';
 import { type MouseEvent, type ReactNode, useRef } from 'react';
 
 import type { FetchCharacterListResult } from '@/api/api';
+import { DEFAULT_PAGE } from '@/api/api';
 import { SearchParams } from '@/common/enums';
 import { CardList } from '@/components/card-list/CardList';
 import { ThrowErrorButton } from '@/components/error-button/ThrowErrorButton';
@@ -9,7 +10,6 @@ import { Header } from '@/components/header/Header';
 import { Loader } from '@/components/loader/Loader';
 import { SearchForm } from '@/components/search-form/SearchForm';
 import { ThemeButton } from '@/components/theme-button/ThemeButton';
-import { DEFAULT_PAGE } from '@/store/api/api-slice';
 
 import styles from './MainPage.module.scss';
 
