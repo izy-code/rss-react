@@ -1,5 +1,5 @@
+import { useNavigate } from '@remix-run/react';
 import type { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { CustomButton } from '@/components/custom-button/CustomButton';
 
@@ -16,9 +16,6 @@ export function Page404(): ReactNode {
         <div className={styles.buttons}>
           <CustomButton variant="tertiary" onClick={() => navigate(-1)}>
             Previous page
-          </CustomButton>
-          <CustomButton variant="tertiary" onClick={() => navigate('/')}>
-            Home page
           </CustomButton>
         </div>
       </div>
