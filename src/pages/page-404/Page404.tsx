@@ -17,6 +17,16 @@ export function Page404(): ReactNode {
           <CustomButton variant="tertiary" onClick={() => navigate(-1)}>
             Previous page
           </CustomButton>
+          <CustomButton
+            variant="tertiary"
+            onClick={() => {
+              const hostUrl = `${window.location.protocol}//${window.location.host}`;
+
+              window.location.href = hostUrl;
+            }}
+          >
+            Last stored search
+          </CustomButton>
         </div>
       </div>
     </main>
