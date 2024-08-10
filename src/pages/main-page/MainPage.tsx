@@ -25,11 +25,15 @@ export function MainPage({ characters }: { characters: FetchCharacterListResult 
   const page = (Number(searchParams.get(SearchParams.PAGE)) || DEFAULT_PAGE).toString();
   const detailsParam = searchParams.get(SearchParams.DETAILS);
 
-  const hasPageChanged =
-    navigation.location && new URLSearchParams(navigation.location.search).get(SearchParams.PAGE) !== page;
-  const hasSearchTermChanged =
-    navigation.location && new URLSearchParams(navigation.location.search).get(SearchParams.NAME) !== searchTerm;
-  const isCardListLoading = hasPageChanged || hasSearchTermChanged;
+  let isCardListLoading = false;
+
+  if (navigation.location) {
+    const futureSearchParams = new URLSearchParams(navigation.location.search);
+    const pageParam = futureSearchParams.get(SearchParams.PAGE);
+    const searchTermParam = futureSearchParams.get(SearchParams.NAME) || '';
+
+    isCardListLoading = page !== pageParam || searchTermParam !== searchTerm;
+  }
 
   const handleMainClick = (evt: MouseEvent): void => {
     const isTargetRef =
@@ -50,7 +54,7 @@ export function MainPage({ characters }: { characters: FetchCharacterListResult 
       </Header>
       <main className={styles.main} onClick={handleMainClick} ref={mainRef}>
         <section className={styles.listSection} ref={sectionRef}>
-          {isCardListLoading ? <Loader /> : <CardList characters={characters} />}
+          {isCardListLoading ? <Loader /> : <CardList characters={characters} ref={listRef} />}
         </section>
         {detailsParam && (
           <section className={styles.detailsSection}>
