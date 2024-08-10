@@ -11,7 +11,7 @@ import styles from './SearchForm.module.scss';
 
 export function SearchForm(): ReactNode {
   const { getStoredValue, setStoredValue } = useLocalStorage<string>();
-  const [searchTerm, setSearchTerm] = useState<string>(getStoredValue(LocalStorageKeys.SEARCH) || '');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,6 +29,10 @@ export function SearchForm(): ReactNode {
     },
     [setStoredValue],
   );
+
+  useEffect(() => {
+    setSearchTerm(getStoredValue(LocalStorageKeys.SEARCH) || '');
+  }, [getStoredValue]);
 
   useEffect(() => {
     const nameParam = searchParams.get(SearchParams.NAME) ?? '';

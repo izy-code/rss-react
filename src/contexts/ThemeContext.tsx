@@ -21,13 +21,19 @@ export const ThemeContext = createContext<ThemeContextType>({
 
 export function ThemeProvider({ children }: { children: ReactNode }): ReactNode {
   const { getStoredValue, setStoredValue } = useLocalStorage<boolean>();
-  const [isDarkTheme, setIsDarkTheme] = useState(getStoredValue(LocalStorageKeys.THEME) || false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
-    setStoredValue(LocalStorageKeys.THEME, isDarkTheme);
-  }, [isDarkTheme, setStoredValue]);
+    setIsDarkTheme(getStoredValue(LocalStorageKeys.THEME) || false);
+  }, [getStoredValue]);
 
-  const toggleTheme = useCallback((): void => setIsDarkTheme((prevTheme) => !prevTheme), []);
+  const toggleTheme = useCallback((): void => {
+    setIsDarkTheme((prevTheme) => {
+      setStoredValue(LocalStorageKeys.THEME, !prevTheme);
+
+      return !prevTheme;
+    });
+  }, [setStoredValue]);
 
   const contextValue = useMemo(() => ({ isDarkTheme, toggleTheme }), [isDarkTheme, toggleTheme]);
 
