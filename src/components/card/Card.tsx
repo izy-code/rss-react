@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from '@remix-run/react';
 import clsx from 'clsx';
-import { type ReactNode } from 'react';
+import type { ChangeEvent, ReactNode } from 'react';
 
 import { SearchParams } from '@/common/enums';
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
@@ -30,11 +30,7 @@ export function Card({ character }: Props): ReactNode {
     return `?${updatedSearchParams.toString()}`;
   };
 
-  const handleListItemClick = (evt: React.MouseEvent): void => {
-    evt.stopPropagation();
-  };
-
-  const handleCheckboxChange = (evt: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleCheckboxChange = (evt: ChangeEvent<HTMLInputElement>): void => {
     if (evt.target.checked) {
       dispatch(selectItem(character));
     } else {
@@ -43,7 +39,7 @@ export function Card({ character }: Props): ReactNode {
   };
 
   return (
-    <li className={styles.card} onClick={(evt) => handleListItemClick(evt)}>
+    <li className={styles.card}>
       <Link className={clsx(isActive ? styles.active : '', styles.link)} to={getLinkPath()}>
         <ImageLoader imageSrc={character.image} imageAlt={character.name} />
         <div className={styles.content}>
@@ -53,7 +49,7 @@ export function Card({ character }: Props): ReactNode {
             type="checkbox"
             checked={Boolean(storeItemData)}
             onChange={handleCheckboxChange}
-            onClick={(evt) => handleListItemClick(evt)}
+            onClick={(evt) => evt.stopPropagation()}
           />
         </div>
       </Link>

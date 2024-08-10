@@ -1,6 +1,7 @@
 import { useSearchParams } from '@remix-run/react';
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
+import { DEFAULT_PAGE } from '@/api/api';
 import { SearchParams } from '@/common/enums';
 import type { CharacterListInfo } from '@/store/api/types';
 
@@ -14,24 +15,25 @@ interface Props {
 export function Pagination({ pageInfo }: Props): ReactNode {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentPage = Number(searchParams.get(SearchParams.PAGE));
+  const currentPage = Number(searchParams.get(SearchParams.PAGE)) || DEFAULT_PAGE;
 
   const handlePageChange = (pageNumber: number): void => {
     searchParams.set(SearchParams.PAGE, pageNumber.toString());
     setSearchParams(searchParams);
   };
 
-  const handleButtonClick = (evt: React.MouseEvent, nextPage: number): void => {
-    evt.stopPropagation();
-
-    handlePageChange(nextPage);
-  };
+  useEffect(() => {
+    if (!Number.isInteger(currentPage) || currentPage < DEFAULT_PAGE) {
+      searchParams.set(SearchParams.PAGE, DEFAULT_PAGE.toString());
+      setSearchParams(searchParams);
+    }
+  }, [currentPage, searchParams, setSearchParams]);
 
   return (
     <div className={styles.container}>
       <CustomButton
         className={styles.button}
-        onClick={(evt) => handleButtonClick(evt, currentPage - 1)}
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
         Prev
@@ -39,7 +41,7 @@ export function Pagination({ pageInfo }: Props): ReactNode {
       <p className={styles.text}>{`Page ${currentPage} of ${pageInfo.pages}`}</p>
       <CustomButton
         className={styles.button}
-        onClick={(evt) => handleButtonClick(evt, currentPage + 1)}
+        onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === pageInfo.pages}
       >
         Next
