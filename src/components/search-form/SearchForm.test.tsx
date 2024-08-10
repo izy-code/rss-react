@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
+import { MemoryRouter } from '@remix-run/react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { LocalStorageKeys } from '@/common/enums';
 import { LOCAL_STORAGE_KEY } from '@/hooks/useLocalStorage';

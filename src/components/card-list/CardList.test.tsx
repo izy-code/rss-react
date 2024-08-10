@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
+import { MemoryRouter } from '@remix-run/react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';

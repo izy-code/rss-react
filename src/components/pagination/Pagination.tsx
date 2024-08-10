@@ -1,5 +1,5 @@
+import { useSearchParams } from '@remix-run/react';
 import { type ReactNode } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import type { CharacterListInfo } from '@/store/api/types';

@@ -1,5 +1,5 @@
+import { Outlet, useSearchParams } from '@remix-run/react';
 import type { ReactNode } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import { CardList } from '@/components/card-list/CardList';

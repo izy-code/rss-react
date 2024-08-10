@@ -1,6 +1,6 @@
+import { Link, useSearchParams } from '@remix-run/react';
 import clsx from 'clsx';
 import { type ReactNode } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';

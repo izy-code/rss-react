@@ -1,15 +1,15 @@
 import '@testing-library/jest-dom';
 
+import { UNSAFE_ErrorResponseImpl, useRouteError } from '@remix-run/react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { UNSAFE_ErrorResponseImpl, useRouteError } from 'react-router-dom';
 import type { Mock } from 'vitest';
 import { vi } from 'vitest';
 
 import { ErrorPage } from './ErrorPage';
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('@remix-run/react', async () => {
+  const actual = await vi.importActual('@remix-run/react');
   return {
     ...actual,
     useRouteError: vi.fn(),

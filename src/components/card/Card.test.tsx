@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 
+import { createMemoryRouter, MemoryRouter, RouterProvider, useLocation } from '@remix-run/react';
 import { screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { createMemoryRouter, MemoryRouter, RouterProvider, useLocation } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import { Details } from '@/components/details/Details';

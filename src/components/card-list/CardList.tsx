@@ -1,6 +1,6 @@
+import { useSearchParams } from '@remix-run/react';
 import type { ReactNode } from 'react';
 import { useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import { Card } from '@/components/card/Card';

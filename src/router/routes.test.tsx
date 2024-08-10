@@ -1,5 +1,5 @@
+import { createMemoryRouter, RouterProvider } from '@remix-run/react';
 import { render, screen } from '@testing-library/react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';

@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
+import { MemoryRouter, Route, Routes } from '@remix-run/react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { MainPage } from '@/pages/main-page/MainPage';
 import { characterMock } from '@/test/mocks/mocks';

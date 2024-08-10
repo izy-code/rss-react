@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 
+import { MemoryRouter, useLocation } from '@remix-run/react';
 import { screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';
