@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import { type ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import placeholder from '@/assets/images/placeholder.svg';
 
@@ -14,10 +15,18 @@ interface Props {
 
 export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Props): ReactNode {
   const [isLoading, setIsLoading] = useState(true);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   const handleImageLoad = (): void => {
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    const img = imageRef.current;
+    if (img && img.complete) {
+      handleImageLoad();
+    }
+  }, []);
 
   return (
     <>
@@ -28,6 +37,7 @@ export function ImageLoader({ imageSrc, imageAlt, secondaryColor = false }: Prop
         </div>
       )}
       <img
+        ref={imageRef}
         className={clsx(styles.image, isLoading ? styles.hidden : '')}
         src={imageSrc}
         alt={imageAlt}
