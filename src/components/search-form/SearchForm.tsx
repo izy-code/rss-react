@@ -32,11 +32,11 @@ export function SearchForm(): ReactNode {
   useEffect(() => {
     const nameParam = searchParams.get(SearchParams.NAME) ?? '';
 
-    if (searchTerm && searchParams.size === 1) {
+    if (searchTerm && searchParams.size === 0) {
       inputRef.current!.value = searchTerm;
       searchParams.set(SearchParams.NAME, searchTerm);
       setSearchParams(searchParams);
-    } else if (searchTerm !== nameParam && searchParams.size > 1) {
+    } else if (searchTerm !== nameParam && searchParams.size > 0) {
       updateSearchTerm(nameParam);
       inputRef.current!.value = nameParam;
     }
