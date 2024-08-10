@@ -12,7 +12,7 @@ type State = {
   errorMessage: string;
 };
 
-export class ErrorBoundary extends Component<Props, State> {
+export class ClassErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
