@@ -1,9 +1,21 @@
 import './root.scss';
 
-import { isRouteErrorResponse, Links, Meta, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
+import type { LoaderFunctionArgs } from '@remix-run/node';
+import {
+  isRouteErrorResponse,
+  Links,
+  Meta,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+  useRouteError,
+} from '@remix-run/react';
 import type { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 
+import type { FetchCharacterListResult } from '@/api/api';
+import { DEFAULT_PAGE, fetchCharacters } from '@/api/api';
+import { SearchParams } from '@/common/enums';
 import { ClassErrorBoundary } from '@/components/error-boundary/ClassErrorBoundary';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ErrorPage } from '@/pages/error-page/ErrorPage';
@@ -31,12 +43,24 @@ export function Layout({ children }: { children: ReactNode }): ReactNode {
   );
 }
 
+export const loader = async ({ request }: LoaderFunctionArgs): Promise<FetchCharacterListResult> => {
+  const url = new URL(request.url);
+  const searchTerm = url.searchParams.get(SearchParams.NAME) || '';
+  const page = Number(url.searchParams.get(SearchParams.PAGE)) || DEFAULT_PAGE;
+
+  const characters = await fetchCharacters(searchTerm, page);
+
+  return characters;
+};
+
 export default function App(): ReactNode {
+  const characters = useLoaderData<typeof loader>();
+
   return (
     <ThemeProvider>
       <ClassErrorBoundary>
         <Provider store={store}>
-          <MainPage />
+          <MainPage characters={characters} />
         </Provider>
       </ClassErrorBoundary>
     </ThemeProvider>

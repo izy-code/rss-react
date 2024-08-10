@@ -51,6 +51,8 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/prefer-stateless-function': 'off',
     'react/button-has-type': 'off',
+    'react-refresh/only-export-components': 'off',
+    'prefer-arrow-callback': ['error', { allowNamedFunctions: true }],
     curly: ['error', 'all'],
     'react/jsx-props-no-spreading': [
       'error',
