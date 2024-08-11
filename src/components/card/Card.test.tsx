@@ -1,6 +1,6 @@
 import type { TypedResponse } from '@remix-run/node';
 import type * as RemixReactType from '@remix-run/react';
-import { json, useLoaderData, useLocation } from '@remix-run/react';
+import { json, useLoaderData } from '@remix-run/react';
 import { createRemixStub } from '@remix-run/testing';
 import { screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -8,23 +8,13 @@ import type { ReactNode } from 'react';
 import type { FetchCharacterListResult, FetchCharacterResult } from '@/api/api';
 import App from '@/app/root';
 import Index from '@/app/routes/_index';
-import { SearchParams } from '@/common/enums';
 import { characterMock, charactersDataMock } from '@/test/mocks/mocks';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { CardList } from '../card-list/CardList';
 import { Card } from './Card';
 
-const DETAILS_TEST_ID = 'details-display';
-
 global.URL.createObjectURL = vi.fn(() => 'mockedURL');
-
-function DetailsSearchParamDisplay(): ReactNode {
-  const location = useLocation();
-  const detailsID = new URLSearchParams(location.search).get(SearchParams.DETAILS);
-
-  return <p data-testid={DETAILS_TEST_ID}>{detailsID}</p>;
-}
 
 describe('Card Component', () => {
   afterAll(() => {
@@ -49,28 +39,42 @@ describe('Card Component', () => {
     expect(screen.getByAltText(characterMock.name)).toHaveAttribute('src', characterMock.image);
   });
 
-  it('changes URL search params when clicked which triggers an additional API call', async (): Promise<void> => {
+  it('validates that clicking on a card opens a detailed card component', async (): Promise<void> => {
     const RemixStub = createRemixStub([
       {
+        id: 'root',
         path: '/',
-        Component: (): ReactNode => (
-          <>
-            <Card character={characterMock} />
-            <DetailsSearchParamDisplay />
-          </>
-        ),
+        Component: (): ReactNode => <App />,
+        children: [
+          {
+            id: 'index',
+            path: '/',
+            Component: (): ReactNode => <Index />,
+            loader: (): TypedResponse<FetchCharacterResult> => json({ status: 'success', data: characterMock }),
+          },
+        ],
+        loader: (): TypedResponse<FetchCharacterListResult> => json({ status: 'success', data: charactersDataMock }),
       },
     ]);
 
-    const { user } = renderWithProvidersAndUser(<RemixStub />);
+    const { user } = renderWithProvidersAndUser(
+      <RemixStub
+        hydrationData={{
+          loaderData: {
+            root: { status: 'success', data: charactersDataMock },
+            index: { status: 'success', data: characterMock },
+          },
+        }}
+      />,
+    );
 
-    const linkElement = screen.getByRole('link');
+    expect(screen.queryByRole('button', { name: /close details/i })).not.toBeInTheDocument();
 
-    expect(linkElement).toBeInTheDocument();
+    const linkElements = screen.getAllByRole('link');
 
-    await user.click(linkElement);
+    await user.click(linkElements[0]!);
 
-    expect(screen.getByTestId(DETAILS_TEST_ID)).toHaveTextContent(characterMock.id.toString());
+    expect(await screen.findByRole('button', { name: /close details/i })).toBeInTheDocument();
   });
 
   it('triggers an additional API call to fetch detailed information when clicked', async (): Promise<void> => {
