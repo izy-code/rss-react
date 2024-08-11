@@ -31,7 +31,7 @@ exports[`Router render > should match the snapshot for 404 page 1`] = `
           class="_button_1c0f93 _button--tertiary_1c0f93"
           type="button"
         >
-          Home page
+          Last stored search
         </button>
       </div>
     </div>
@@ -41,137 +41,323 @@ exports[`Router render > should match the snapshot for 404 page 1`] = `
 
 exports[`Router render > should match the snapshot for error page 1`] = `
 <div>
-  <main
-    class="_main_6e3859"
+  <div
+    class="_container_6f7f49"
   >
-    <div
-      class="_container_6e3859"
+    <main
+      class="_main_6e3859"
     >
-      <h1
-        class="_header_6e3859"
+      <div
+        class="_container_6e3859"
       >
-        Oops!
-      </h1>
-      <p
-        class="_text_6e3859"
-      >
-        Sorry, an unexpected error has occurred.
-      </p>
-      <p
-        class="_errorDesc_6e3859"
-      >
-        Error message:
-      </p>
-      <p
-        class="_error_6e3859"
-      >
-        Error throwing button was clicked
-      </p>
-      <p
-        class="_text_6e3859"
-      >
-        Please try to refresh the page.
-      </p>
-      <button
-        class="_button_1c0f93 _button--primary_1c0f93 _refreshBtn_6e3859"
-        type="button"
-      >
-        Refresh the page
-      </button>
-    </div>
-  </main>
+        <h1
+          class="_header_6e3859"
+        >
+          Oops!
+        </h1>
+        <p
+          class="_text_6e3859"
+        >
+          Sorry, an unexpected error has occurred.
+        </p>
+        <p
+          class="_errorDesc_6e3859"
+        >
+          Error message:
+        </p>
+        <p
+          class="_error_6e3859"
+        >
+          Error throwing button was clicked
+        </p>
+        <p
+          class="_text_6e3859"
+        >
+          Please try to refresh the page.
+        </p>
+        <button
+          class="_button_1c0f93 _button--primary_1c0f93 _refreshBtn_6e3859"
+          type="button"
+        >
+          Refresh the page
+        </button>
+      </div>
+    </main>
+  </div>
 </div>
 `;
 
-exports[`Router render > should match the snapshot for main routes 1`] = `
+exports[`Router render > should match the snapshot for main route 1`] = `
 <div>
   <div
-    class="_page_6798d4"
+    class="_container_6f7f49"
   >
-    <header
-      class="_header_accb48"
+    <div
+      class="_page_6798d4"
     >
-      <div
-        class="_container_accb48"
-      >
-        <h1
-          class="visually-hidden"
-        >
-          Rick and Morty characters
-        </h1>
-        <form
-          class="_form_1de04e"
-        >
-          <input
-            autocomplete="off"
-            class="_input_1de04e"
-            placeholder="Enter character name…"
-            type="search"
-            value="rick"
-          />
-          <button
-            class="_button_1c0f93 _button--secondary_1c0f93"
-            type="submit"
-          >
-            Search
-          </button>
-        </form>
-        <button
-          class="_button_1c0f93 _button--cancel_1c0f93"
-          type="button"
-        >
-          Throw error
-        </button>
-        <button
-          class="_button_1c0f93 _button--secondary_1c0f93 _button_628325 __628325"
-          type="button"
-        >
-          <span
-            class="visually-hidden"
-          >
-            Switch to dark theme
-          </span>
-        </button>
-      </div>
-    </header>
-    <main
-      class="_main_6798d4"
-    >
-      <section
-        class="_listSection_6798d4"
+      <header
+        class="_header_accb48"
       >
         <div
-          class="_container_5bac6f"
+          class="_container_accb48"
         >
+          <h1
+            class="visually-hidden"
+          >
+            Rick and Morty characters
+          </h1>
+          <form
+            class="_form_1de04e"
+          >
+            <input
+              autocomplete="off"
+              class="_input_1de04e"
+              placeholder="Enter character name…"
+              type="search"
+              value=""
+            />
+            <button
+              class="_button_1c0f93 _button--secondary_1c0f93"
+              type="submit"
+            >
+              Search
+            </button>
+          </form>
           <button
-            class="_button_1c0f93 _button--primary_1c0f93 _button_5bac6f"
-            disabled=""
+            class="_button_1c0f93 _button--cancel_1c0f93"
             type="button"
           >
-            Prev
+            Throw error
           </button>
-          <p
-            class="_text_5bac6f"
-          >
-            Page 1 of 1
-          </p>
           <button
-            class="_button_1c0f93 _button--primary_1c0f93 _button_5bac6f"
-            disabled=""
+            class="_button_1c0f93 _button--secondary_1c0f93 _button_628325 __628325"
             type="button"
           >
-            Next
+            <span
+              class="visually-hidden"
+            >
+              Switch to dark theme
+            </span>
           </button>
         </div>
-        <ul
-          class="_list_269ea4"
+      </header>
+      <main
+        class="_main_6798d4"
+      >
+        <section
+          class="_listSection_6798d4"
         >
-          <li
-            class="_card_c39673"
+          <div
+            class="_container_5bac6f"
           >
-            <a
-              class="_link_c39673"
-              href="/?page=1&name=rick&details=1"
+            <button
+              class="_button_1c0f93 _button--primary_1c0f93 _button_5bac6f"
+              disabled=""
+              type="button"
+            >
+              Prev
+            </button>
+            <p
+              class="_text_5bac6f"
+            >
+              Page 1 of 1
+            </p>
+            <button
+              class="_button_1c0f93 _button--primary_1c0f93 _button_5bac6f"
+              disabled=""
+              type="button"
+            >
+              Next
+            </button>
+          </div>
+          <ul
+            class="_list_269ea4"
+          >
+            <li
+              class="_card_c39673"
+            >
+              <a
+                class="_active_c39673 _link_c39673"
+                data-discover="true"
+                href="/?details=1"
+              >
+                <div
+                  class="_placeholder_4c56d5"
+                >
+                  <img
+                    alt="Placeholder"
+                    class="_image_4c56d5 _placeholderImage_4c56d5"
+                    src="/src/assets/images/placeholder.svg"
+                  />
+                  <div
+                    class="_loaderContainer_523128 _loader_4c56d5"
+                  >
+                    <h2
+                      class="visually-hidden"
+                    >
+                      Loading...
+                    </h2>
+                    <div
+                      class="_loader_523128"
+                    />
+                  </div>
+                </div>
+                <img
+                  alt="Rick Sanchez Mocked"
+                  class="_image_4c56d5 _hidden_4c56d5"
+                  src="https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+                />
+                <div
+                  class="_content_c39673"
+                >
+                  <h2
+                    class="_title_c39673"
+                  >
+                    Rick Sanchez Mocked
+                  </h2>
+                  <input
+                    class="_checkbox_c39673"
+                    type="checkbox"
+                  />
+                </div>
+              </a>
+            </li>
+            <li
+              class="_card_c39673"
+            >
+              <a
+                class="_link_c39673"
+                data-discover="true"
+                href="/?details=8"
+              >
+                <div
+                  class="_placeholder_4c56d5"
+                >
+                  <img
+                    alt="Placeholder"
+                    class="_image_4c56d5 _placeholderImage_4c56d5"
+                    src="/src/assets/images/placeholder.svg"
+                  />
+                  <div
+                    class="_loaderContainer_523128 _loader_4c56d5"
+                  >
+                    <h2
+                      class="visually-hidden"
+                    >
+                      Loading...
+                    </h2>
+                    <div
+                      class="_loader_523128"
+                    />
+                  </div>
+                </div>
+                <img
+                  alt="Adjudicator Rick Mocked"
+                  class="_image_4c56d5 _hidden_4c56d5"
+                  src="https://rickandmortyapi.com/api/character/avatar/8.jpeg"
+                />
+                <div
+                  class="_content_c39673"
+                >
+                  <h2
+                    class="_title_c39673"
+                  >
+                    Adjudicator Rick Mocked
+                  </h2>
+                  <input
+                    class="_checkbox_c39673"
+                    type="checkbox"
+                  />
+                </div>
+              </a>
+            </li>
+            <li
+              class="_card_c39673"
+            >
+              <a
+                class="_link_c39673"
+                data-discover="true"
+                href="/?details=15"
+              >
+                <div
+                  class="_placeholder_4c56d5"
+                >
+                  <img
+                    alt="Placeholder"
+                    class="_image_4c56d5 _placeholderImage_4c56d5"
+                    src="/src/assets/images/placeholder.svg"
+                  />
+                  <div
+                    class="_loaderContainer_523128 _loader_4c56d5"
+                  >
+                    <h2
+                      class="visually-hidden"
+                    >
+                      Loading...
+                    </h2>
+                    <div
+                      class="_loader_523128"
+                    />
+                  </div>
+                </div>
+                <img
+                  alt="Alien Rick Mocked"
+                  class="_image_4c56d5 _hidden_4c56d5"
+                  src="https://rickandmortyapi.com/api/character/avatar/15.jpeg"
+                />
+                <div
+                  class="_content_c39673"
+                >
+                  <h2
+                    class="_title_c39673"
+                  >
+                    Alien Rick Mocked
+                  </h2>
+                  <input
+                    class="_checkbox_c39673"
+                    type="checkbox"
+                  />
+                </div>
+              </a>
+            </li>
+          </ul>
+          <div
+            aria-hidden="true"
+            class="_flyout_8b00b0"
+          >
+            <p
+              class="_counter_8b00b0"
+            >
+              Items selected: 
+              0
+            </p>
+            <div
+              class="_buttonsContainer_8b00b0"
+            >
+              <button
+                class="_button_1c0f93 _button--cancel_1c0f93"
+                type="button"
+              >
+                Unselect all
+              </button>
+              <a
+                class="_link_8b00b0"
+                download="0_characters.csv"
+                href="#"
+              >
+                Download
+              </a>
+            </div>
+          </div>
+        </section>
+        <section
+          class="_detailsSection_6798d4"
+        >
+          <div
+            class="_container_c19b66"
+          >
+            <div
+              class="_card_c19b66"
             >
               <div
                 class="_placeholder_4c56d5"
@@ -190,7 +376,7 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
                     Loading...
                   </h2>
                   <div
-                    class="_loader_523128"
+                    class="_loader_523128 _secondary_523128"
                   />
                 </div>
               </div>
@@ -199,148 +385,110 @@ exports[`Router render > should match the snapshot for main routes 1`] = `
                 class="_image_4c56d5 _hidden_4c56d5"
                 src="https://rickandmortyapi.com/api/character/avatar/1.jpeg"
               />
-              <div
-                class="_content_c39673"
+              <h2
+                class="_title_c19b66"
               >
-                <h2
-                  class="_title_c39673"
-                >
-                  Rick Sanchez Mocked
-                </h2>
-                <input
-                  class="_checkbox_c39673"
-                  type="checkbox"
-                />
-              </div>
-            </a>
-          </li>
-          <li
-            class="_card_c39673"
-          >
-            <a
-              class="_link_c39673"
-              href="/?page=1&name=rick&details=8"
-            >
-              <div
-                class="_placeholder_4c56d5"
+                Rick Sanchez Mocked
+              </h2>
+              <dl
+                class="_descriptionList_c19b66"
               >
-                <img
-                  alt="Placeholder"
-                  class="_image_4c56d5 _placeholderImage_4c56d5"
-                  src="/src/assets/images/placeholder.svg"
-                />
                 <div
-                  class="_loaderContainer_523128 _loader_4c56d5"
+                  class="_descriptionItem_c19b66"
                 >
-                  <h2
-                    class="visually-hidden"
+                  <dt
+                    class="_descriptionTerm_c19b66"
                   >
-                    Loading...
-                  </h2>
-                  <div
-                    class="_loader_523128"
-                  />
+                    Species: 
+                  </dt>
+                  <dd
+                    class="_descriptionDetail_c19b66"
+                  >
+                    Human
+                  </dd>
                 </div>
-              </div>
-              <img
-                alt="Adjudicator Rick Mocked"
-                class="_image_4c56d5 _hidden_4c56d5"
-                src="https://rickandmortyapi.com/api/character/avatar/8.jpeg"
-              />
-              <div
-                class="_content_c39673"
-              >
-                <h2
-                  class="_title_c39673"
-                >
-                  Adjudicator Rick Mocked
-                </h2>
-                <input
-                  class="_checkbox_c39673"
-                  type="checkbox"
-                />
-              </div>
-            </a>
-          </li>
-          <li
-            class="_card_c39673"
-          >
-            <a
-              class="_link_c39673"
-              href="/?page=1&name=rick&details=15"
-            >
-              <div
-                class="_placeholder_4c56d5"
-              >
-                <img
-                  alt="Placeholder"
-                  class="_image_4c56d5 _placeholderImage_4c56d5"
-                  src="/src/assets/images/placeholder.svg"
-                />
                 <div
-                  class="_loaderContainer_523128 _loader_4c56d5"
+                  class="_descriptionItem_c19b66"
                 >
-                  <h2
-                    class="visually-hidden"
+                  <dt
+                    class="_descriptionTerm_c19b66"
                   >
-                    Loading...
-                  </h2>
-                  <div
-                    class="_loader_523128"
-                  />
+                    Status: 
+                  </dt>
+                  <dd
+                    class="_descriptionDetail_c19b66"
+                  >
+                    Alive
+                  </dd>
                 </div>
-              </div>
-              <img
-                alt="Alien Rick Mocked"
-                class="_image_4c56d5 _hidden_4c56d5"
-                src="https://rickandmortyapi.com/api/character/avatar/15.jpeg"
-              />
-              <div
-                class="_content_c39673"
-              >
-                <h2
-                  class="_title_c39673"
+                <div
+                  class="_descriptionItem_c19b66"
                 >
-                  Alien Rick Mocked
-                </h2>
-                <input
-                  class="_checkbox_c39673"
-                  type="checkbox"
-                />
-              </div>
-            </a>
-          </li>
-        </ul>
-        <div
-          aria-hidden="true"
-          class="_flyout_8b00b0"
-        >
-          <p
-            class="_counter_8b00b0"
-          >
-            Items selected: 
-            0
-          </p>
-          <div
-            class="_buttonsContainer_8b00b0"
-          >
+                  <dt
+                    class="_descriptionTerm_c19b66"
+                  >
+                    Gender: 
+                  </dt>
+                  <dd
+                    class="_descriptionDetail_c19b66"
+                  >
+                    Male
+                  </dd>
+                </div>
+                <div
+                  class="_descriptionItem_c19b66"
+                >
+                  <dt
+                    class="_descriptionTerm_c19b66"
+                  >
+                    Episodes count: 
+                  </dt>
+                  <dd
+                    class="_descriptionDetail_c19b66"
+                  >
+                    3
+                  </dd>
+                </div>
+                <div
+                  class="_descriptionItem_c19b66"
+                >
+                  <dt
+                    class="_descriptionTerm_c19b66"
+                  >
+                    Origin: 
+                  </dt>
+                  <dd
+                    class="_descriptionDetail_c19b66"
+                  >
+                    Earth (C-137)
+                  </dd>
+                </div>
+                <div
+                  class="_descriptionItem_c19b66"
+                >
+                  <dt
+                    class="_descriptionTerm_c19b66"
+                  >
+                    Location: 
+                  </dt>
+                  <dd
+                    class="_descriptionDetail_c19b66"
+                  >
+                    Citadel of Ricks
+                  </dd>
+                </div>
+              </dl>
+            </div>
             <button
-              class="_button_1c0f93 _button--cancel_1c0f93"
+              class="_button_1c0f93 _button--cancel_1c0f93 _button_c19b66"
               type="button"
             >
-              Unselect all
+              Close details
             </button>
-            <a
-              class="_link_8b00b0"
-              download="0_characters.csv"
-              href="#"
-            >
-              Download
-            </a>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </div>
   </div>
 </div>
 `;
