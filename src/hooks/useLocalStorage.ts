@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import type { LocalStorageKeys } from '@/common/enums';
 
-export const LOCAL_STORAGE_KEY = 'izy-next-pages-router-task';
+export const LOCAL_STORAGE_KEY = 'izy-next-app-router-task';
 
 export function getLocalStorage<T>(): Record<string, T> {
   const item = localStorage.getItem(LOCAL_STORAGE_KEY);
