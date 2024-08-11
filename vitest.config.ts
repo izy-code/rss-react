@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     coverage: {
       all: true,
-      exclude: ['**/types.ts', '**/types/*', '**/*.d.ts', 'src/**/*/enums.ts', 'src/pages/_app.tsx', 'src/test/**/*'],
+      exclude: ['**/types.ts', '**/types/*', '**/*.d.ts', 'src/**/*/enums.ts', 'src/test/**/*'],
       extension: ['.ts', '.tsx'],
       include: ['src/**/*'],
       provider: 'v8',
