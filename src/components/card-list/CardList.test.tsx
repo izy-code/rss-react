@@ -1,11 +1,8 @@
-import '@testing-library/jest-dom';
-
-import { MemoryRouter } from '@remix-run/react';
+import { createRemixStub } from '@remix-run/testing';
 import { screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
 
-import { SearchParams } from '@/common/enums';
 import { charactersDataMock } from '@/test/mocks/mocks';
-import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { CardList } from './CardList';
@@ -16,22 +13,28 @@ describe('CardList Component', () => {
   });
 
   it('renders the specified number of cards', async (): Promise<void> => {
-    renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${MOCK_PAGE_NUMBER}&name=${MOCK_SEARCH_NAME}`]}>
-        <CardList />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <CardList characters={{ status: 'success', data: charactersDataMock }} />,
+      },
+    ]);
+
+    renderWithProvidersAndUser(<RemixStub />);
 
     const cards = await screen.findAllByRole('listitem');
     expect(cards).toHaveLength(charactersDataMock.info.count);
   });
 
   it('displays an appropriate message if no cards are present', async (): Promise<void> => {
-    renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?name=wrong`]}>
-        <CardList />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <CardList characters={{ status: 'empty' }} />,
+      },
+    ]);
+
+    renderWithProvidersAndUser(<RemixStub />);
 
     const message = await screen.findByText('No characters found');
     expect(message).toBeInTheDocument();
@@ -46,11 +49,14 @@ describe('CardList Component', () => {
       };
     });
 
-    const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?${SearchParams.NAME}=${MOCK_SEARCH_NAME}`]}>
-        <CardList />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <CardList characters={{ status: 'success', data: charactersDataMock }} />,
+      },
+    ]);
+
+    const { user } = renderWithProvidersAndUser(<RemixStub />);
 
     const checkboxes = await screen.findAllByRole('checkbox');
     expect(checkboxes.length).toBe(3);
