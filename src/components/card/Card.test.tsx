@@ -48,6 +48,23 @@ describe('Card Component', () => {
     });
   });
 
+  it('validates that clicking on a card opens a detailed card component', async (): Promise<void> => {
+    vi.mock('next/router', () => vi.importActual('next-router-mock'));
+
+    const { user } = renderWithProvidersAndUser(
+      <MemoryRouterProvider url={`/?${SearchParams.NAME}=${MOCK_SEARCH_NAME}`}>
+        <Home />
+      </MemoryRouterProvider>,
+    );
+    expect(screen.queryByRole('button', { name: /close details/i })).not.toBeInTheDocument();
+
+    const linkElements = await screen.findAllByRole('link');
+
+    await user.click(linkElements[0]!);
+
+    expect(await screen.findByRole('button', { name: /close details/i })).toBeInTheDocument();
+  });
+
   it('triggers an additional API call to fetch detailed information when clicked', async (): Promise<void> => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
 
