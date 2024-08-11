@@ -1,22 +1,25 @@
 import path from 'node:path';
 
 import { vitePlugin as remix } from '@remix-run/dev';
+import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    remix({
-      appDirectory: 'src/app',
-      ignoredRouteFiles: ['**/*.scss', '**/*.test.{ts,tsx}'],
-      buildDirectory: 'dist',
-      future: {
-        v3_fetcherPersist: true,
-        v3_relativeSplatPath: true,
-        v3_throwAbortReason: true,
-      },
-    }),
+    !process.env.VITEST
+      ? remix({
+          appDirectory: 'src/app',
+          ignoredRouteFiles: ['**/*.scss', '**/*.test.{ts,tsx}'],
+          buildDirectory: 'dist',
+          future: {
+            v3_fetcherPersist: true,
+            v3_relativeSplatPath: true,
+            v3_throwAbortReason: true,
+          },
+        })
+      : react(),
     tsconfigPaths(),
   ],
   resolve: {
