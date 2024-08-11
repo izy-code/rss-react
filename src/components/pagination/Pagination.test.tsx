@@ -1,6 +1,5 @@
-import '@testing-library/jest-dom';
-
-import { MemoryRouter, useLocation } from '@remix-run/react';
+import { useLocation } from '@remix-run/react';
+import { createRemixStub } from '@remix-run/testing';
 import { screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
@@ -25,11 +24,14 @@ describe('Pagination Component', () => {
   it('disables the "Prev" button on the first page', () => {
     const initialPage = 1;
 
-    renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
-        <Pagination pageInfo={pageInfoMock} />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <Pagination pageInfo={pageInfoMock} />,
+      },
+    ]);
+
+    renderWithProvidersAndUser(<RemixStub initialEntries={[`/?page=${initialPage}`]} />);
 
     const prevButton = screen.getByRole('button', { name: /prev/i });
 
@@ -37,11 +39,14 @@ describe('Pagination Component', () => {
   });
 
   it('disables the "Next" button on the last page', () => {
-    renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${pageInfoMock.pages}`]}>
-        <Pagination pageInfo={pageInfoMock} />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <Pagination pageInfo={pageInfoMock} />,
+      },
+    ]);
+
+    renderWithProvidersAndUser(<RemixStub initialEntries={[`/?page=${pageInfoMock.pages}`]} />);
 
     const nextButton = screen.getByRole('button', { name: /next/i });
 
@@ -51,12 +56,19 @@ describe('Pagination Component', () => {
   it('updates URL query parameter when "Next" button is clicked', async () => {
     const initialPage = 2;
 
-    const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
-        <Pagination pageInfo={pageInfoMock} />
-        <PageSearchParamDisplay />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => (
+          <>
+            <Pagination pageInfo={pageInfoMock} />
+            <PageSearchParamDisplay />
+          </>
+        ),
+      },
+    ]);
+
+    const { user } = renderWithProvidersAndUser(<RemixStub initialEntries={[`/?page=${initialPage}`]} />);
 
     const nextButton = screen.getByRole('button', { name: /next/i });
 
@@ -68,12 +80,19 @@ describe('Pagination Component', () => {
   it('updates URL query parameter when "Prev" button is clicked', async () => {
     const initialPage = 2;
 
-    const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?page=${initialPage}`]}>
-        <Pagination pageInfo={pageInfoMock} />
-        <PageSearchParamDisplay />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => (
+          <>
+            <Pagination pageInfo={pageInfoMock} />
+            <PageSearchParamDisplay />
+          </>
+        ),
+      },
+    ]);
+
+    const { user } = renderWithProvidersAndUser(<RemixStub initialEntries={[`/?page=${initialPage}`]} />);
 
     const prevButton = screen.getByRole('button', { name: /prev/i });
 
