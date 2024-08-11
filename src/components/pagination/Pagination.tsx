@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 import { DEFAULT_PAGE } from '@/store/api/api-slice';
 import type { CharacterListInfo } from '@/store/api/types';
@@ -21,15 +21,19 @@ export function Pagination({ pageInfo }: Props): ReactNode {
     void router.push({ query: { ...router.query, page: pageNumber.toString() } });
   };
 
-  const handleButtonClick = (nextPage: number): void => {
-    handlePageChange(nextPage);
-  };
+  useEffect(() => {
+    const pageNumber = Number(page?.toString());
+
+    if (!Number.isInteger(pageNumber) || pageNumber < DEFAULT_PAGE) {
+      void router.push({ query: { ...router.query, page: DEFAULT_PAGE.toString() } });
+    }
+  }, [router, page]);
 
   return (
     <div className={styles.container}>
       <CustomButton
         className={styles.button}
-        onClick={() => handleButtonClick(currentPage - 1)}
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
         Prev
@@ -37,7 +41,7 @@ export function Pagination({ pageInfo }: Props): ReactNode {
       <p className={styles.text}>{`Page ${currentPage} of ${pageInfo.pages}`}</p>
       <CustomButton
         className={styles.button}
-        onClick={() => handleButtonClick(currentPage + 1)}
+        onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === pageInfo.pages}
       >
         Next

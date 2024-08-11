@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
-import { forwardRef, useEffect } from 'react';
+import { forwardRef } from 'react';
 
 import { Card } from '@/components/card/Card';
 import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
@@ -26,14 +26,6 @@ export const CardList = forwardRef<HTMLUListElement>(function CardList(_, listRe
     searchTerm: nameParam,
     page: pageParam,
   });
-
-  useEffect(() => {
-    const pageNumber = Number(page?.toString());
-
-    if (!Number.isInteger(pageNumber) || pageNumber < DEFAULT_PAGE) {
-      void router.push({ query: { ...router.query, page: DEFAULT_PAGE.toString() } });
-    }
-  }, [router, page]);
 
   let content: ReactNode = null;
 
