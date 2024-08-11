@@ -1,5 +1,3 @@
-import '@testing-library/jest-dom';
-
 import { render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { useContext } from 'react';
@@ -12,20 +10,20 @@ import { ThemeContext, ThemeProvider } from './ThemeContext';
 
 const THEME_TEST_ID = 'theme-display';
 
-function TestComponent(): ReactNode {
-  const { isDarkTheme, toggleTheme } = useContext(ThemeContext);
-  return (
-    <div>
-      <span data-testid={THEME_TEST_ID}>{isDarkTheme ? 'Dark' : 'Light'}</span>
-      <button onClick={toggleTheme}>Toggle Theme</button>
-    </div>
-  );
-}
-
 describe('ThemeProvider', () => {
   beforeEach(() => {
     localStorage.clear();
   });
+
+  function TestComponent(): ReactNode {
+    const { isDarkTheme, toggleTheme } = useContext(ThemeContext);
+    return (
+      <div>
+        <span data-testid={THEME_TEST_ID}>{isDarkTheme ? 'Dark' : 'Light'}</span>
+        <button onClick={toggleTheme}>Toggle Theme</button>
+      </div>
+    );
+  }
 
   it('initializes theme based on localStorage', async () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ [LocalStorageKeys.THEME]: true }));
