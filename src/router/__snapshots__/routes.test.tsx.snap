@@ -179,7 +179,7 @@ exports[`Router render > should match the snapshot for main route 1`] = `
               <a
                 class="_active_c39673 _link_c39673"
                 data-discover="true"
-                href="/?details=1"
+                href="/?details=1&page=1"
               >
                 <div
                   class="_placeholder_4c56d5"
@@ -228,7 +228,7 @@ exports[`Router render > should match the snapshot for main route 1`] = `
               <a
                 class="_link_c39673"
                 data-discover="true"
-                href="/?details=8"
+                href="/?details=8&page=1"
               >
                 <div
                   class="_placeholder_4c56d5"
@@ -277,7 +277,7 @@ exports[`Router render > should match the snapshot for main route 1`] = `
               <a
                 class="_link_c39673"
                 data-discover="true"
-                href="/?details=15"
+                href="/?details=15&page=1"
               >
                 <div
                   class="_placeholder_4c56d5"

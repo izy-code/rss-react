@@ -15,7 +15,7 @@ interface Props {
 export function Pagination({ pageInfo }: Props): ReactNode {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentPage = Number(searchParams.get(SearchParams.PAGE)) || DEFAULT_PAGE;
+  const currentPage = Number(searchParams.get(SearchParams.PAGE));
 
   const handlePageChange = (pageNumber: number): void => {
     searchParams.set(SearchParams.PAGE, pageNumber.toString());
