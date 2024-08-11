@@ -37,7 +37,7 @@ describe('Card Component', () => {
     expect(screen.getByAltText(characterMock.name)).toBeInTheDocument();
   });
 
-  it('changes URL search params when clicked', async (): Promise<void> => {
+  it('validates that clicking on a card opens a detailed card component by checking URL change', async (): Promise<void> => {
     vi.mock('next/router', () => vi.importActual('next-router-mock'));
 
     const { user } = renderWithProvidersAndUser(
