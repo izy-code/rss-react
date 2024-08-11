@@ -28,10 +28,12 @@ export const CardList = forwardRef<HTMLUListElement>(function CardList(_, listRe
   });
 
   useEffect(() => {
-    if (!Number.isInteger(pageParam) || pageParam < DEFAULT_PAGE) {
+    const pageNumber = Number(page?.toString());
+
+    if (!Number.isInteger(pageNumber) || pageNumber < DEFAULT_PAGE) {
       void router.push({ query: { ...router.query, page: DEFAULT_PAGE.toString() } });
     }
-  }, [pageParam, router]);
+  }, [router, page]);
 
   let content: ReactNode = null;
 
