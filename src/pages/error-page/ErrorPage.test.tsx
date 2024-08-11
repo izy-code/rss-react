@@ -52,16 +52,6 @@ describe('ErrorPage', () => {
     expect(screen.getByText('Boundary error message')).toBeInTheDocument();
   });
 
-  // it('updates errorMessage based on routeError (isRouteErrorResponse)', () => {
-  //   (useRouteError as Mock).mockReturnValue(new ErrorResponse(404, 'Not Found', {}));
-
-  //   render(<ErrorPage errorBoundaryMessage={null} />);
-
-  //   expect(screen.getByText('Oops!')).toBeInTheDocument();
-  //   expect(screen.getByText('Sorry, an unexpected error has occurred.')).toBeInTheDocument();
-  //   expect(screen.getByText('Not Found')).toBeInTheDocument();
-  // });
-
   it('updates errorMessage based on routeError (instance of Error)', () => {
     (useRouteError as Mock).mockReturnValue(new Error('Instance error message'));
 
