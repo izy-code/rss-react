@@ -1,5 +1,5 @@
+import { useNavigate } from '@remix-run/react';
 import type { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { CustomButton } from '@/components/custom-button/CustomButton';
 
@@ -17,8 +17,15 @@ export function Page404(): ReactNode {
           <CustomButton variant="tertiary" onClick={() => navigate(-1)}>
             Previous page
           </CustomButton>
-          <CustomButton variant="tertiary" onClick={() => navigate('/')}>
-            Home page
+          <CustomButton
+            variant="tertiary"
+            onClick={() => {
+              const hostUrl = `${window.location.protocol}//${window.location.host}`;
+
+              window.location.href = hostUrl;
+            }}
+          >
+            Last stored search
           </CustomButton>
         </div>
       </div>

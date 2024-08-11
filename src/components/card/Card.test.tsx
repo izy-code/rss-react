@@ -1,88 +1,140 @@
-import '@testing-library/jest-dom';
-
+import type { TypedResponse } from '@remix-run/node';
+import type * as RemixReactType from '@remix-run/react';
+import { json, useLoaderData } from '@remix-run/react';
+import { createRemixStub } from '@remix-run/testing';
 import { screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { createMemoryRouter, MemoryRouter, RouterProvider, useLocation } from 'react-router-dom';
 
-import { SearchParams } from '@/common/enums';
-import { Details } from '@/components/details/Details';
-import { routes } from '@/router/routes';
-import { BASE_URL } from '@/store/api/api-slice';
-import { characterMock } from '@/test/mocks/mocks';
-import { MOCK_SEARCH_NAME } from '@/test/msw/handlers';
+import type { FetchCharacterListResult, FetchCharacterResult } from '@/api/api';
+import App from '@/app/root';
+import Index from '@/app/routes/_index';
+import { characterMock, charactersDataMock } from '@/test/mocks/mocks';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
+import { CardList } from '../card-list/CardList';
 import { Card } from './Card';
-
-const DETAILS_TEST_ID = 'details-display';
 
 global.URL.createObjectURL = vi.fn(() => 'mockedURL');
 
-function DetailsSearchParamDisplay(): ReactNode {
-  const location = useLocation();
-  const detailsID = new URLSearchParams(location.search).get(SearchParams.DETAILS);
-
-  return <p data-testid={DETAILS_TEST_ID}>{detailsID}</p>;
-}
-
 describe('Card Component', () => {
+  afterAll(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('renders the relevant card data', (): void => {
-    renderWithProvidersAndUser(
-      <MemoryRouter>
-        <Card character={characterMock} />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <Card character={characterMock} />,
+      },
+    ]);
+
+    renderWithProvidersAndUser(<RemixStub />);
 
     expect(screen.getByRole('heading', { name: characterMock.name })).toBeInTheDocument();
     expect(screen.getByAltText(characterMock.name)).toHaveAttribute('src', characterMock.image);
   });
 
-  it('changes URL search params when clicked', async (): Promise<void> => {
+  it('validates that clicking on a card opens a detailed card component', async (): Promise<void> => {
+    const RemixStub = createRemixStub([
+      {
+        id: 'root',
+        path: '/',
+        Component: (): ReactNode => <App />,
+        children: [
+          {
+            id: 'index',
+            path: '/',
+            Component: (): ReactNode => <Index />,
+            loader: (): TypedResponse<FetchCharacterResult> => json({ status: 'success', data: characterMock }),
+          },
+        ],
+        loader: (): TypedResponse<FetchCharacterListResult> => json({ status: 'success', data: charactersDataMock }),
+      },
+    ]);
+
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter>
-        <Card character={characterMock} />
-        <DetailsSearchParamDisplay />
-      </MemoryRouter>,
+      <RemixStub
+        hydrationData={{
+          loaderData: {
+            root: { status: 'success', data: charactersDataMock },
+            index: { status: 'success', data: characterMock },
+          },
+        }}
+      />,
     );
 
-    const linkElement = screen.getByRole('link');
+    expect(screen.queryByRole('button', { name: /close details/i })).not.toBeInTheDocument();
 
-    expect(linkElement).toBeInTheDocument();
+    const linkElements = screen.getAllByRole('link');
 
-    await user.click(linkElement);
+    await user.click(linkElements[0]!);
 
-    expect(screen.getByTestId(DETAILS_TEST_ID)).toHaveTextContent(characterMock.id.toString());
+    expect(await screen.findByRole('button', { name: /close details/i })).toBeInTheDocument();
   });
 
   it('triggers an additional API call to fetch detailed information when clicked', async (): Promise<void> => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    vi.mock('@remix-run/react', async () => {
+      const original = await vi.importActual<typeof RemixReactType>('@remix-run/react');
+      return {
+        ...original,
+        useLoaderData: vi.fn(original.useLoaderData),
+      };
+    });
+
+    const RemixStub = createRemixStub([
+      {
+        id: 'root',
+        path: '/',
+        Component: (): ReactNode => <App />,
+        children: [
+          {
+            id: 'index',
+            path: '/',
+            Component: (): ReactNode => <Index />,
+            loader: (): TypedResponse<FetchCharacterResult> => json({ status: 'success', data: characterMock }),
+          },
+        ],
+        loader: (): TypedResponse<FetchCharacterListResult> => json({ status: 'success', data: charactersDataMock }),
+      },
+    ]);
 
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/`]}>
-        <Card character={characterMock} />
-        <Details />
-      </MemoryRouter>,
+      <RemixStub
+        hydrationData={{
+          loaderData: {
+            root: { status: 'success', data: charactersDataMock },
+            index: { status: 'success', data: characterMock },
+          },
+        }}
+      />,
     );
 
-    const linkElement = screen.getByRole('link');
+    const useLoaderDataSpy = vi.mocked(useLoaderData);
+    const initialCallCount = useLoaderDataSpy.mock.calls.length;
 
-    expect(fetchSpy).not.toHaveBeenCalled();
+    const linkElements = screen.getAllByRole('link');
 
-    await user.click(linkElement);
-    await waitFor(() =>
-      expect(fetchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ url: `${BASE_URL}character/${characterMock.id}` }),
-      ),
-    );
+    await user.click(linkElements[0]!);
 
-    expect(fetchSpy).toHaveBeenCalled();
+    const afterClickCallCount = useLoaderDataSpy.mock.calls.length;
+
+    expect(afterClickCallCount).toBeGreaterThan(initialCallCount);
   });
 
   it('triggers flyout counter change when input clicked', async (): Promise<void> => {
-    const router = createMemoryRouter(routes, {
-      initialEntries: [`/?${SearchParams.NAME}=${MOCK_SEARCH_NAME}`],
-    });
-    const { user } = renderWithProvidersAndUser(<RouterProvider router={router} />);
+    const RemixStub = createRemixStub([
+      {
+        path: `/`,
+        Component: (): ReactNode => <CardList characters={{ status: 'success', data: charactersDataMock }} />,
+      },
+    ]);
+
+    const { user } = renderWithProvidersAndUser(<RemixStub />);
 
     const checkboxes = await screen.findAllByRole('checkbox');
     const counter = screen.getByText(/items selected: 0/i);

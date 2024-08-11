@@ -1,5 +1,5 @@
+import { isRouteErrorResponse, useRouteError } from '@remix-run/react';
 import { type ReactNode, useEffect, useState } from 'react';
-import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 
 import { CustomButton } from '@/components/custom-button/CustomButton';
 

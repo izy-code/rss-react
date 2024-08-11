@@ -1,35 +1,49 @@
-import '@testing-library/jest-dom';
-
+import type { TypedResponse } from '@remix-run/node';
+import { json } from '@remix-run/react';
+import { createRemixStub } from '@remix-run/testing';
 import { screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import type { ReactNode } from 'react';
 
-import { MainPage } from '@/pages/main-page/MainPage';
-import { characterMock } from '@/test/mocks/mocks';
+import type { FetchCharacterListResult, FetchCharacterResult } from '@/api/api';
+import App from '@/app/root';
+import Index from '@/app/routes/_index';
+import { SearchParams } from '@/common/enums';
+import { characterMock, charactersDataMock } from '@/test/mocks/mocks';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
 import { Details } from './Details';
 
 describe('Details Component', () => {
-  afterEach(() => {
+  afterAll(() => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('displays a loading indicator while fetching data', async () => {
-    renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Details />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <Index />,
+      },
+    ]);
+
+    renderWithProvidersAndUser(<RemixStub />);
 
     expect(await screen.findByRole('heading', { name: /loading.../i })).toBeInTheDocument();
   });
 
   it('displays the detailed card data correctly', async () => {
-    renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Details />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <Details character={{ status: 'success', data: characterMock }} />,
+      },
+    ]);
+
+    renderWithProvidersAndUser(<RemixStub initialEntries={[`/?${SearchParams.DETAILS}=${characterMock.id}`]} />);
 
     expect(await screen.findByText(characterMock.name)).toBeInTheDocument();
     expect(screen.getByText(characterMock.species)).toBeInTheDocument();
@@ -38,14 +52,33 @@ describe('Details Component', () => {
   });
 
   it('hides the details section when the close button is clicked', async () => {
+    const RemixStub = createRemixStub([
+      {
+        id: 'root',
+        path: '/',
+        Component: (): ReactNode => <App />,
+        children: [
+          {
+            id: 'index',
+            path: '/',
+            Component: (): ReactNode => <Index />,
+            loader: (): TypedResponse<FetchCharacterResult> => json({ status: 'success', data: characterMock }),
+          },
+        ],
+        loader: (): TypedResponse<FetchCharacterListResult> => json({ status: 'success', data: charactersDataMock }),
+      },
+    ]);
+
     const { user } = renderWithProvidersAndUser(
-      <MemoryRouter initialEntries={[`/?details=${characterMock.id}`]}>
-        <Routes>
-          <Route path="/" element={<MainPage />}>
-            <Route path="" element={<Details />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <RemixStub
+        hydrationData={{
+          loaderData: {
+            root: { status: 'success', data: charactersDataMock },
+            index: { status: 'success', data: characterMock },
+          },
+        }}
+        initialEntries={[`/?${SearchParams.DETAILS}=${characterMock.id}`]}
+      />,
     );
 
     const closeButton = await screen.findByRole('button', { name: /close details/i });

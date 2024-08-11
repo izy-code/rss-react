@@ -1,7 +1,6 @@
-import '@testing-library/jest-dom';
-
+import { createRemixStub } from '@remix-run/testing';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import type { ReactNode } from 'react';
 
 import { LocalStorageKeys } from '@/common/enums';
 import { LOCAL_STORAGE_KEY } from '@/hooks/useLocalStorage';
@@ -16,11 +15,14 @@ describe('SearchForm Component', () => {
   });
 
   it('saves the entered value to localStorage when Search button is clicked', async () => {
-    const { user } = renderWithProvidersAndUser(
-      <MemoryRouter>
-        <SearchForm />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <SearchForm />,
+      },
+    ]);
+
+    const { user } = renderWithProvidersAndUser(<RemixStub />);
 
     const searchInput = screen.getByRole('searchbox');
     const searchButton = screen.getByRole('button', { name: /search/i });
@@ -37,11 +39,14 @@ describe('SearchForm Component', () => {
     const storedValue = { [LocalStorageKeys.SEARCH]: MOCK_SEARCH_NAME };
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(storedValue));
 
-    renderWithProvidersAndUser(
-      <MemoryRouter>
-        <SearchForm />
-      </MemoryRouter>,
-    );
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <SearchForm />,
+      },
+    ]);
+
+    renderWithProvidersAndUser(<RemixStub />);
 
     const searchInput = screen.getByRole('searchbox');
     expect(searchInput).toHaveValue(MOCK_SEARCH_NAME);

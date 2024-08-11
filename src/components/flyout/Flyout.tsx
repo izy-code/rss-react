@@ -22,7 +22,7 @@ export function Flyout(): ReactNode {
   return (
     <div className={clsx(styles.flyout, isShown && styles.show)} aria-hidden={!isShown}>
       <p className={styles.counter}>Items selected: {itemCount}</p>
-      <div className={styles.buttonsContainer} onClick={(evt) => evt.stopPropagation()}>
+      <div className={styles.buttonsContainer}>
         <CustomButton variant="cancel" onClick={handleUnselectAll}>
           Unselect all
         </CustomButton>

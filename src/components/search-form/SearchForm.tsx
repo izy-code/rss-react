@@ -1,26 +1,21 @@
+import { useNavigation, useSearchParams } from '@remix-run/react';
 import type { FormEvent, ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
+import { DEFAULT_PAGE } from '@/api/api';
 import { LocalStorageKeys, SearchParams } from '@/common/enums';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { DEFAULT_PAGE, useGetCharactersListQuery } from '@/store/api/api-slice';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import styles from './SearchForm.module.scss';
 
 export function SearchForm(): ReactNode {
   const { getStoredValue, setStoredValue } = useLocalStorage<string>();
-  const [searchTerm, setSearchTerm] = useState<string>(getStoredValue(LocalStorageKeys.SEARCH) || '');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const pageParam = Number(searchParams.get(SearchParams.PAGE));
-
-  const { isFetching: isDisabled } = useGetCharactersListQuery({
-    searchTerm,
-    page: pageParam,
-  });
+  const navigation = useNavigation();
+  const isDisabled = navigation.state === 'loading';
 
   const updateSearchTerm = useCallback(
     (newTerm: string): void => {
@@ -31,13 +26,17 @@ export function SearchForm(): ReactNode {
   );
 
   useEffect(() => {
+    setSearchTerm(getStoredValue(LocalStorageKeys.SEARCH) || '');
+  }, [getStoredValue]);
+
+  useEffect(() => {
     const nameParam = searchParams.get(SearchParams.NAME) ?? '';
 
-    if (searchTerm && searchParams.size === 1) {
+    if (searchTerm && searchParams.size === 0) {
       inputRef.current!.value = searchTerm;
       searchParams.set(SearchParams.NAME, searchTerm);
       setSearchParams(searchParams);
-    } else if (searchTerm !== nameParam && searchParams.size > 1) {
+    } else if (searchTerm !== nameParam && searchParams.size > 0) {
       updateSearchTerm(nameParam);
       inputRef.current!.value = nameParam;
     }

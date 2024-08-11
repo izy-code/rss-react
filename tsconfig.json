@@ -2,11 +2,12 @@
   "compilerOptions": {
     "target": "ES2022" /* Ignored by Vite bundler https://vitejs.dev/guide/features.html#target */,
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "preserve",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "moduleDetection": "force" /* every non-declaration file is treated as a module */,
+    "forceConsistentCasingInFileNames": true,
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -23,7 +24,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "@remix-run/node"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"],

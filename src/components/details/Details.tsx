@@ -1,66 +1,63 @@
+import { useSearchParams } from '@remix-run/react';
 import { type ReactNode } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
+import type { FetchCharacterResult } from '@/api/api';
 import { SearchParams } from '@/common/enums';
-import { useGetCharacterByIdQuery } from '@/store/api/api-slice';
 
 import { CustomButton } from '../custom-button/CustomButton';
 import { ImageLoader } from '../image-loader/ImageLoader';
 import { Loader } from '../loader/Loader';
 import styles from './Details.module.scss';
 
-export function Details(): ReactNode {
+export function Details({ character }: { character: FetchCharacterResult }): ReactNode {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const detailsParam = searchParams.get(SearchParams.DETAILS) || 'no-details';
-
-  const { data: characterData, isFetching, isSuccess, isError, error } = useGetCharacterByIdQuery(detailsParam);
+  const details = searchParams.get(SearchParams.DETAILS) || 'no-details';
 
   const handleButtonClick = (): void => {
     searchParams.delete(SearchParams.DETAILS);
     setSearchParams(searchParams);
   };
 
-  let content: ReactNode = null;
-
-  if (isFetching) {
-    content = <Loader secondaryColor className={styles.loader} />;
-  } else if (isError) {
-    if (!Number.isInteger(+detailsParam) || ('status' in error && error.status === 404)) {
-      content = <div className={styles.message}>No character found</div>;
-    } else {
-      content = <div className={styles.message}>Character details fetching problem</div>;
-    }
-  } else if (isSuccess && characterData) {
-    const characterProps = {
-      Species: characterData.species,
-      Status: characterData.status,
-      Gender: characterData.gender,
-      'Episodes count': characterData.episode.length,
-      Origin: characterData.origin.name,
-      Location: characterData.location.name,
-    };
-
-    content = (
-      <div className={styles.container}>
-        <div className={styles.card}>
-          <ImageLoader imageSrc={characterData.image} imageAlt={characterData.name} secondaryColor />
-          <h2 className={styles.title}>{characterData.name}</h2>
-          <dl className={styles.descriptionList}>
-            {Object.entries(characterProps).map(([param, value]) => (
-              <div className={styles.descriptionItem} key={param}>
-                <dt className={styles.descriptionTerm}>{`${param}: `}</dt>
-                <dd className={styles.descriptionDetail}>{value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-        <CustomButton variant="cancel" className={styles.button} onClick={handleButtonClick}>
-          Close details
-        </CustomButton>
-      </div>
-    );
+  if (!character) {
+    return <Loader secondaryColor className={styles.loader} />;
   }
 
-  return content;
+  if (character.status === 'error' || !Number.isInteger(+details)) {
+    return <div className={styles.message}>Character details fetching problem</div>;
+  }
+
+  if (character.status === 'empty' || !character.data) {
+    return <div className={styles.message}>No character found</div>;
+  }
+
+  const characterData = character.data;
+  const characterProps = {
+    Species: characterData.species,
+    Status: characterData.status,
+    Gender: characterData.gender,
+    'Episodes count': characterData.episode.length,
+    Origin: characterData.origin.name,
+    Location: characterData.location.name,
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <ImageLoader imageSrc={characterData.image} imageAlt={characterData.name} secondaryColor />
+        <h2 className={styles.title}>{characterData.name}</h2>
+        <dl className={styles.descriptionList}>
+          {Object.entries(characterProps).map(([param, value]) => (
+            <div className={styles.descriptionItem} key={param}>
+              <dt className={styles.descriptionTerm}>{`${param}: `}</dt>
+              <dd className={styles.descriptionDetail}>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <CustomButton variant="cancel" className={styles.button} onClick={handleButtonClick}>
+        Close details
+      </CustomButton>
+    </div>
+  );
 }

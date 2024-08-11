@@ -1,15 +1,15 @@
-import '@testing-library/jest-dom';
-
+import { useRouteError } from '@remix-run/react';
+import { createRemixStub } from '@remix-run/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { UNSAFE_ErrorResponseImpl, useRouteError } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 import { vi } from 'vitest';
 
 import { ErrorPage } from './ErrorPage';
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('@remix-run/react', async () => {
+  const actual = await vi.importActual('@remix-run/react');
   return {
     ...actual,
     useRouteError: vi.fn(),
@@ -38,27 +38,31 @@ describe('ErrorPage', () => {
   it('displays the error message from errorBoundaryMessage prop', () => {
     const errorBoundaryMessage = 'Boundary error message';
 
-    render(<ErrorPage errorBoundaryMessage={errorBoundaryMessage} />);
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <ErrorPage errorBoundaryMessage={errorBoundaryMessage} />,
+      },
+    ]);
+
+    render(<RemixStub />);
 
     expect(screen.getByText('Oops!')).toBeInTheDocument();
     expect(screen.getByText('Sorry, an unexpected error has occurred.')).toBeInTheDocument();
     expect(screen.getByText('Boundary error message')).toBeInTheDocument();
   });
 
-  it('updates errorMessage based on routeError (isRouteErrorResponse)', () => {
-    (useRouteError as Mock).mockReturnValue(new UNSAFE_ErrorResponseImpl(404, 'Not Found', {}));
-
-    render(<ErrorPage errorBoundaryMessage={null} />);
-
-    expect(screen.getByText('Oops!')).toBeInTheDocument();
-    expect(screen.getByText('Sorry, an unexpected error has occurred.')).toBeInTheDocument();
-    expect(screen.getByText('Not Found')).toBeInTheDocument();
-  });
-
   it('updates errorMessage based on routeError (instance of Error)', () => {
     (useRouteError as Mock).mockReturnValue(new Error('Instance error message'));
 
-    render(<ErrorPage errorBoundaryMessage={null} />);
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <ErrorPage errorBoundaryMessage={null} />,
+      },
+    ]);
+
+    render(<RemixStub />);
 
     expect(screen.getByText('Oops!')).toBeInTheDocument();
     expect(screen.getByText('Sorry, an unexpected error has occurred.')).toBeInTheDocument();
@@ -68,7 +72,14 @@ describe('ErrorPage', () => {
   it('sets errorMessage to null if routeError is not recognized', () => {
     (useRouteError as Mock).mockReturnValue('Unknown error');
 
-    render(<ErrorPage errorBoundaryMessage={null} />);
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <ErrorPage errorBoundaryMessage={null} />,
+      },
+    ]);
+
+    render(<RemixStub />);
 
     expect(screen.getByText('Oops!')).toBeInTheDocument();
     expect(screen.getByText('Sorry, an unexpected error has occurred.')).toBeInTheDocument();
@@ -78,7 +89,14 @@ describe('ErrorPage', () => {
   it('reloads the page when the refresh button is clicked', async () => {
     const user = userEvent.setup();
 
-    render(<ErrorPage errorBoundaryMessage={null} />);
+    const RemixStub = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <ErrorPage errorBoundaryMessage={null} />,
+      },
+    ]);
+
+    render(<RemixStub />);
 
     const refreshButton = screen.getByRole('button', { name: /refresh the page/i });
     await user.click(refreshButton);

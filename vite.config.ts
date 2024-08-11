@@ -1,24 +1,26 @@
 import path from 'node:path';
 
+import { vitePlugin as remix } from '@remix-run/dev';
 import react from '@vitejs/plugin-react';
-import checker from 'vite-plugin-checker';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    !process.env.VITEST
+      ? remix({
+          appDirectory: 'src/app',
+          ignoredRouteFiles: ['**/*.scss', '**/*.test.{ts,tsx}'],
+          buildDirectory: 'dist',
+          future: {
+            v3_fetcherPersist: true,
+            v3_relativeSplatPath: true,
+            v3_throwAbortReason: true,
+          },
+        })
+      : react(),
     tsconfigPaths(),
-    checker({
-      typescript: true,
-      stylelint: {
-        lintCommand: 'stylelint ./src/**/*.{css,scss} --quiet-deprecation-warnings',
-      },
-      eslint: {
-        lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
-      },
-    }),
   ],
   resolve: {
     alias: {
@@ -28,17 +30,7 @@ export default defineConfig({
   test: {
     coverage: {
       all: true,
-      exclude: [
-        'src/test/**/*',
-        '**/types.ts',
-        '**/types/*',
-        '**/*.d.ts',
-        '**/index.ts',
-        'src/index.tsx',
-        'src/App.tsx',
-        'src/config/**/*',
-        'src/**/*/enums.ts',
-      ],
+      exclude: ['src/test/**/*', '**/types.ts', '**/types/*', '**/*.d.ts', '**/index.ts', 'src/**/*/enums.ts'],
       extension: ['.ts', '.tsx'],
       include: ['src/**/*'],
       provider: 'v8',

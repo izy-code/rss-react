@@ -1,17 +1,47 @@
-import { render, screen } from '@testing-library/react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import type { TypedResponse } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { createRemixStub } from '@remix-run/testing';
+import { screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
 
-import { MOCK_PAGE_NUMBER, MOCK_SEARCH_NAME } from '@/test/msw/handlers';
+import type { FetchCharacterListResult, FetchCharacterResult } from '@/api/api';
+import App from '@/app/root';
+import Index from '@/app/routes/_index';
+import { SearchParams } from '@/common/enums';
+import { Page404 } from '@/pages/page-404/Page404';
+import { characterMock, charactersDataMock } from '@/test/mocks/mocks';
 import { renderWithProvidersAndUser } from '@/utils/test-utils';
 
-import { routes } from './routes';
+const AppRemixStub = createRemixStub([
+  {
+    id: 'root',
+    path: '/',
+    Component: (): ReactNode => <App />,
+    children: [
+      {
+        id: 'index',
+        path: '/',
+        Component: (): ReactNode => <Index />,
+        loader: (): TypedResponse<FetchCharacterResult> => json({ status: 'success', data: characterMock }),
+      },
+    ],
+    loader: (): TypedResponse<FetchCharacterListResult> => json({ status: 'success', data: charactersDataMock }),
+  },
+]);
 
 describe('Router render', () => {
-  it('should match the snapshot for main routes', async () => {
-    const memoryRouter = createMemoryRouter(routes, {
-      initialEntries: [`/?page=${MOCK_PAGE_NUMBER}&name=${MOCK_SEARCH_NAME}`],
-    });
-    const { container } = renderWithProvidersAndUser(<RouterProvider router={memoryRouter} />);
+  it('should match the snapshot for main route', async () => {
+    const { container } = renderWithProvidersAndUser(
+      <AppRemixStub
+        hydrationData={{
+          loaderData: {
+            root: { status: 'success', data: charactersDataMock },
+            index: { status: 'success', data: characterMock },
+          },
+        }}
+        initialEntries={[`/?${SearchParams.DETAILS}=${characterMock.id}`]}
+      />,
+    );
 
     await screen.findByRole('button', { name: /prev/i });
 
@@ -19,8 +49,14 @@ describe('Router render', () => {
   });
 
   it('should match the snapshot for 404 page', () => {
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/non-existent-route'] });
-    const { container } = render(<RouterProvider router={memoryRouter} />);
+    const RemixStub404 = createRemixStub([
+      {
+        path: '/',
+        Component: (): ReactNode => <Page404 />,
+      },
+    ]);
+
+    const { container } = renderWithProvidersAndUser(<RemixStub404 />);
 
     expect(container).toMatchSnapshot();
   });
@@ -28,8 +64,17 @@ describe('Router render', () => {
   it('should match the snapshot for error page', async () => {
     const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] });
-    const { user, container } = renderWithProvidersAndUser(<RouterProvider router={memoryRouter} />);
+    const { container, user } = renderWithProvidersAndUser(
+      <AppRemixStub
+        hydrationData={{
+          loaderData: {
+            root: { status: 'success', data: charactersDataMock },
+            index: { status: 'success', data: characterMock },
+          },
+        }}
+        initialEntries={[`/?${SearchParams.DETAILS}=${characterMock.id}`]}
+      />,
+    );
 
     const errorButton = screen.getByRole('button', { name: /throw error/i });
 
