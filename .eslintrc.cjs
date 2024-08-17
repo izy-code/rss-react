@@ -12,9 +12,7 @@ module.exports = {
     'prettier',
   ],
   extends: [
-    'airbnb',
-    'airbnb-typescript',
-    'airbnb/hooks',
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended-type-checked',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
@@ -51,6 +49,7 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/prefer-stateless-function': 'off',
     'react/button-has-type': 'off',
+    'react/prop-types': [2, { ignore: ['className'] }],
     curly: ['error', 'all'],
     'react/jsx-props-no-spreading': [
       'error',
