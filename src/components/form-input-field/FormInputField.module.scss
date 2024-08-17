@@ -1,0 +1,38 @@
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  gap: 5px;
+}
+
+.input {
+  margin: 0;
+  padding: 5px;
+  font-style: var(--primary-font);
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+.invalid {
+  border-style: solid;
+  border-color: var(--color-error);
+
+  &[type="file"] {
+    border: none;
+    outline: solid 2px var(--color-error);
+  }
+}
+
+.label {
+  font-size: 16px;
+}
+
+.errorMessage {
+  min-height: 21px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-error-accent);
+}
