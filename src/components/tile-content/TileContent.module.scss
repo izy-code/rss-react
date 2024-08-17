@@ -1,0 +1,27 @@
+.picture {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.list {
+  margin: 0;
+}
+
+.field {
+  display: flex;
+  gap: 4px;
+}
+
+.term {
+  font-weight: 700;
+}
+
+.detail {
+  overflow: hidden;
+  margin: 0;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
