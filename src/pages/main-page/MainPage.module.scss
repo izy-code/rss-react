@@ -1,0 +1,84 @@
+.page {
+  display: flex;
+  flex: 1;
+  flex-flow: column nowrap;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  padding: 10px 10px 30px;
+}
+
+.header {
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.title {
+  width: fit-content;
+  margin: 0 auto 10px;
+  font-size: 30px;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.link {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: color 0.4s ease-in-out;
+
+  &:hover,
+  &:focus-visible {
+    @media (hover: hover) {
+      color: var(--color-link);
+    }
+  }
+}
+
+.main {
+  width: 100%;
+  max-width: var(--max-width);
+}
+
+.text {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 20px;
+  font-weight: 00;
+  text-align: center;
+  background-color: var(--color-bg-container);
+  border-radius: 10px;
+  box-shadow: 0 0 16px 8px var(--color-shadow);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  justify-content: center;
+  justify-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listItem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(300px, 100%);
+  margin: 0 auto;
+  padding: 12px;
+  background-color: var(--color-bg-container);
+  border-radius: 10px;
+  box-shadow: 8px 8px 10px 4px var(--color-shadow);
+  transition: box-shadow 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.newTile {
+  box-shadow: 8px 8px 10px 4px var(--color-primary-active);
+  transform: scale(1.03);
+}
