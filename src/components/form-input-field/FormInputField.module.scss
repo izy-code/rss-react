@@ -6,6 +6,7 @@
 .row {
   display: flex;
   gap: 5px;
+  align-items: center;
 }
 
 .input {
@@ -14,6 +15,18 @@
   font-style: var(--primary-font);
   font-size: 16px;
   border-radius: 4px;
+
+  &[type="checkbox"],
+  &[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  &[type="file"] {
+    width: fit-content;
+    cursor: pointer;
+  }
 }
 
 .invalid {
@@ -28,7 +41,9 @@
 }
 
 .label {
+  width: fit-content;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .errorMessage {
