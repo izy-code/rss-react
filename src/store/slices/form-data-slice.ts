@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { SchemaInferredType } from '@/common/validationSchema';
+import type { SchemaInferredType } from '@/common/validation-schema';
 
 export type Form = Omit<SchemaInferredType, 'picture'> & { picture: string };
 

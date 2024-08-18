@@ -4,7 +4,7 @@ import { ValidationError } from 'yup';
 
 import { ALLOWED_FILE_TYPES } from '@/common/constants';
 import { RoutePath } from '@/common/enums';
-import { validationSchema } from '@/common/validationSchema';
+import { validationSchema } from '@/common/validation-schema';
 import { CustomButton } from '@/components/custom-button/CustomButton';
 import { FormInputField } from '@/components/form-input-field/FormInputField';
 import { FormPasswordField } from '@/components/form-password-field/FormPasswordField';

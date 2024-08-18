@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { ALLOWED_FILE_TYPES } from '@/common/constants';
 import { RoutePath } from '@/common/enums';
-import { type SchemaInferredType, validationSchema } from '@/common/validationSchema';
+import { type SchemaInferredType, validationSchema } from '@/common/validation-schema';
 import { CustomButton } from '@/components/custom-button/CustomButton';
 import { FormInputField } from '@/components/form-input-field/FormInputField';
 import { FormPasswordField } from '@/components/form-password-field/FormPasswordField';
